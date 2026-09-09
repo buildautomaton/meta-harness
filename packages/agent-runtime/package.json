@@ -1,0 +1,39 @@
+{
+  "name": "@buildautomaton/agent-runtime",
+  "version": "0.1.0",
+  "private": true,
+  "description": "ACP agent runtime library for CLI programs: discovery, capabilities, prompts, planning/todos",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "scripts": {
+    "build": "tsup",
+    "type-check": "tsc --noEmit",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@agentclientprotocol/codex-acp": "^1.1.4",
+    "@agentclientprotocol/sdk": "^0.14.0",
+    "tree-kill": "^1.2.2"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "tsup": "^8.5.1",
+    "typescript": "^5.9.3",
+    "vitest": "^2.0.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "files": [
+    "dist",
+    "src"
+  ]
+}
