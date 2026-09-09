@@ -1,13 +1,19 @@
 node_modules/
 .pnpm-store/
 .turbo/
+.next/
+.tsimp/
 dist/
+generated/
 *.tsbuildinfo
 
 .env
+.env.local
+.env.prod
 .env.*
 !.env.example
 
 .DS_Store
 .vscode
 .idea
+
