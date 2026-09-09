@@ -1,4 +1,4 @@
-# Metaharness agent guidelines
+# Meta Harness agent guidelines
 
 ## File size
 

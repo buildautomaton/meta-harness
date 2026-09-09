@@ -22,7 +22,7 @@ The runtime is the **library**. Your CLI owns argv parsing, TTY UX, config files
 
 ## Install
 
-This package lives in the Metaharness monorepo and is currently private (`"private": true`). From the workspace:
+This package lives in the [@buildautomaton/meta-harness](https://github.com/buildautomaton/meta-harness) monorepo and is currently private (`"private": true`). From the workspace:
 
 ```bash
 pnpm install
@@ -519,4 +519,4 @@ Useful references:
 
 ## License
 
-Private package in the Metaharness monorepo. Distribution follows the repository's licensing terms.
+Private package in the [@buildautomaton/meta-harness](https://github.com/buildautomaton/meta-harness) monorepo. Distribution follows the repository's licensing terms.

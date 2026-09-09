@@ -1,4 +1,4 @@
-# Metaharness
+# @buildautomaton/meta-harness
 
 A pnpm/Turborepo monorepo for local agent harness tooling.
 
