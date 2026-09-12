@@ -1,2 +1,2 @@
-/** Log line sink for the agent runtime (host-injected). */
+/** Log line sink (host-injected). */
 export type LogFn = (message: string) => void;

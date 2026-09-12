@@ -2,7 +2,7 @@
   "name": "@buildautomaton/agent-runtime",
   "version": "0.1.0",
   "private": true,
-  "description": "ACP agent runtime library for CLI programs: discovery, capabilities, prompts, planning/todos",
+  "description": "ACP agent runtime: plugin kernel plus a catalog of harness, session, transport, and tool plugins",
   "type": "module",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -10,6 +10,10 @@
     ".": {
       "types": "./dist/index.d.ts",
       "default": "./dist/index.js"
+    },
+    "./plugins": {
+      "types": "./dist/plugins.d.ts",
+      "default": "./dist/plugins.js"
     },
     "./package.json": "./package.json"
   },

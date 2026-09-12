@@ -24,10 +24,10 @@ A monorepo for meta-harness tooling.
 
 ## Project structure
 
-- `packages/agent-runtime`: ACP agent runtime library
-  - Discover local agents, probe capabilities, run prompts
-  - Stream plans, todos, permissions, and file changes
-  - TypeScript library for CLI and Node hosts
+- `packages/agent-runtime`: ACP runtime (`src/runtime/{core,harnesses,session,transport,tools}`) plus plugins (`src/plugins/`)
+  - `coreSet({ options, hooks, implementation, runtime })`: builtin harnesses, disk/stream sessions, subagent tools, MCP and remote transports
+  - Tools plugin: `launch_subagent`, `get_session`
+- `packages/cli`: thin CLI that registers `coreSet()` (MCP stdio or HTTP remote)
 
 ## Getting started
 
@@ -63,4 +63,13 @@ pnpm --filter @buildautomaton/agent-runtime type-check
 ```
 
 See [`packages/agent-runtime/README.md`](packages/agent-runtime/README.md)
-for the host API and CLI integration patterns.
+for the plugin architecture and available plugins.
+
+### CLI
+
+```bash
+pnpm --filter @buildautomaton/cli build
+pnpm --filter @buildautomaton/cli test
+```
+
+See [`packages/cli/README.md`](packages/cli/README.md).
