@@ -17,3 +17,6 @@ generated/
 .vscode
 .idea
 
+.harness/
+.meta-harness/
+
