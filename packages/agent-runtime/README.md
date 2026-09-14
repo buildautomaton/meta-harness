@@ -45,7 +45,7 @@ Requires **Node.js 18+**. Plugins are also exported from `@buildautomaton/agent-
 | `src/runtime/session/` | Session runtime helpers |
 | `src/runtime/transport/` | Transport runtime helpers |
 | `src/runtime/tools/` | Tools runtime helpers |
-| `src/plugins/` | Concrete plugins and `coreSet()` |
+| `src/plugins/` | `coreSet()` plus one folder per plugin (`harnesses/cursor`, `session/disk`, `tools/minion`, `transport/mcp`, …) |
 
 `createRuntime` does not register plugins on its own. It requires a **session** plugin and a **transport** plugin.
 
@@ -65,7 +65,7 @@ Every plugin factory takes one named-args object `{ options, hooks, implementati
 | `harness` | `HarnessOptions` | `HarnessHooks` | `HarnessImplementation` |
 | `session` | `DiskSessionOptions` / `StreamSessionOptions` | `SessionHooks` | `SessionImplementation` |
 | `transport` | `McpTransportOptions` / `RemoteTransportOptions` | `TransportHooks` | `TransportImplementation` / `RemoteTransportImplementation` |
-| `tools` | `SubagentToolsOptions` | `ToolsHooks` | `ToolsImplementation` |
+| `tools` | `ToolsOptions` | `ToolsHooks` | `ToolsImplementation` |
 
 ```ts
 import {
@@ -73,7 +73,7 @@ import {
   cursorHarnessPlugin,
   diskSessionPlugin,
   mcpTransportPlugin,
-  subagentToolsPlugin,
+  minionToolsPlugin,
 } from '@buildautomaton/agent-runtime';
 
 const runtime = await createRuntime({
@@ -81,7 +81,7 @@ const runtime = await createRuntime({
   plugins: [
     cursorHarnessPlugin(),
     diskSessionPlugin({ options: { dir: '.harness/sessions' } }),
-    subagentToolsPlugin(),
+    minionToolsPlugin(),
     mcpTransportPlugin(),
   ],
 });
@@ -89,7 +89,7 @@ const runtime = await createRuntime({
 await runtime.start();
 ```
 
-`coreSet({ options, hooks, implementation, runtime })` is the usual bundle used by the CLI. It includes every built-in harness plugin plus disk sessions, subagent tools, and MCP (or remote).
+`coreSet({ options, hooks, implementation, runtime })` is the usual bundle used by the CLI. It includes every built-in harness plugin plus disk sessions, MCP (or remote), and `minionToolsPlugin` unless `minionTools: false`. Register any other `kind: 'tools'` plugin beside it — minion tools are not the tools layer.
 
 The ACP manager starts with an **empty** harness registry. Register harnesses through a plugin (or `manager.registerHarness`) before prompting.
 
@@ -111,21 +111,33 @@ Each agent type is its own plugin. `coreSet()` / `coreHarnessPlugins()` include 
 
 ### Sessions
 
-- **`diskSessionPlugin({ options: { dir } })`** — `{id}.json` metadata + `{id}.jsonl` transcript. Default dir: `<cwd>/.harness/sessions`.
+- **`diskSessionPlugin({ options: { dir } })`** — `{id}.jsonl` event log while running; compact at the end to `{id}.md` messages and a structured `log` on `{id}.json`. Default dir: `<cwd>/.harness/sessions`.
 - **`streamSessionPlugin()`** — wraps the current backend with in-memory `subscribe()`.
 
 ### Transports
 
-- **`mcpTransportPlugin()`** — JSON-RPC MCP over stdin/stdout.
+- **`mcpTransportPlugin()`** — JSON-RPC MCP over localhost HTTP (Streamable HTTP POST + SSE GET). Options: `host`, `port`, `path` (defaults `127.0.0.1:3333/mcp`).
 - **`remoteTransportPlugin({ implementation })`** — register with a control plane. `createHttpRemoteAdapter(url)` POSTs `/register`, polls `/commands`, POSTs `/results`.
 
-### Tools — `subagentToolsPlugin()`
+### Tools
 
-`launch_subagent` — `{ harness, prompt, model? }` in the runtime working directory; returns `{ sessionId }` immediately and runs the agent in the background.
+Any plugin with `kind: 'tools'` can register MCP tools via `ToolsImplementation` (`listTools` / `callTool`). Optional `instructions()` and `prompts()` supply MCP initialize instructions and `prompts/list` entries. The MCP transport does not contribute that text. Multiple tools plugins merge. **`minionToolsPlugin()`** is one such plugin:
 
-`get_session` — `{ sessionId }` → status plus a **summary** (last portion of the transcript).
+`spawn_minion` — `{ harness, prompt, model?, background? }` waits like Task by default (streams MCP progress on the same tool call) and returns compacted agent messages. `background: true` returns `minionId` immediately.
 
-Permissions default to auto-allow so headless MCP/remote hosts do not stall. Override with `host.resolvePermission`.
+`await_minion` — block until a minion finishes or needs the user, with live progress. Use after background spawn or after `resolve_minion_request`. Do not poll.
+
+`get_minion_context` — working directory and harness list minions inherit.
+
+`get_minion` / `get_minion_transcript` — status plus compacted **agent messages only** (no tool output or reasoning). Permission and auth requests use the same shape: `title`, `message`, and options with human-readable `label` plus `optionId`.
+
+`resolve_minion_request` — approve/deny a minion permission (pass `optionId` or the label, e.g. Allow all) or store a provider API token.
+
+While a spawn/await tool call is in flight, progress is sent as MCP `notifications/progress` (and `notifications/message`) on the Streamable HTTP SSE response so the coordinator sees updates without polling.
+
+On disk, a running session appends `{id}.jsonl`. When it ends, that log is compacted to `{id}.md` (concatenated agent messages) and a structured `log` on `{id}.json` (messages, thoughts, and tool calls). The JSONL file is then removed.
+
+Override permission handling with `hooks.resolvePermission` when you do not want to wait for the coordinator.
 
 ## Quick start (manager only)
 

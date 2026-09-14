@@ -30,6 +30,3 @@ export function notifyAgentHarnessesSessionClosed(sessionId: string): void {
 export function notifyAgentHarnessesPromptTurnFinished(sessionId: string | undefined): void {
   globalRegistry.notifyPromptTurnFinished(sessionId);
 }
-
-/** @deprecated Prefer listAgentHarnesses() on a manager. */
-export const AGENT_HARNESSES: readonly AgentHarness[] = [];

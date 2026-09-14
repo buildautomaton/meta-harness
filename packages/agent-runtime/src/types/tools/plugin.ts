@@ -1,22 +1,23 @@
 import type { PluginFactory, PluginInit, PluginRuntimeContext } from '../plugin.js';
 import type { ToolsHooks } from './hooks.js';
 import type { ToolsImplementation } from './implementation.js';
-import type { SubagentToolsOptions } from './options.js';
+import type { ToolsOptions } from './options.js';
 
+/** A registerable tool set. Minion tools are one implementation of this contract. */
 export type ToolsPlugin = {
   name: string;
   kind: 'tools';
-  options?: SubagentToolsOptions;
+  options?: ToolsOptions;
   hooks?: ToolsHooks;
   implementation: ToolsImplementation;
   runtime?: PluginRuntimeContext;
 };
 
 export type ToolsPluginFactory = PluginFactory<
-  SubagentToolsOptions,
+  ToolsOptions,
   ToolsHooks,
   Partial<ToolsImplementation>,
   ToolsPlugin
 >;
 
-export type ToolsPluginInit = PluginInit<SubagentToolsOptions, ToolsHooks, Partial<ToolsImplementation>>;
+export type ToolsPluginInit = PluginInit<ToolsOptions, ToolsHooks, Partial<ToolsImplementation>>;

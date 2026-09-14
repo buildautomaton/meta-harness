@@ -4,6 +4,7 @@ import type { ToolContext, ToolRegistry, ToolsImplementation } from '../../types
 import type { SessionBackend, SessionBackendWrap } from '../session/types.js';
 import { bindHandle } from './bind-handle.js';
 import { createRuntimeManager } from './create-manager.js';
+import { createNotifierHub } from '../notify/hub.js';
 import type { RuntimeHandle, RuntimeOptions } from './runtime-types.js';
 
 function defaultLog(line: string): void {
@@ -18,7 +19,9 @@ function toolsFrom(impls: ToolsImplementation[], ctx: ToolContext): ToolRegistry
   return mergeToolRegistries(
     impls.map((impl) => ({
       listTools: () => impl.listTools(ctx),
-      callTool: (name, args) => impl.callTool(name, args, ctx),
+      callTool: (name, args, extras) => impl.callTool(name, args, ctx, extras),
+      instructions: impl.instructions ? () => impl.instructions!() : undefined,
+      prompts: impl.prompts ? () => impl.prompts!() : undefined,
     })),
   );
 }
@@ -38,12 +41,14 @@ export async function createRuntime(options: RuntimeOptions): Promise<RuntimeHan
     isShutdownRequested: options.isShutdownRequested,
   });
   for (const harness of slots.harnesses) manager.registerHarness(harness);
+  const notifier = createNotifierHub();
   const tools = toolsFrom(slots.tools, {
     cwd: options.cwd,
     manager,
     backend,
     sessionHooks: slots.sessionHooks,
     toolsHooks: slots.toolsHooks,
+    notifier,
   });
   return bindHandle({
     cwd: options.cwd,
@@ -51,5 +56,6 @@ export async function createRuntime(options: RuntimeOptions): Promise<RuntimeHan
     transport: slots.transport,
     tools,
     transportHooks: slots.transportHooks,
+    notifier,
   });
 }

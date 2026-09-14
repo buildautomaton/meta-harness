@@ -1,3 +1,6 @@
+import type { MinionPendingRequest } from '../notify.js';
+import type { SessionLogEntry } from './log.js';
+
 export type SessionStatus = 'running' | 'completed' | 'failed';
 
 export type SessionRecord = {
@@ -12,6 +15,8 @@ export type SessionRecord = {
   createdAt: string;
   updatedAt: string;
   error?: string;
+  transcript?: string;
+  log?: SessionLogEntry[];
 };
 
 export type SessionEvent = {
@@ -33,11 +38,17 @@ export type SessionSnapshot = {
 };
 
 export type SessionStatusResult = {
-  sessionId: string;
+  minionId: string;
   status: SessionStatus;
   harness: string;
   model?: string;
+  cwd?: string;
   error?: string;
+  authRequired?: boolean;
+  authEnvVar?: string;
+  pendingRequests: MinionPendingRequest[];
+  needsUser?: boolean;
+  transcript: string;
   summary: string;
 };
 

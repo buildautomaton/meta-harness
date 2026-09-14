@@ -2,6 +2,7 @@ export type McpToolInputSchema = Record<string, unknown>;
 
 export type McpToolDefinition = {
   name: string;
+  title?: string;
   description: string;
   inputSchema: McpToolInputSchema;
 };
