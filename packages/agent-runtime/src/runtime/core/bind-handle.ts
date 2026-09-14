@@ -3,6 +3,7 @@ import type { CommandHost } from '../../types/transport/implementation.js';
 import type { HostTransport } from '../transport/types.js';
 import type { TransportHooks } from '../../types/transport/hooks.js';
 import type { ToolRegistry } from '../../types/tools/implementation.js';
+import type { NotifierHub } from '../../types/notify.js';
 import type { RuntimeHandle } from './runtime-types.js';
 
 export function bindHandle(opts: {
@@ -11,9 +12,10 @@ export function bindHandle(opts: {
   transport: HostTransport;
   tools: ToolRegistry;
   transportHooks?: TransportHooks;
+  notifier?: NotifierHub;
 }): RuntimeHandle {
-  const { cwd, manager, transport, tools, transportHooks } = opts;
-  const host: CommandHost = { cwd, listTools: tools.listTools, callTool: tools.callTool };
+  const { cwd, manager, transport, tools, transportHooks, notifier } = opts;
+  const host: CommandHost = { cwd, listTools: tools.listTools, callTool: tools.callTool, notifier };
   return {
     cwd,
     manager,

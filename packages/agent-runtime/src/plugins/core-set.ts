@@ -6,13 +6,13 @@ import type { SessionBackendKind } from '../types/session/options.js';
 import type { CoreSetHooks } from './core-set-hooks.js';
 import type { CoreSetImplementation } from './core-set-implementation.js';
 import { coreHarnessPlugins } from './harnesses/plugins.js';
-import { diskSessionPlugin } from './session/disk-plugin.js';
-import { streamSessionPlugin } from './session/stream-plugin.js';
+import { diskSessionPlugin } from './session/disk/plugin.js';
+import { streamSessionPlugin } from './session/stream/plugin.js';
 import { mcpTransportPlugin } from './transport/mcp/plugin.js';
 import { remoteTransportPlugin } from './transport/remote/plugin.js';
-import { createHttpRemoteAdapter } from './transport/http/adapter.js';
+import { createHttpRemoteAdapter } from './transport/remote/http-adapter.js';
 import { defaultSessionsDir } from './session/create-backend.js';
-import { subagentToolsPlugin } from './tools/plugin.js';
+import { minionToolsPlugin } from './tools/minion/plugin.js';
 
 export type CoreSetOptions = {
   cwd: string;
@@ -21,6 +21,11 @@ export type CoreSetOptions = {
   backend?: SessionBackendKind;
   transport?: TransportKind;
   remoteUrl?: string;
+  mcpHost?: string;
+  mcpPort?: number;
+  mcpPath?: string;
+  /** Register minionToolsPlugin (default true). Other tools plugins can still be added. */
+  minionTools?: boolean;
 };
 
 function defaultLog(line: string): void {
@@ -46,12 +51,16 @@ export function coreSet(
       implementation: init.implementation?.session,
       ...shared,
     }),
-    subagentToolsPlugin({
-      hooks: init.hooks?.tools,
-      implementation: init.implementation?.tools,
-      ...shared,
-    }),
   ];
+  if (opts.minionTools !== false) {
+    plugins.push(
+      minionToolsPlugin({
+        hooks: init.hooks?.tools,
+        implementation: init.implementation?.tools,
+        ...shared,
+      }),
+    );
+  }
   if (opts.backend === 'stream') {
     plugins.push(
       streamSessionPlugin({
@@ -73,7 +82,13 @@ export function coreSet(
       }),
     );
   } else {
-    plugins.push(mcpTransportPlugin({ hooks: init.hooks?.transport, ...shared }));
+    plugins.push(
+      mcpTransportPlugin({
+        hooks: init.hooks?.transport,
+        options: { host: opts.mcpHost, port: opts.mcpPort, path: opts.mcpPath },
+        ...shared,
+      }),
+    );
   }
   return plugins;
 }

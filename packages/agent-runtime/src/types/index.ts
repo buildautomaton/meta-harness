@@ -29,6 +29,7 @@ export type {
   SessionListener,
 } from './session/records.js';
 export type { SessionImplementation } from './session/implementation.js';
+export type { SessionLogEntry, SessionCompactPayload } from './session/log.js';
 export type { SessionHooks } from './session/hooks.js';
 export type { DiskSessionOptions, StreamSessionOptions, SessionBackendKind } from './session/options.js';
 export type { SessionPlugin, SessionPluginFactory, SessionPluginInit } from './session/plugin.js';
@@ -45,7 +46,16 @@ export type {
 export type { TransportPlugin, TransportPluginFactory, TransportPluginInit } from './transport/plugin.js';
 
 export type { McpToolInputSchema, McpToolDefinition, McpToolCallResult } from './tools/definitions.js';
-export type { ToolsImplementation, ToolContext, ToolRegistry } from './tools/implementation.js';
+export type { ToolsImplementation, ToolContext, ToolRegistry, ToolCallExtras } from './tools/implementation.js';
+export type { ToolsPrompt } from './tools/prompts.js';
 export type { ToolsHooks, PermissionRequest } from './tools/hooks.js';
-export type { SubagentToolsOptions } from './tools/options.js';
+export type { ToolsOptions } from './tools/options.js';
+export type {
+  MinionEvent,
+  MinionEventType,
+  MinionAsk,
+  MinionPendingRequest,
+  NotifierHub,
+  NotifierSink,
+} from './notify.js';
 export type { ToolsPlugin, ToolsPluginFactory, ToolsPluginInit } from './tools/plugin.js';

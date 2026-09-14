@@ -53,11 +53,11 @@ Host supplies plugins. Kernel fills slots. Handle starts the transport.
 | `kiroHarnessPlugin` | `harness-kiro` | type `kiro-acp`. Detect and prompts; no install helper |
 | `claudeCodeHarnessPlugin` | `harness-claude-code` | type `claude-code`. Detect, install (`ANTHROPIC_API_KEY`), prompts |
 | `opencodeHarnessPlugin` | `harness-opencode` | type `opencode`. Install only; prompts not wired yet |
-| `diskSessionPlugin` | `session-disk` | `{id}.json` metadata + `{id}.jsonl` transcript. Sets the backend |
+| `diskSessionPlugin` | `session-disk` | `{id}.jsonl` while running; compact to `{id}.md` + structured `{id}.json` log |
 | `streamSessionPlugin` | `session-stream` | Wraps the current backend with in-memory `subscribe()` |
-| `mcpTransportPlugin` | `transport-mcp` | JSON-RPC MCP over stdin/stdout. Default in `coreSet()` |
+| `mcpTransportPlugin` | `transport-mcp` | JSON-RPC MCP over localhost HTTP (default `http://127.0.0.1:3333/mcp`). Streamable HTTP POST plus SSE GET for minion notifications |
 | `remoteTransportPlugin` | `transport-remote` | Control plane: POST `/register`, poll `/commands`, POST `/results` |
-| `subagentToolsPlugin` | `tools-subagent` | `launch_subagent` and `get_session`; permissions auto-allow by default |
+| `minionToolsPlugin` | `tools-minion` | `spawn_minion` waits like Task with live progress; `await_minion`, `get_minion_transcript`, `resolve_minion_request` |
 
 ### Factory contract
 
@@ -72,12 +72,12 @@ Every factory takes one named-args object `{ options, hooks, implementation, run
 
 A plugin object is `{ name, kind, options, hooks, implementation, runtime }`. `kind` is `harness | session | transport | tools`.
 
-`coreSet()` is the CLI bundle: all five harness plugins, disk sessions, subagent tools, then MCP — or remote when `transport: "remote"`. If `backend: "stream"`, a stream wrap is stacked on disk so `subscribe()` sits on the file backend. Detect order for built-in harnesses: Cursor, Codex, Kiro, Claude Code, OpenCode.
+`coreSet()` is the CLI bundle: all five harness plugins, disk sessions, then MCP — or remote when `transport: "remote"`. `minionToolsPlugin` is included by default (`minionTools: false` skips it). Other `kind: 'tools'` plugins can be registered the same way. If `backend: "stream"`, a stream wrap is stacked on disk so `subscribe()` sits on the file backend. Detect order for built-in harnesses: Cursor, Codex, Kiro, Claude Code, OpenCode.
 
 ## Project structure
 
 - `packages/agent-runtime`: ACP runtime (`src/runtime/{core,harnesses,session,transport,tools}`) plus plugins (`src/plugins/`)
-- `packages/cli`: thin CLI that registers `coreSet()` (MCP stdio or HTTP remote)
+- `packages/cli`: thin CLI that registers `coreSet()` (MCP HTTP or remote)
 
 See [`packages/agent-runtime/README.md`](packages/agent-runtime/README.md) for factories, types, and custom plugins, and [`packages/cli/README.md`](packages/cli/README.md) for the CLI.
 

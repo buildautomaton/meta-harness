@@ -1,32 +1,40 @@
-import type {
-  CommandHost,
-} from '../../../types/transport/implementation.js';
+import type { CommandHost } from '../../../types/transport/implementation.js';
+import type { LogFn } from '../../../types/log.js';
 import type { HostTransport } from '../../../runtime/transport/types.js';
 import type { RemoteCommand, RemoteTransportImplementation } from '../../../types/transport/options.js';
-import { GET_SESSION_TOOL, LAUNCH_SUBAGENT_TOOL } from '../../tools/names.js';
+import { logToStderr } from '../shared/log-to-stderr.js';
 
 export function createRemoteTransport(
   adapter: RemoteTransportImplementation,
+  log: LogFn = logToStderr,
 ): HostTransport {
+  let unsub: (() => void) | undefined;
   return {
     id: 'remote',
     async start(host: CommandHost) {
-      await adapter.register({ cwd: host.cwd, tools: await host.listTools() });
+      log('[Remote] Registering with control plane');
+      const tools = await host.listTools();
+      await adapter.register({ cwd: host.cwd, tools });
+      log(`[Remote] Registered (${tools.map((t) => t.name).join(', ') || 'no tools'})`);
+      unsub = host.notifier?.subscribe({
+        notify: (event) => {
+          adapter.publish?.({ sessionId: event.minionId, type: event.type, payload: event });
+        },
+      });
       await adapter.subscribe((cmd) => dispatchRemoteCommand(host, cmd));
+      log('[Remote] Subscribed; ready for commands');
     },
     async stop() {
+      log('[Remote] Stopping');
+      unsub?.();
       await adapter.unsubscribe();
     },
   };
 }
 
 async function dispatchRemoteCommand(host: CommandHost, cmd: RemoteCommand): Promise<unknown> {
-  const type = cmd.type;
-  const name = cmd.name ?? (type === 'call_tool' ? undefined : type);
-  const params = cmd.params ?? {};
-  if (type === 'call_tool' && cmd.name) return host.callTool(cmd.name, params);
-  if (name === LAUNCH_SUBAGENT_TOOL || name === GET_SESSION_TOOL || name) {
-    return host.callTool(name, params);
-  }
-  throw new Error(`Unknown remote command: ${type}`);
+  const name = cmd.name ?? (cmd.type === 'call_tool' ? undefined : cmd.type);
+  if (cmd.type === 'call_tool' && cmd.name) return host.callTool(cmd.name, cmd.params ?? {});
+  if (name) return host.callTool(name, cmd.params ?? {});
+  throw new Error(`Unknown remote command: ${cmd.type}`);
 }

@@ -1,4 +1,10 @@
-import type { SessionBackendKind, TransportKind } from '@buildautomaton/agent-runtime';
+import {
+  MCP_DEFAULT_PATH,
+  MCP_DEFAULT_PORT,
+  normalizeMcpPath,
+  type SessionBackendKind,
+  type TransportKind,
+} from '@buildautomaton/agent-runtime';
 import { CLI_VERSION } from './version.js';
 
 export type ParsedCli = {
@@ -7,6 +13,8 @@ export type ParsedCli = {
   backend: SessionBackendKind;
   transport: TransportKind;
   remoteUrl?: string;
+  mcpPort: number;
+  mcpPath: string;
   verbose: boolean;
 };
 
@@ -29,21 +37,35 @@ export function parseCli(argv: string[]): ParsedCli {
     backend,
     transport,
     remoteUrl: strFlag(flags['remote-url']),
+    mcpPort: parsePort(flags.port),
+    mcpPath: normalizeMcpPath(strFlag(flags['mcp-path']) ?? MCP_DEFAULT_PATH),
     verbose: flags.verbose === true,
   };
 }
 
 function printHelp(): void {
   process.stdout.write(`meta-harness ${CLI_VERSION}
-Launch a local MCP server (launch_subagent, get_session) or register remotely.
+Launch a local MCP HTTP server (spawn_minion waits like Task; await_minion, get_minion_transcript) or register remotely.
 
-  --cwd <path>            Working directory for launched subagents
+  --cwd <path>            Working directory for spawned minions
   --sessions-dir <path>   Disk session directory
   --backend <disk|stream> Session store (default: disk)
   --transport <mcp|remote>
+  --port <n>              MCP HTTP port (default: ${MCP_DEFAULT_PORT})
+  --mcp-path <path>       MCP URL path (default: ${MCP_DEFAULT_PATH})
   --remote-url <url>      Control-plane URL when --transport remote
   --verbose
 `);
+}
+
+function parsePort(value: string | true | undefined): number {
+  if (value === undefined) return MCP_DEFAULT_PORT;
+  const n = typeof value === 'string' ? Number(value) : NaN;
+  if (!Number.isInteger(n) || n < 1 || n > 65535) {
+    console.error('Invalid --port (expected an integer 1-65535).');
+    process.exit(1);
+  }
+  return n;
 }
 
 function strFlag(value: string | true | undefined): string | undefined {

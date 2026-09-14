@@ -1,7 +1,12 @@
 import type { McpToolDefinition } from '../tools/definitions.js';
 
 export type TransportKind = 'mcp' | 'remote';
-export type McpTransportOptions = { id?: string };
+export type McpTransportOptions = {
+  id?: string;
+  host?: string;
+  port?: number;
+  path?: string;
+};
 export type RemoteTransportOptions = { id?: string };
 
 export type RemoteCommand = {

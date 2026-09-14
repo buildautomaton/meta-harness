@@ -1,6 +1,7 @@
+import type { NotifierHub } from '../notify.js';
 import type { ToolRegistry } from '../tools/implementation.js';
 
-export type CommandHost = ToolRegistry & { cwd: string };
+export type CommandHost = ToolRegistry & { cwd: string; notifier?: NotifierHub };
 
 /** Methods a transport plugin may override. */
 export type TransportImplementation = {
