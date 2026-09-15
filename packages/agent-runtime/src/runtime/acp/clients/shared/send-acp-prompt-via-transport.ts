@@ -2,9 +2,9 @@
  * Shared `session/prompt` + result normalization for any {@link AcpSessionTransport}.
  */
 
-import type { PromptResult } from '@runtime/acp/clients/acp-client.js';
-import type { AcpImagePromptPart, AcpPromptContentBlock, AcpSessionTransport } from '@runtime/acp/clients/acp-session-transport.js';
-import type { AcpSessionContext } from '@runtime/acp/clients/acp-session-context.js';
+import type { PromptResult } from '@runtime/acp/client-types.js';
+import type { AcpImagePromptPart, AcpPromptContentBlock, AcpSessionTransport } from '@runtime/acp/acp-session-transport.js';
+import type { AcpSessionContext } from '@runtime/acp/session-context.js';
 import { normalizeAcpPromptTurnFailure, normalizeAcpPromptTurnSuccess } from './normalize-acp-prompt-result.js';
 
 export async function sendAcpPromptViaTransport(

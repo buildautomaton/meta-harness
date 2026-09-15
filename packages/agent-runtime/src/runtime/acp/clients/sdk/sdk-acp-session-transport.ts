@@ -2,7 +2,7 @@
  * {@link AcpSessionTransport} backed by `@agentclientprotocol/sdk` `ClientSideConnection`.
  */
 
-import type { AcpSessionTransport } from '@runtime/acp/clients/acp-session-transport.js';
+import type { AcpSessionTransport } from '@runtime/acp/acp-session-transport.js';
 
 type SdkConnectionLike = {
   initialize: (p: Record<string, unknown>) => Promise<unknown>;

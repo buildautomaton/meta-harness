@@ -1,6 +1,6 @@
 import { enrichAcpPermissionRpcResultFromRequestParams } from '@runtime/acp/permission/enrich-acp-permission-rpc-result.js';
-import type { AcpClientOptions } from '@runtime/acp/clients/acp-client.js';
-import type { AcpSessionContext } from '@runtime/acp/clients/acp-session-context.js';
+import type { AcpClientOptions } from '@runtime/acp/client-types.js';
+import type { AcpSessionContext } from '@runtime/acp/session-context.js';
 import { acpReadTextFileInProcess, acpWriteTextFileInProcess } from '@runtime/acp/clients/shared/acp-fs-read-write.js';
 import { dispatchAcpSessionUpdate } from '@runtime/acp/clients/shared/dispatch-session-update.js';
 import { flattenSdkSessionNotificationParams } from '@runtime/acp/clients/shared/flatten-sdk-session-notification.js';

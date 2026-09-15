@@ -4,8 +4,8 @@
  */
 
 import { logDebug } from '@runtime/core/util/log.js';
-import type { AcpSessionTransport } from '@runtime/acp/clients/acp-session-transport.js';
-import type { AcpSessionContext } from '@runtime/acp/clients/acp-session-context.js';
+import type { AcpSessionTransport } from '@runtime/acp/acp-session-transport.js';
+import type { AcpSessionContext } from '@runtime/acp/session-context.js';
 
 export type AcpEstablishedWire = {
   sessionId: string;

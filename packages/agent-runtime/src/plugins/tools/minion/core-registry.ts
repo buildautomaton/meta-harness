@@ -25,10 +25,7 @@ export type ResolveMinionResult = {
 };
 
 export type CoreToolHost = {
-  spawnMinion: (
-    params: LaunchAgentParams,
-    opts?: { background?: boolean },
-  ) => Promise<SessionStatusResult | null>;
+  spawnMinion: (params: LaunchAgentParams) => Promise<SessionStatusResult | null>;
   awaitMinion: (minionId: string) => Promise<SessionStatusResult | null>;
   getMinion: (minionId: string) => Promise<SessionStatusResult | null>;
   getMinionContext: () => MinionContextResult;
@@ -60,7 +57,7 @@ async function spawn(host: CoreToolHost, args: Record<string, unknown>) {
   if (!harness || !prompt) {
     return jsonToolResult({ error: 'harness and prompt are required' }, true);
   }
-  const result = await host.spawnMinion({ harness, prompt, model }, { background: args.background === true });
+  const result = await host.spawnMinion({ harness, prompt, model });
   if (!result) return jsonToolResult({ error: 'Failed to spawn minion' }, true);
   return jsonToolResult(result);
 }

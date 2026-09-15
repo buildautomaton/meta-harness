@@ -2,7 +2,7 @@
  * {@link AcpSessionTransport} backed by Cursor CLI JSON-RPC `send` + custom cancel notification.
  */
 
-import type { AcpSessionTransport } from '@runtime/acp/clients/acp-session-transport.js';
+import type { AcpSessionTransport } from '@runtime/acp/acp-session-transport.js';
 
 export function createCursorJsonRpcAcpTransport(deps: {
   send: (method: string, params: Record<string, unknown>) => Promise<unknown>;

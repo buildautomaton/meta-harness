@@ -2,7 +2,7 @@
  * ACP client for [Kiro CLI](https://kiro.dev/docs/cli/acp/) — JSON-RPC ACP over stdio (`kiro-cli acp`).
  */
 
-import type { AcpClientHandle, AcpClientOptions } from '@runtime/acp/clients/acp-client.js';
+import type { AcpClientHandle, AcpClientOptions } from '@runtime/acp/client-types.js';
 import { isCommandOnPath } from '@runtime/acp/clients/detect-command-on-path.js';
 import { createSdkStdioAcpClient } from '@runtime/acp/clients/sdk/sdk-stdio-acp-client.js';
 

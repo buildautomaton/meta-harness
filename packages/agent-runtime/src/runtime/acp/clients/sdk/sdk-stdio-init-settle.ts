@@ -1,5 +1,5 @@
 import type { ChildProcess } from 'node:child_process';
-import type { AcpClientHandle } from '@runtime/acp/clients/acp-client.js';
+import type { AcpClientHandle } from '@runtime/acp/client-types.js';
 import { forceAcpSubprocessDisconnect } from '@runtime/acp/clients/graceful-acp-subprocess-disconnect.js';
 
 export function createSdkStdioInitSettle(child: ChildProcess) {

@@ -1,9 +1,16 @@
 /**
  * ACP agent runtime — plugin kernel plus a catalog of plugins.
+ *
+ * Map: types/ (plugin contracts) → runtime/core/ (createRuntime) →
+ * runtime/acp/ (engine + wire) → runtime/harnesses/ (registry) →
+ * plugins/ (coreSet + per-agent adapters). See README glossary.
  */
 
+// kernel + ACP engine
 export * from './types/index.js';
 export * from './runtime/index.js';
+
+// plugin catalog
 export {
   coreSet,
   coreHarnessPlugins,

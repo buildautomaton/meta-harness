@@ -5,7 +5,7 @@
  * @see https://agentclientprotocol.com/protocol/session-modes
  */
 
-import type { AcpClientHandle, AcpClientOptions } from '@runtime/acp/clients/acp-client.js';
+import type { AcpClientHandle, AcpClientOptions } from '@runtime/acp/client-types.js';
 import { execProbeShutdownAware } from '@runtime/acp/clients/detect-command-on-path.js';
 import { createSdkStdioAcpClient } from '@runtime/acp/clients/sdk/sdk-stdio-acp-client.js';
 

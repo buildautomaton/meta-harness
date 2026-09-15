@@ -7,7 +7,7 @@ import {
   formatJsonRpcStyleError,
   mergeErrorWithStderr,
 } from '@runtime/acp/clients/agent-stderr-capture.js';
-import type { AcpClientHandle, AcpClientOptions } from '@runtime/acp/clients/acp-client.js';
+import type { AcpClientHandle, AcpClientOptions } from '@runtime/acp/client-types.js';
 import {
   installedAgentAuthProcessEnv,
   cursorAgentUsesApiKeyAuth,

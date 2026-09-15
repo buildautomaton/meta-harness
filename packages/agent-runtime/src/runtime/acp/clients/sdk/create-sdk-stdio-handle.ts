@@ -1,7 +1,7 @@
 import { gracefulAcpSubprocessDisconnect } from '@runtime/acp/clients/graceful-acp-subprocess-disconnect.js';
-import type { AcpClientHandle, PromptResult, SendPromptOptions } from '@runtime/acp/clients/acp-client.js';
-import type { AcpSessionContext } from '@runtime/acp/clients/acp-session-context.js';
-import type { AcpSessionTransport } from '@runtime/acp/clients/acp-session-transport.js';
+import type { AcpClientHandle, PromptResult, SendPromptOptions } from '@runtime/acp/client-types.js';
+import type { AcpSessionContext } from '@runtime/acp/session-context.js';
+import type { AcpSessionTransport } from '@runtime/acp/acp-session-transport.js';
 import { sendAcpPromptViaTransport } from '@runtime/acp/clients/shared/send-acp-prompt-via-transport.js';
 import {
   resolvePendingSdkStdioPermissionCancellations,

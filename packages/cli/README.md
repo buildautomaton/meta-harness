@@ -13,8 +13,8 @@ The MCP (or remote) server exposes minion tools (not subagents, to avoid clashin
 
 | Tool | Arguments | Result |
 | --- | --- | --- |
-| `spawn_minion` | `harness`, `prompt`, optional `model`, `background` | Waits like Task by default; returns transcript. `background: true` returns `minionId` immediately |
-| `await_minion` | `minionId` | Blocks with live progress until done or `needsUser` |
+| `spawn_minion` | `harness`, `prompt`, optional `model` | Waits until done or `needsUser`; returns transcript. No background spawn. |
+| `await_minion` | `minionId` | Blocks with live progress until done or `needsUser`. Use after `resolve_minion_request`. |
 | `get_minion_context` | none | cwd, harnesses, shared workspace note |
 | `get_minion` | `minionId` | status, pending requests, compacted agent transcript |
 | `get_minion_transcript` | `minionId` | agent messages only (no tool/reasoning dumps) |

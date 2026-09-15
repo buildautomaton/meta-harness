@@ -13,7 +13,7 @@ export function bindMinionHost(
   extras?: ToolCallExtras,
 ): CoreToolHost {
   return {
-    spawnMinion: async (params, opts) => {
+    spawnMinion: async (params) => {
       const { sessionId } = await launchSession({
         engine: ctx.engine,
         backend: ctx.backend,
@@ -24,9 +24,6 @@ export function bindMinionHost(
         notifier: ctx.notifier,
         pending,
       });
-      if (opts?.background) {
-        return getSessionStatus(ctx.backend, sessionId, pending.list(sessionId), ctx.engine);
-      }
       extras?.reportProgress?.({ message: 'Minion spawned; waiting for result', progress: 0 });
       return waitForMinion({
         backend: ctx.backend,

@@ -5,7 +5,7 @@
 
 import { localAgentErrorSuggestsAuth } from '@runtime/harnesses/auth/local-agent-auth.js';
 import { formatJsonRpcStyleError, mergeErrorWithStderr } from '@runtime/acp/clients/agent-stderr-capture.js';
-import type { PromptResult } from '@runtime/acp/clients/acp-client.js';
+import type { PromptResult } from '@runtime/acp/client-types.js';
 
 export function normalizeAcpPromptTurnSuccess(opts: {
   stopReason?: string | undefined;

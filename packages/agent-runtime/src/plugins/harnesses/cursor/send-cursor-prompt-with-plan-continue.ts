@@ -1,7 +1,7 @@
 import { log } from '@runtime/core/util/log.js';
-import type { PromptResult } from '@runtime/acp/clients/acp-client.js';
-import type { AcpSessionContext } from '@runtime/acp/clients/acp-session-context.js';
-import type { AcpImagePromptPart, AcpSessionTransport } from '@runtime/acp/clients/acp-session-transport.js';
+import type { PromptResult } from '@runtime/acp/client-types.js';
+import type { AcpSessionContext } from '@runtime/acp/session-context.js';
+import type { AcpImagePromptPart, AcpSessionTransport } from '@runtime/acp/acp-session-transport.js';
 import { sendAcpPromptViaTransport } from '@runtime/acp/clients/shared/send-acp-prompt-via-transport.js';
 import {
   consumePendingPlanExecute,

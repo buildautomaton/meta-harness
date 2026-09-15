@@ -36,7 +36,8 @@ describe('createCoreToolRegistry', () => {
       }),
       resolveMinionRequest: async () => ({ ok: true }),
     });
-    expect((await tools.listTools()).map((t) => t.name)).toEqual([
+    const listed = await tools.listTools();
+    expect(listed.map((t) => t.name)).toEqual([
       SPAWN_MINION_TOOL,
       AWAIT_MINION_TOOL,
       GET_MINION_CONTEXT_TOOL,
@@ -44,6 +45,9 @@ describe('createCoreToolRegistry', () => {
       GET_MINION_TRANSCRIPT_TOOL,
       'resolve_minion_request',
     ]);
+    const spawnDef = listed.find((t) => t.name === SPAWN_MINION_TOOL);
+    const props = (spawnDef?.inputSchema as { properties?: Record<string, unknown> }).properties;
+    expect(props).not.toHaveProperty('background');
     const launched = await tools.callTool(SPAWN_MINION_TOOL, {
       harness: 'cursor-cli',
       prompt: 'do it',

@@ -1,5 +1,5 @@
 import { formatSessionUpdateKindForLog } from '@runtime/acp/logging/format-session-update-kind-for-log.js';
-import type { AcpSessionContext } from '@runtime/acp/clients/acp-session-context.js';
+import type { AcpSessionContext } from '@runtime/acp/session-context.js';
 import { dispatchAcpSessionUpdate } from '@runtime/acp/clients/shared/dispatch-session-update.js';
 
 export function handleCursorIncomingSessionUpdate(

@@ -32,6 +32,11 @@ function defaultLog(line: string): void {
   process.stderr.write(`${line}\n`);
 }
 
+/**
+ * Default plugin bundle: harnesses, disk session, minion tools, then MCP
+ * (or remote). Pass the array to `createRuntime`. `minionTools: false` skips
+ * minion tools; `backend: "stream"` wraps disk with `subscribe()`.
+ */
 export function coreSet(
   init: PluginInit<CoreSetOptions, CoreSetHooks, CoreSetImplementation> & { options: CoreSetOptions },
 ): AgentRuntimePlugin[] {

@@ -8,7 +8,7 @@ import { discoverAgents } from '@runtime/harnesses/discovery/detect-local-agent-
 import { probeOneAgentTypeForCapabilities } from '@runtime/acp/capabilities/probe-one-agent-type-for-capabilities.js';
 import { cancelRun } from './cancel-run.js';
 import { disconnectAll } from './disconnect-all.js';
-import { handlePrompt } from './handle-prompt.js';
+import { handlePrompt } from './prompt-pipeline.js';
 import { createAcpEngineContext } from './engine-context.js';
 
 /**

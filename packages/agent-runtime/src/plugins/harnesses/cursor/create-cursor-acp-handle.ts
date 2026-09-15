@@ -1,7 +1,7 @@
 import { killChildProcessTreeGracefully } from '@runtime/acp/clients/kill-process-tree.js';
-import type { AcpClientHandle, PromptResult, SendPromptOptions } from '@runtime/acp/clients/acp-client.js';
-import type { AcpSessionContext } from '@runtime/acp/clients/acp-session-context.js';
-import type { AcpSessionTransport } from '@runtime/acp/clients/acp-session-transport.js';
+import type { AcpClientHandle, PromptResult, SendPromptOptions } from '@runtime/acp/client-types.js';
+import type { AcpSessionContext } from '@runtime/acp/session-context.js';
+import type { AcpSessionTransport } from '@runtime/acp/acp-session-transport.js';
 import { sendCursorPromptWithPlanContinue } from './send-cursor-prompt-with-plan-continue.js';
 import { cancelPendingCursorPermissionRequests } from './cancel-pending-cursor-permission-requests.js';
 import type { createCursorAcpIncomingLineHandler } from './cursor-acp-incoming-line-handler.js';

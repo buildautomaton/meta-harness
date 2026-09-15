@@ -1,5 +1,5 @@
 import type { ChildProcess } from 'node:child_process';
-import type { AcpSessionTransport } from './acp-session-transport.js';
+import type { AcpSessionTransport } from '@runtime/acp/acp-session-transport.js';
 import {
   ACP_PROCESS_TREE_KILL_GRACE_MS,
   killChildProcessTreeGracefully,
