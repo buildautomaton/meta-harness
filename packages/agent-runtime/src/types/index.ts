@@ -32,7 +32,12 @@ export type { SessionImplementation } from './session/implementation.js';
 export type { SessionLogEntry, SessionCompactPayload } from './session/log.js';
 export type { SessionHooks } from './session/hooks.js';
 export type { DiskSessionOptions, StreamSessionOptions, SessionBackendKind } from './session/options.js';
-export type { SessionPlugin, SessionPluginFactory, SessionPluginInit } from './session/plugin.js';
+export type {
+  SessionPlugin,
+  SessionPluginFactory,
+  SessionPluginInit,
+  SessionBackendWrap,
+} from './session/plugin.js';
 
 export type { TransportImplementation, CommandHost } from './transport/implementation.js';
 export type { TransportHooks } from './transport/hooks.js';

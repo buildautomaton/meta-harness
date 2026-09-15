@@ -1,6 +1,5 @@
 import type { PluginSlots } from './plugin-slots.js';
 import type { SessionPlugin } from '@/types/session/plugin.js';
-import type { SessionBackendWrap } from '@runtime/session/types.js';
 import { addHooksOnce, mergeOptional } from './merge-hooks.js';
 
 const seenSession = new WeakMap<PluginSlots, WeakSet<object>>();
@@ -14,11 +13,7 @@ function seenFor(slots: PluginSlots): WeakSet<object> {
   return set;
 }
 
-export type SessionPluginRecord = SessionPlugin & {
-  wrapBackend?: SessionBackendWrap;
-};
-
-export function applySessionPlugin(slots: PluginSlots, plugin: SessionPluginRecord): void {
+export function applySessionPlugin(slots: PluginSlots, plugin: SessionPlugin): void {
   if (plugin.wrapBackend) {
     slots.backendWraps.push(plugin.wrapBackend);
   } else if (plugin.implementation) {

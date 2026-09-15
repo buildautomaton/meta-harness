@@ -5,10 +5,12 @@ import type { TransportPlugin } from '@/types/transport/plugin.js';
 import type { LogFn } from '@/types/log.js';
 import { createPluginSlots, type PluginSlots } from './plugin-slots.js';
 import { applyHarnessPlugin } from './apply-harness.js';
-import { applySessionPlugin, type SessionPluginRecord } from './apply-session.js';
+import { applySessionPlugin } from './apply-session.js';
+import type { SessionPlugin } from '@/types/session/plugin.js';
 import { applyTransportPlugin } from './apply-transport.js';
 import { applyToolsPlugin } from './apply-tools.js';
 
+/** Fill `PluginSlots` by `kind`: harnesses[], session backend/wraps, tools, transport. */
 export function applyPlugins(
   plugins: readonly AgentRuntimePlugin[],
   _options: { log: LogFn; cwd: string },
@@ -26,7 +28,7 @@ function applyOne(slots: PluginSlots, plugin: AgentRuntimePlugin): void {
       applyHarnessPlugin(slots, plugin as HarnessPlugin);
       return;
     case 'session':
-      applySessionPlugin(slots, plugin as SessionPluginRecord);
+      applySessionPlugin(slots, plugin as SessionPlugin);
       return;
     case 'transport':
       applyTransportPlugin(slots, plugin as TransportPlugin);

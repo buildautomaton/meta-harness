@@ -1,8 +1,8 @@
 import { Readable, Writable } from 'node:stream';
 import { killChildProcessTree } from '@runtime/acp/clients/kill-process-tree.js';
 import { bootstrapAcpWireSession } from '@runtime/acp/clients/shared/bootstrap-acp-wire-session.js';
-import type { AcpClientOptions } from '@runtime/acp/clients/acp-client.js';
-import type { AcpSessionContext } from '@runtime/acp/clients/acp-session-context.js';
+import type { AcpClientOptions } from '@runtime/acp/client-types.js';
+import type { AcpSessionContext } from '@runtime/acp/session-context.js';
 import { createSdkAcpSessionTransport } from './sdk-acp-session-transport.js';
 import { createSdkStdioConnectionClient } from './sdk-stdio-connection-client.js';
 import type { SdkStdioPermissionPendingEntry } from './sdk-stdio-permission-pending.js';

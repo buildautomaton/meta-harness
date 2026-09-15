@@ -28,7 +28,11 @@ function toolsFrom(impls: ToolsImplementation[], ctx: ToolContext): ToolRegistry
   );
 }
 
-/** Compose plugins into a runtime. Requires a session plugin and a transport plugin. */
+/**
+ * Compose plugins into a `RuntimeHandle`. Requires a session plugin and a
+ * transport plugin. Harness plugins register agent types on `handle.engine`.
+ * Call `start()` to open the host channel; prompts go through `engine.prompt`.
+ */
 export async function createRuntime(options: RuntimeOptions): Promise<RuntimeHandle> {
   const log = options.log ?? defaultLog;
   const slots = applyPlugins(options.plugins ?? [], { log, cwd: options.cwd });

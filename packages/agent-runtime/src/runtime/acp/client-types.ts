@@ -53,6 +53,7 @@ export type AcpClientOptions = {
 };
 
 export type AcpClientHandle = {
+  /** ACP protocol session id (`acpSessionId`), not the host record id. */
   sessionId: string;
   sendPrompt(prompt: string, options?: SendPromptOptions): Promise<PromptResult>;
   cancel?(): Promise<void>;

@@ -6,8 +6,8 @@
 import type { AgentConfig } from '@runtime/core/util/agent-config.js';
 import { applyAcpModelFromAcpSession } from '@runtime/acp/model/apply-acp-model-from-agent-session.js';
 import type { SessionConfigOption, SessionModeState } from '@agentclientprotocol/sdk';
-import type { AcpSessionTransport } from '@runtime/acp/clients/acp-session-transport.js';
-import type { AcpSessionContext } from '@runtime/acp/clients/acp-session-context.js';
+import type { AcpSessionTransport } from '@runtime/acp/acp-session-transport.js';
+import type { AcpSessionContext } from '@runtime/acp/session-context.js';
 import { configOptionsForPermission } from './config-options-for-permission.js';
 import { establishAcpSessionWithTransport, type AcpEstablishedWire } from './establish-acp-session.js';
 import { parseAcpInitAgentCapabilities } from './parse-acp-init-capabilities.js';

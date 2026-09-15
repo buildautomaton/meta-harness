@@ -3,7 +3,7 @@
  * @see https://github.com/agentclientprotocol/codex-acp
  */
 
-import type { AcpClientHandle, AcpClientOptions } from '@runtime/acp/clients/acp-client.js';
+import type { AcpClientHandle, AcpClientOptions } from '@runtime/acp/client-types.js';
 import { isCommandOnPath } from '@runtime/acp/clients/detect-command-on-path.js';
 import { createSdkStdioAcpClient } from '@runtime/acp/clients/sdk/sdk-stdio-acp-client.js';
 

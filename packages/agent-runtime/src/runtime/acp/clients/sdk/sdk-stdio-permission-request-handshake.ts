@@ -1,4 +1,4 @@
-import type { AcpClientOptions } from '@runtime/acp/clients/acp-client.js';
+import type { AcpClientOptions } from '@runtime/acp/client-types.js';
 
 export type PendingPermissionReplyEntry = {
   resolve: (result: unknown) => void;

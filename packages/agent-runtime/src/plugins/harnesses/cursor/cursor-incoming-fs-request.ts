@@ -1,4 +1,4 @@
-import type { AcpSessionContext } from '@runtime/acp/clients/acp-session-context.js';
+import type { AcpSessionContext } from '@runtime/acp/session-context.js';
 import { acpReadTextFileInProcess, acpWriteTextFileInProcess } from '@runtime/acp/clients/shared/acp-fs-read-write.js';
 import {
   isCursorFsReadMethod,

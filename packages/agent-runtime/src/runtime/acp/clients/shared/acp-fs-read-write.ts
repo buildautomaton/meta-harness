@@ -6,7 +6,7 @@ import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname } from 'node:path';
 import { editSnippetToUnifiedDiff } from '@runtime/core/util/unified-diff.js';
 import { resolveSafePathUnderCwd, toDisplayPathRelativeToCwd } from '@runtime/core/util/safe-path.js';
-import type { AcpSessionContext } from '@runtime/acp/clients/acp-session-context.js';
+import type { AcpSessionContext } from '@runtime/acp/session-context.js';
 
 export function sliceFileContentForAcp(content: string, line?: number | null, limit?: number | null): string {
   if (line == null && limit == null) return content;

@@ -4,7 +4,7 @@ import { createCursorAcpIncomingLineHandler } from './cursor-acp-incoming-line-h
 import { createCursorJsonRpcAcpTransport } from './cursor-json-rpc-acp-transport.js';
 import { createCursorJsonRpcWriter } from './cursor-json-rpc-wire.js';
 import type { JsonRpcRequestId, PendingRequest } from './cursor-json-rpc-types.js';
-import type { AcpSessionContext } from '@runtime/acp/clients/acp-session-context.js';
+import type { AcpSessionContext } from '@runtime/acp/session-context.js';
 import type { CursorAcpChild } from './spawn-cursor-acp-process.js';
 import type { CursorAcpIncomingLineHandlerDeps } from './cursor-acp-incoming-line-handler.js';
 

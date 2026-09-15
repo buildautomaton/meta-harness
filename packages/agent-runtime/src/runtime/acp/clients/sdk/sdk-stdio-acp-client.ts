@@ -8,7 +8,7 @@ import {
   formatJsonRpcStyleError,
   mergeErrorWithStderr,
 } from '@runtime/acp/clients/agent-stderr-capture.js';
-import type { AcpClientHandle, AcpClientOptions } from '@runtime/acp/clients/acp-client.js';
+import type { AcpClientHandle, AcpClientOptions } from '@runtime/acp/client-types.js';
 import { formatSpawnError } from '@runtime/acp/clients/format-spawn-error.js';
 import { createSdkStdioHandle } from './create-sdk-stdio-handle.js';
 import { createSdkStdioSessionContext } from './create-sdk-stdio-session-context.js';

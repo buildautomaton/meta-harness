@@ -149,6 +149,8 @@ flowchart LR
 
 A harness plugin's `createClient` returns a live ACP subprocess. The engine reuses that subprocess when `cwd` and spawn identity still match; otherwise it disconnects and spawns again. Completions are fire-and-forget via `sendResult`; live updates go through `sendSessionUpdate`.
 
+The chain is narrated in `src/runtime/acp/engine/prompt-pipeline.ts` (`handlePrompt` → `runPrompt` → `acquirePromptClient` → `dispatchPrompt`). MCP/remote transport never calls `prompt`; minion tools (or an embedding host) do.
+
 Harnesses live on the engine's registry only. `registerHarness` does not write to a process-wide global.
 
 ### Identifiers
@@ -203,9 +205,30 @@ Prefer `createRuntime` for CLIs. `prompt()` is fire-and-forget; completion arriv
 | `src/runtime/session/` | Session runtime helpers |
 | `src/runtime/transport/` | Transport runtime helpers |
 | `src/runtime/tools/` | Tools runtime helpers |
+| `src/runtime/notify/` | In-process minion event hub used by tools/transport |
 | `src/plugins/` | `coreSet()` plus one folder per plugin (`harnesses/cursor`, `session/disk`, `tools/minion`, `transport/mcp`, …) |
 
-`createRuntime` does not register plugins on its own. It requires a **session** plugin and a **transport** plugin.
+`src/types/` is plugin contracts. ACP public types (`AcpEngine`, `AcpClientHandle`, session kinds) live under `src/runtime/acp/` and are re-exported from the package root.
+
+`createRuntime` does not register plugins on its own. It requires a **session** plugin and a **transport** plugin. The `session` kind writes `backend` and/or `backendWraps` (`wrapBackend`).
+
+### Glossary
+
+Three folders are named “harness.” “Session” and “transport” each mean two things. Use this table when reading the code.
+
+| Term | Meaning |
+| --- | --- |
+| **Harness plugin** | Catalog adapter in `plugins/harnesses/<agent>` (`name` like `harness-cursor`) |
+| **Agent type** | Registry key (`cursor-cli`, `codex-acp`) — `HarnessOptions.type` |
+| **`AgentHarness`** | Options + implementation on the engine registry |
+| **ACP client** | Live subprocess handle (`AcpClientHandle`) |
+| Host **`sessionId`** | Session-plugin record id |
+| **`acpSessionId`** | ACP protocol session id from the agent |
+| **`AcpClientHandle.sessionId`** | Same as `acpSessionId` (protocol id, not the host record) |
+| **`HostTransport`** | MCP/remote host channel (`start` / `stop`) |
+| **`AcpSessionTransport`** | ACP wire: initialize / newSession / prompt |
+
+`plugins/harnesses` = per-agent adapters. `runtime/acp` = engine + wire + clients. `runtime/harnesses` = registry, discovery, install.
 
 ## Available plugins
 
@@ -226,7 +249,7 @@ Each agent type is its own plugin. `coreSet()` / `coreHarnessPlugins()` include 
 ### Sessions
 
 - **`diskSessionPlugin({ options: { dir } })`** (`session-disk`) — `{id}.jsonl` event log while running; compact at the end to `{id}.md` messages and a structured `log` on `{id}.json`. Default dir: `<cwd>/.harness/sessions`.
-- **`streamSessionPlugin()`** (`session-stream`) — wraps the current backend with in-memory `subscribe()`.
+- **`streamSessionPlugin()`** (`session-stream`) — wraps the current backend with in-memory `subscribe()` via `wrapBackend` (does not replace disk).
 
 ### Transports
 
@@ -237,9 +260,9 @@ Each agent type is its own plugin. `coreSet()` / `coreHarnessPlugins()` include 
 
 Any plugin with `kind: 'tools'` can register MCP tools via `ToolsImplementation` (`listTools` / `callTool`). Optional `instructions()` and `prompts()` supply MCP initialize instructions and `prompts/list` entries. The MCP transport does not contribute that text. Multiple tools plugins merge. **`minionToolsPlugin()`** (`tools-minion`) is one such plugin:
 
-`spawn_minion` — `{ harness, prompt, model?, background? }` waits like Task by default (streams MCP progress on the same tool call) and returns compacted agent messages. `background: true` returns `minionId` immediately.
+`spawn_minion` — `{ harness, prompt, model? }` waits until the minion finishes or needs the user (streams MCP progress on the same tool call) and returns compacted agent messages. There is no background spawn. For several minions, call `spawn_minion` multiple times in one turn (each call waits on its own). Permission requests arrive as MCP notifications while the call is in flight; resolve with `resolve_minion_request` on a separate call, then `await_minion`.
 
-`await_minion` — block until a minion finishes or needs the user, with live progress. Use after background spawn or after `resolve_minion_request`. Do not poll.
+`await_minion` — block until a minion finishes or needs the user, with live progress. Use after `resolve_minion_request`. Do not poll.
 
 `get_minion_context` — working directory and harness list minions inherit.
 
@@ -260,10 +283,10 @@ const myTools: AgentRuntimePlugin = {
   name: 'my-tools',
   kind: 'tools',
   implementation: {
-    listTools: () => [
+    listTools: (_ctx) => [
       { name: 'ping', description: 'Health check', inputSchema: { type: 'object' } },
     ],
-    callTool: async (name) => ({
+    callTool: async (name, _args, _ctx) => ({
       content: [{ type: 'text', text: name === 'ping' ? 'ok' : 'unknown' }],
     }),
   },
@@ -287,14 +310,16 @@ Same `type` on `registerHarness` replaces an existing harness.
 createRuntime(options: RuntimeOptions): Promise<RuntimeHandle>
 runRuntime(options: RuntimeOptions): Promise<void>
 coreSet({ options, hooks?, implementation?, runtime? }): AgentRuntimePlugin[]
-createAcpEngine(options): Promise<AcpEngine>
+createAcpEngine(options: AcpEngineOptions): Promise<AcpEngine>
 ```
 
-**Runtime handle:** `start` / `stop` / `engine`.
+**Runtime options:** `cwd`, `plugins?`, `log?`, `isShutdownRequested?`.
+
+**Runtime handle:** `start` / `stop` / `engine`. `start` opens the host channel; it does not send prompts.
 
 **ACP engine:** `registerHarness` / `getHarness` / `listHarnesses` / `discoverAgents` / `probeCapabilities` / `setPreferredHarnessType` / `prompt` / `cancelRun` / `isRegisteredRun` / `resolveRequest` / `disconnect`.
 
-`createRuntime` wires session persist through `buildClientHostHooks`, then calls `createAcpEngine`. Engine options: `log`, `reportAgentCapabilities?`, `clientHostHooks?`, `isShutdownRequested?`, `clientInfo?`.
+`createRuntime` wires session persist through `buildClientHostHooks`, then calls `createAcpEngine`. Engine-only options (`reportAgentCapabilities?`, `clientHostHooks?`, `clientInfo?`) are on `AcpEngineOptions`, not `RuntimeOptions`.
 
 ## Development
 
