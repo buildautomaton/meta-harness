@@ -19,25 +19,18 @@ export function createProgressReporter(
     n += 1;
     const progress = update.progress ?? n;
     if (token !== undefined) {
-      emit(sse, onNotify, {
+      onNotify?.({
         jsonrpc: '2.0',
         method: 'notifications/progress',
         params: { progressToken: token, progress, message: update.message },
       });
     }
-    emit(sse, onNotify, {
+    const note: JsonRpcMessage = {
       jsonrpc: '2.0',
       method: 'notifications/message',
       params: { level: 'info', logger: 'minion', data: { type: 'progress', message: update.message, progress } },
-    });
+    };
+    sse?.broadcast(note);
+    onNotify?.(note);
   };
-}
-
-function emit(
-  sse: McpSseHub | undefined,
-  onNotify: ((msg: JsonRpcMessage) => void) | undefined,
-  msg: JsonRpcMessage,
-): void {
-  sse?.broadcast(msg);
-  onNotify?.(msg);
 }
