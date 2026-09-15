@@ -18,15 +18,20 @@ export async function waitForMinion(options: {
 }): Promise<SessionStatusResult | null> {
   const { backend, pending, manager, notifier, minionId, extras } = options;
   let progress = 0;
+  let settled = false;
   const tick = async (message: string) => {
-    progress += 1;
-    extras?.reportProgress?.({ message, progress });
-    return getSessionStatus(backend, minionId, pending.list(minionId), manager);
+    if (settled) return null;
+    const status = await getSessionStatus(backend, minionId, pending.list(minionId), manager);
+    if (settled) return null;
+    if (status && !isSettled(status)) {
+      progress += 1;
+      extras?.reportProgress?.({ message, progress });
+    }
+    return status;
   };
   const first = await tick('Waiting for minion');
   if (!first || isSettled(first)) return first;
   return new Promise((resolve) => {
-    let settled = false;
     const finish = (result: SessionStatusResult | null) => {
       if (settled) return;
       settled = true;
