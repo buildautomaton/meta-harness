@@ -1,4 +1,4 @@
-import type { PluginFactory, PluginInit, PluginRuntimeContext } from '../plugin.js';
+import type { PluginFactory, PluginInit, PluginRuntimeContext } from '@/types/plugin.js';
 import type { SessionHooks } from './hooks.js';
 import type { SessionImplementation } from './implementation.js';
 import type { DiskSessionOptions, StreamSessionOptions } from './options.js';

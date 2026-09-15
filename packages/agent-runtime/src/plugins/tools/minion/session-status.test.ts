@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { getSessionStatus } from './session-status.js';
-import { createStreamBackend } from '../../session/stream/backend.js';
+import { createStreamBackend } from '@plugins/session/stream/backend.js';
 
 describe('getSessionStatus', () => {
   it('returns summary from the transcript tail', async () => {

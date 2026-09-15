@@ -1,4 +1,4 @@
-import { defineHarnessPlugin } from '../define-plugin.js';
+import { defineHarnessPlugin } from '@plugins/harnesses/define-plugin.js';
 import { kiroHarnessOptions, kiroHarnessImplementation } from './definition.js';
 
 export const kiroHarnessPlugin = defineHarnessPlugin(

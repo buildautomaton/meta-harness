@@ -1,8 +1,8 @@
 import { describe, expect, it, vi } from 'vitest';
 import { sendCursorPromptWithPlanContinue } from './send-cursor-prompt-with-plan-continue.js';
 import { CURSOR_PLAN_CONTINUE_PROMPT } from './cursor-plan-continue.js';
-import type { AcpSessionContext } from '../../../runtime/harnesses/clients/acp-session-context.js';
-import type { AcpSessionTransport } from '../../../runtime/harnesses/clients/acp-session-transport.js';
+import type { AcpSessionContext } from '@runtime/acp/clients/acp-session-context.js';
+import type { AcpSessionTransport } from '@runtime/acp/clients/acp-session-transport.js';
 
 function ctx(pending: boolean): AcpSessionContext {
   return {

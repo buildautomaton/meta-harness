@@ -1,4 +1,4 @@
-import type { AgentInstallContext } from '../../../../types/harness/host.js';
+import type { AgentInstallContext } from '@/types/harness/host.js';
 
 export type AgentInstallCommand = {
   agentType: string;

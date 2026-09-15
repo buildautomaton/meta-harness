@@ -1,8 +1,8 @@
-import type { CommandHost } from '../../../types/transport/implementation.js';
-import type { LogFn } from '../../../types/log.js';
-import type { HostTransport } from '../../../runtime/transport/types.js';
-import type { RemoteCommand, RemoteTransportImplementation } from '../../../types/transport/options.js';
-import { logToStderr } from '../shared/log-to-stderr.js';
+import type { CommandHost } from '@/types/transport/implementation.js';
+import type { LogFn } from '@/types/log.js';
+import type { HostTransport } from '@runtime/transport/types.js';
+import type { RemoteCommand, RemoteTransportImplementation } from '@/types/transport/options.js';
+import { logToStderr } from '@plugins/transport/shared/log-to-stderr.js';
 
 export function createRemoteTransport(
   adapter: RemoteTransportImplementation,

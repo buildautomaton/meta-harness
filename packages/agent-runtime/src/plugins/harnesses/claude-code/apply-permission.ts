@@ -1,5 +1,5 @@
-import type { AgentConfig } from '../../../runtime/core/util/agent-config.js';
-import { getClaudePermissionModeFromAgentConfig } from '../../../runtime/core/util/agent-config.js';
+import type { AgentConfig } from '@runtime/core/util/agent-config.js';
+import { getClaudePermissionModeFromAgentConfig } from '@runtime/core/util/agent-config.js';
 import type {
   SessionConfigOption,
   SessionConfigSelectGroup,

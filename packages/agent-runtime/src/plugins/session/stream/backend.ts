@@ -1,10 +1,10 @@
-import type { SessionBackend } from '../../../runtime/session/types.js';
+import type { SessionBackend } from '@runtime/session/types.js';
 import type {
   SessionEvent,
   SessionListener,
   SessionSnapshot,
-} from '../../../types/session/records.js';
-import { isoNow } from '../../../runtime/core/iso-now.js';
+} from '@/types/session/records.js';
+import { isoNow } from '@runtime/core/iso-now.js';
 
 /** In-memory session store with subscribe(); optionally mirrors an inner backend. */
 export function createStreamBackend(inner?: SessionBackend): SessionBackend {

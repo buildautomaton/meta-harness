@@ -1,4 +1,4 @@
-import type { ToolCallExtras, ToolContext } from '../../../types/tools/implementation.js';
+import type { ToolCallExtras, ToolContext } from '@/types/tools/implementation.js';
 import type { CoreToolHost, MinionContextResult } from './core-registry.js';
 import { applyMinionAuthToken } from './apply-auth.js';
 import { launchSession } from './launch-session.js';
@@ -15,7 +15,7 @@ export function bindMinionHost(
   return {
     spawnMinion: async (params, opts) => {
       const { sessionId } = await launchSession({
-        manager: ctx.manager,
+        engine: ctx.engine,
         backend: ctx.backend,
         cwd: ctx.cwd,
         params,
@@ -25,13 +25,13 @@ export function bindMinionHost(
         pending,
       });
       if (opts?.background) {
-        return getSessionStatus(ctx.backend, sessionId, pending.list(sessionId), ctx.manager);
+        return getSessionStatus(ctx.backend, sessionId, pending.list(sessionId), ctx.engine);
       }
       extras?.reportProgress?.({ message: 'Minion spawned; waiting for result', progress: 0 });
       return waitForMinion({
         backend: ctx.backend,
         pending,
-        manager: ctx.manager,
+        engine: ctx.engine,
         notifier: ctx.notifier,
         minionId: sessionId,
         extras,
@@ -41,13 +41,13 @@ export function bindMinionHost(
       waitForMinion({
         backend: ctx.backend,
         pending,
-        manager: ctx.manager,
+        engine: ctx.engine,
         notifier: ctx.notifier,
         minionId,
         extras,
       }),
     getMinion: (minionId) =>
-      getSessionStatus(ctx.backend, minionId, pending.list(minionId), ctx.manager),
+      getSessionStatus(ctx.backend, minionId, pending.list(minionId), ctx.engine),
     getMinionContext: () => minionContext(ctx),
     resolveMinionRequest: (args) => resolveRequest(ctx, pending, args),
   };
@@ -56,7 +56,7 @@ export function bindMinionHost(
 export function minionContext(ctx: ToolContext): MinionContextResult {
   return {
     workingDirectory: ctx.cwd,
-    harnesses: ctx.manager.listHarnesses().map((h) => ({
+    harnesses: ctx.engine.listHarnesses().map((h) => ({
       type: h.type,
       displayName: h.displayName,
       ...(h.installTokenEnvVar ? { authEnvVar: h.installTokenEnvVar } : {}),
@@ -75,7 +75,7 @@ async function resolveRequest(
   const token = str(args.token);
   const snapshot = await ctx.backend.get(minionId);
   const harness = snapshot?.session.harness ?? '';
-  const stored = token ? applyMinionAuthToken(ctx.manager, harness, token) : { stored: false };
+  const stored = token ? applyMinionAuthToken(ctx.engine, harness, token) : { stored: false };
   const requestId = str(args.requestId);
   if (requestId) {
     const listed = pending.list(minionId);

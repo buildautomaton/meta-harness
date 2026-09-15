@@ -1,4 +1,4 @@
-import type { HarnessPluginInit } from '../../types/harness/plugin.js';
+import type { HarnessPluginInit } from '@/types/harness/plugin.js';
 import { claudeCodeHarnessPlugin } from './claude-code/plugin.js';
 import { codexHarnessPlugin } from './codex/plugin.js';
 import { cursorHarnessPlugin } from './cursor/plugin.js';

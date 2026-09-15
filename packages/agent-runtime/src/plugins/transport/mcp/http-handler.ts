@@ -1,6 +1,6 @@
 import type { IncomingMessage, ServerResponse } from 'node:http';
-import type { LogFn } from '../../../types/log.js';
-import type { ToolRegistry } from '../../../types/tools/implementation.js';
+import type { LogFn } from '@/types/log.js';
+import type { ToolRegistry } from '@/types/tools/implementation.js';
 import { handleMcpMethod } from './methods.js';
 import { handleStreamingToolCall } from './post-sse.js';
 import { jsonRpcError, parseRpcJson, type JsonRpcMessage } from './jsonrpc.js';

@@ -1,8 +1,8 @@
-import type { AgentRuntimePlugin } from '../../types/plugin.js';
-import type { HarnessPlugin } from '../../types/harness/plugin.js';
-import type { ToolsPlugin } from '../../types/tools/plugin.js';
-import type { TransportPlugin } from '../../types/transport/plugin.js';
-import type { LogFn } from '../../types/log.js';
+import type { AgentRuntimePlugin } from '@/types/plugin.js';
+import type { HarnessPlugin } from '@/types/harness/plugin.js';
+import type { ToolsPlugin } from '@/types/tools/plugin.js';
+import type { TransportPlugin } from '@/types/transport/plugin.js';
+import type { LogFn } from '@/types/log.js';
 import { createPluginSlots, type PluginSlots } from './plugin-slots.js';
 import { applyHarnessPlugin } from './apply-harness.js';
 import { applySessionPlugin, type SessionPluginRecord } from './apply-session.js';

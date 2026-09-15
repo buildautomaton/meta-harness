@@ -1,4 +1,4 @@
-import type { HarnessHostImplementation } from '../../types/harness/host.js';
+import type { HarnessHostImplementation } from '@/types/harness/host.js';
 
 export function pickHarnessHost(
   impl: Partial<HarnessHostImplementation>,

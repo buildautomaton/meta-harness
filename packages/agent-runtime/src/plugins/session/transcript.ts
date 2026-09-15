@@ -1,4 +1,4 @@
-import type { SessionEvent } from '../../types/session/records.js';
+import type { SessionEvent } from '@/types/session/records.js';
 
 const SKIP_KIND = /tool_call|thought|reason|plan|todo|usage|config|command|user_message/i;
 const MESSAGE_KIND = /agent_message|message_chunk|^message$/i;

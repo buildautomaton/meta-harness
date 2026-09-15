@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { applyPlugins } from './plugin-apply.js';
-import { minionToolsPlugin } from '../../plugins/tools/minion/plugin.js';
-import type { ToolsPlugin } from '../../types/tools/plugin.js';
+import { minionToolsPlugin } from '@plugins/tools/minion/plugin.js';
+import type { ToolsPlugin } from '@/types/tools/plugin.js';
 
 const ping: ToolsPlugin = {
   name: 'tools-ping',

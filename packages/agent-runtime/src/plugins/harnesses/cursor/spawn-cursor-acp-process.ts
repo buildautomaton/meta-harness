@@ -1,7 +1,7 @@
 import { spawn, type ChildProcess } from 'node:child_process';
-import { installedAgentAuthProcessEnv } from '../../../runtime/harnesses/clients/installed-agent-auth-env.js';
-import { createStderrCapture } from '../../../runtime/harnesses/clients/agent-stderr-capture.js';
-import type { AcpClientOptions } from '../../../runtime/harnesses/clients/acp-client.js';
+import { installedAgentAuthProcessEnv } from '@runtime/acp/clients/installed-agent-auth-env.js';
+import { createStderrCapture } from '@runtime/acp/clients/agent-stderr-capture.js';
+import type { AcpClientOptions } from '@runtime/acp/clients/acp-client.js';
 
 export type CursorAcpChild = ChildProcess & {
   stdin: NodeJS.WritableStream;

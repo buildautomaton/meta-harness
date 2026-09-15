@@ -1,9 +1,9 @@
 import { describe, expect, it } from 'vitest';
 import { waitForMinion } from './wait-minion.js';
 import { createPendingStore } from './pending-store.js';
-import { createStreamBackend } from '../../session/stream/backend.js';
-import { createNotifierHub } from '../../../runtime/notify/hub.js';
-import type { NotifierHub, NotifierSink } from '../../../types/notify.js';
+import { createStreamBackend } from '@plugins/session/stream/backend.js';
+import { createNotifierHub } from '@runtime/notify/hub.js';
+import type { NotifierHub, NotifierSink } from '@/types/notify.js';
 
 function record(id: string, status: 'running' | 'completed') {
   return {

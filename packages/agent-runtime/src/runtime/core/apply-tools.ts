@@ -1,5 +1,5 @@
 import type { PluginSlots } from './plugin-slots.js';
-import type { ToolsPlugin } from '../../types/tools/plugin.js';
+import type { ToolsPlugin } from '@/types/tools/plugin.js';
 import { addHooksOnce, mergeOptional } from './merge-hooks.js';
 
 const seenTools = new WeakMap<PluginSlots, WeakSet<object>>();

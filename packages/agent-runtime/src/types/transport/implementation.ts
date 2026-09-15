@@ -1,5 +1,5 @@
-import type { NotifierHub } from '../notify.js';
-import type { ToolRegistry } from '../tools/implementation.js';
+import type { NotifierHub } from '@/types/notify.js';
+import type { ToolRegistry } from '@/types/tools/implementation.js';
 
 export type CommandHost = ToolRegistry & { cwd: string; notifier?: NotifierHub };
 

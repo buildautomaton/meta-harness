@@ -1,22 +1,25 @@
-import type { AgentRuntimeManager } from '../../../runtime/core/manager/types.js';
-import type { SessionImplementation } from '../../../types/session/implementation.js';
-import type { MinionPendingRequest } from '../../../types/notify.js';
-import type { SessionRecord, SessionStatusResult } from '../../../types/session/records.js';
-import { localAgentErrorSuggestsAuth } from '../../../runtime/harnesses/auth/local-agent-auth.js';
-import { compactAgentTranscript } from '../../session/transcript.js';
+import type { AcpEngine } from '@runtime/acp/engine/types.js';
+import type { SessionImplementation } from '@/types/session/implementation.js';
+import type { MinionPendingRequest } from '@/types/notify.js';
+import type { SessionRecord, SessionStatusResult } from '@/types/session/records.js';
+import { localAgentErrorSuggestsAuth } from '@runtime/harnesses/auth/local-agent-auth.js';
+import { compactAgentTranscript } from '@plugins/session/transcript.js';
 import { authCoordinatorRequest } from './coordinator-request.js';
 
 export async function getSessionStatus(
   backend: SessionImplementation,
   sessionId: string,
   pending: MinionPendingRequest[] = [],
-  manager?: AgentRuntimeManager,
+  engine?: AcpEngine,
 ): Promise<SessionStatusResult | null> {
   const snapshot = await backend.get(sessionId);
   if (!snapshot) return null;
   const { session, events } = snapshot;
   const transcript = session.transcript?.trim() || compactAgentTranscript(events);
-  const authRequired = localAgentErrorSuggestsAuth(session.harness, session.error);
+  const authRequired = localAgentErrorSuggestsAuth(
+    engine?.getHarness(session.harness)?.authErrorHints,
+    session.error,
+  );
   const pendingRequests = withAuthRequest(session, pending, authRequired);
   return {
     minionId: session.id,
@@ -30,8 +33,8 @@ export async function getSessionStatus(
     needsUser: pendingRequests.length > 0 || authRequired,
     transcript,
     summary: transcript.length <= 4000 ? transcript : transcript.slice(transcript.length - 4000),
-    ...(manager && authRequired
-      ? { authEnvVar: manager.getHarness(session.harness)?.installTokenEnvVar }
+    ...(engine && authRequired
+      ? { authEnvVar: engine.getHarness(session.harness)?.installTokenEnvVar }
       : {}),
   };
 }

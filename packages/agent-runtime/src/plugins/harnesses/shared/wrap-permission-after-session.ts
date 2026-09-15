@@ -1,7 +1,7 @@
-import type { AgentConfig } from '../../../runtime/core/util/agent-config.js';
+import type { AgentConfig } from '@runtime/core/util/agent-config.js';
 import type { SessionConfigOption, SessionModeState } from '@agentclientprotocol/sdk';
-import type { AfterAcpSessionEstablished } from '../../../runtime/harnesses/session-context.js';
-import { configOptionsForPermission } from '../../../runtime/harnesses/clients/shared/config-options-for-permission.js';
+import type { AfterAcpSessionEstablished } from '@runtime/acp/session-context.js';
+import { configOptionsForPermission } from '@runtime/acp/clients/shared/config-options-for-permission.js';
 
 type ApplyPermissionFn = (params: {
   sessionId: string;

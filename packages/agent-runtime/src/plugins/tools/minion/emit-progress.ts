@@ -1,4 +1,4 @@
-import type { MinionEvent, NotifierHub } from '../../../types/notify.js';
+import type { MinionEvent, NotifierHub } from '@/types/notify.js';
 
 const INTERVAL_MS = 2000;
 const lastProgress = new Map<string, number>();

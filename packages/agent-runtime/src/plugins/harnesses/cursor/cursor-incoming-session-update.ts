@@ -1,6 +1,6 @@
-import { formatSessionUpdateKindForLog } from '../../../runtime/harnesses/logging/format-session-update-kind-for-log.js';
-import type { AcpSessionContext } from '../../../runtime/harnesses/clients/acp-session-context.js';
-import { dispatchAcpSessionUpdate } from '../../../runtime/harnesses/clients/shared/dispatch-session-update.js';
+import { formatSessionUpdateKindForLog } from '@runtime/acp/logging/format-session-update-kind-for-log.js';
+import type { AcpSessionContext } from '@runtime/acp/clients/acp-session-context.js';
+import { dispatchAcpSessionUpdate } from '@runtime/acp/clients/shared/dispatch-session-update.js';
 
 export function handleCursorIncomingSessionUpdate(
   msg: Record<string, unknown>,

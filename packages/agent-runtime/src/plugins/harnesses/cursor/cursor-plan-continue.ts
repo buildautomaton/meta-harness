@@ -1,4 +1,4 @@
-import type { AcpSessionTransport } from '../../../runtime/harnesses/clients/acp-session-transport.js';
+import type { AcpSessionTransport } from '@runtime/acp/clients/acp-session-transport.js';
 
 /** Follow-up ACP prompt after `cursor/create_plan` accept — Cursor ends the planning turn otherwise. */
 export const CURSOR_PLAN_CONTINUE_PROMPT =

@@ -1,7 +1,7 @@
-import type { DiscoveredAgent } from '../discovery-types.js';
-import type { AgentHarness } from '../types.js';
-import { yieldToEventLoop } from '../../core/util/yield-to-event-loop.js';
-import { isShutdownRequested } from '../../core/util/shutdown.js';
+import type { DiscoveredAgent } from '@runtime/harnesses/discovery-types.js';
+import type { AgentHarness } from '@runtime/harnesses/types.js';
+import { yieldToEventLoop } from '@runtime/core/util/yield-to-event-loop.js';
+import { isShutdownRequested } from '@runtime/core/util/shutdown.js';
 
 /** Discover local agents via harness detectPresence hooks (best-effort). */
 export async function discoverAgents(

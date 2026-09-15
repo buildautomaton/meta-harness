@@ -1,5 +1,5 @@
-import type { ToolRegistry } from '../../types/tools/implementation.js';
-import type { ToolsPrompt } from '../../types/tools/prompts.js';
+import type { ToolRegistry } from '@/types/tools/implementation.js';
+import type { ToolsPrompt } from '@/types/tools/prompts.js';
 
 export function mergeToolRegistries(registries: ToolRegistry[]): ToolRegistry {
   return {

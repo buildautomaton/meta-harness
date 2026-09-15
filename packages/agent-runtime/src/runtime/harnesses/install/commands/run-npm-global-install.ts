@@ -1,5 +1,5 @@
-import { agentPathEnv } from '../../clients/agent-path.js';
-import { runStreamingCommand } from '../run-streaming-command.js';
+import { agentPathEnv } from '@runtime/acp/clients/agent-path.js';
+import { runStreamingCommand } from '@runtime/harnesses/install/run-streaming-command.js';
 
 export async function runNpmGlobalInstall(
   packageName: string,

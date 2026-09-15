@@ -1,5 +1,5 @@
-import type { SessionEvent } from '../../types/session/records.js';
-import type { SessionLogEntry } from '../../types/session/log.js';
+import type { SessionEvent } from '@/types/session/records.js';
+import type { SessionLogEntry } from '@/types/session/log.js';
 
 export function logToEvents(log: SessionLogEntry[]): SessionEvent[] {
   return log.map((row, index) => ({

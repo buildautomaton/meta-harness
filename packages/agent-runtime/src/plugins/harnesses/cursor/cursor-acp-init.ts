@@ -1,10 +1,10 @@
 import * as readline from 'node:readline';
-import { bootstrapAcpWireSession } from '../../../runtime/harnesses/clients/shared/bootstrap-acp-wire-session.js';
+import { bootstrapAcpWireSession } from '@runtime/acp/clients/shared/bootstrap-acp-wire-session.js';
 import { createCursorAcpIncomingLineHandler } from './cursor-acp-incoming-line-handler.js';
 import { createCursorJsonRpcAcpTransport } from './cursor-json-rpc-acp-transport.js';
 import { createCursorJsonRpcWriter } from './cursor-json-rpc-wire.js';
 import type { JsonRpcRequestId, PendingRequest } from './cursor-json-rpc-types.js';
-import type { AcpSessionContext } from '../../../runtime/harnesses/clients/acp-session-context.js';
+import type { AcpSessionContext } from '@runtime/acp/clients/acp-session-context.js';
 import type { CursorAcpChild } from './spawn-cursor-acp-process.js';
 import type { CursorAcpIncomingLineHandlerDeps } from './cursor-acp-incoming-line-handler.js';
 

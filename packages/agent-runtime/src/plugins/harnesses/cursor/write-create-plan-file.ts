@@ -1,7 +1,7 @@
 import * as fs from 'node:fs';
 import * as path from 'node:path';
 import { pathToFileURL } from 'node:url';
-import { getSessionPlansDir } from '../../../runtime/core/util/session-plans-paths.js';
+import { getSessionPlansDir } from '@runtime/core/util/session-plans-paths.js';
 
 function sanitizePlanFileBase(toolCallId: string): string {
   const t = toolCallId.replace(/[^a-zA-Z0-9_-]+/g, '_').slice(0, 120);

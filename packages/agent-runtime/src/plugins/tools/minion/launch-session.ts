@@ -1,14 +1,14 @@
 import { randomUUID } from 'node:crypto';
-import type { AgentRuntimeManager } from '../../../runtime/core/manager/types.js';
-import type { LaunchAgentParams, SessionRecord } from '../../../types/session/records.js';
-import { isoNow } from '../../../runtime/core/iso-now.js';
+import type { AcpEngine } from '@runtime/acp/engine/types.js';
+import type { LaunchAgentParams, SessionRecord } from '@/types/session/records.js';
+import { isoNow } from '@runtime/core/iso-now.js';
 import { emitMinionEvent } from './emit-progress.js';
 import { wirePrompt } from './run-prompt.js';
 import type { SessionEventHost } from './session-events.js';
 
 export async function launchSession(
   options: SessionEventHost & {
-    manager: AgentRuntimeManager;
+    engine: AcpEngine;
     cwd: string;
     params: LaunchAgentParams;
   },

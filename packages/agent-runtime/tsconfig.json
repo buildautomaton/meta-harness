@@ -15,7 +15,9 @@
     "lib": ["ES2022"],
     "baseUrl": ".",
     "paths": {
-      "@agent-runtime/*": ["src/*"]
+      "@/types/*": ["src/types/*"],
+      "@runtime/*": ["src/runtime/*"],
+      "@plugins/*": ["src/plugins/*"]
     }
   },
   "include": ["src/**/*"],

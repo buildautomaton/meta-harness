@@ -1,5 +1,5 @@
-import type { HarnessOptions } from '../../../types/harness/options.js';
-import type { HarnessImplementation } from '../../../types/harness/implementation.js';
+import type { HarnessOptions } from '@/types/harness/options.js';
+import type { HarnessImplementation } from '@/types/harness/implementation.js';
 import { kiroAuthErrorHints } from './auth.js';
 import {
   buildKiroAcpSpawnCommand,

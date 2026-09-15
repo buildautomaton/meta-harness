@@ -1,4 +1,4 @@
-import type { McpToolDefinition } from '../../../types/tools/definitions.js';
+import type { McpToolDefinition } from '@/types/tools/definitions.js';
 import { RESOLVE_MINION_REQUEST_TOOL } from './names.js';
 
 export const RESOLVE_MINION_DEFINITION: McpToolDefinition = {

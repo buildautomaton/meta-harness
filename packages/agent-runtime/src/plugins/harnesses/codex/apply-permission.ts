@@ -1,5 +1,5 @@
-import type { AgentConfig } from '../../../runtime/core/util/agent-config.js';
-import { getCodexPermissionModeFromAgentConfig } from '../../../runtime/core/util/agent-config.js';
+import type { AgentConfig } from '@runtime/core/util/agent-config.js';
+import { getCodexPermissionModeFromAgentConfig } from '@runtime/core/util/agent-config.js';
 import type {
   SessionConfigOption,
   SessionConfigSelectGroup,

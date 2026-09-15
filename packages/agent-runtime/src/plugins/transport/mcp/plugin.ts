@@ -1,4 +1,4 @@
-import type { TransportPlugin, TransportPluginInit } from '../../../types/transport/plugin.js';
+import type { TransportPlugin, TransportPluginInit } from '@/types/transport/plugin.js';
 import { createMcpTransport } from './transport.js';
 
 export function mcpTransportPlugin(init: TransportPluginInit = {}): TransportPlugin {

@@ -1,4 +1,4 @@
-import type { MinionPendingRequest } from '../notify.js';
+import type { MinionPendingRequest } from '@/types/notify.js';
 import type { SessionLogEntry } from './log.js';
 
 export type SessionStatus = 'running' | 'completed' | 'failed';

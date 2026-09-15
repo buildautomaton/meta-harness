@@ -1,6 +1,6 @@
-import type { AgentRuntimeManager } from './manager/types.js';
-import type { AgentRuntimePlugin } from '../../types/plugin.js';
-import type { LogFn } from '../../types/log.js';
+import type { AcpEngine } from '@runtime/acp/engine/types.js';
+import type { AgentRuntimePlugin } from '@/types/plugin.js';
+import type { LogFn } from '@/types/log.js';
 
 export type RuntimeOptions = {
   cwd: string;
@@ -11,7 +11,7 @@ export type RuntimeOptions = {
 
 export type RuntimeHandle = {
   cwd: string;
-  manager: AgentRuntimeManager;
+  engine: AcpEngine;
   start: () => Promise<void>;
   stop: () => Promise<void>;
 };

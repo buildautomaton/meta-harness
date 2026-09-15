@@ -2,24 +2,24 @@
  * Cursor CLI ACP over JSON-RPC stdio.
  */
 
-import { getDefaultAgentCwd } from '../../../runtime/core/util/cwd.js';
+import { getDefaultAgentCwd } from '@runtime/core/util/cwd.js';
 import {
   formatJsonRpcStyleError,
   mergeErrorWithStderr,
-} from '../../../runtime/harnesses/clients/agent-stderr-capture.js';
-import type { AcpClientHandle, AcpClientOptions } from '../../../runtime/harnesses/clients/acp-client.js';
+} from '@runtime/acp/clients/agent-stderr-capture.js';
+import type { AcpClientHandle, AcpClientOptions } from '@runtime/acp/clients/acp-client.js';
 import {
   installedAgentAuthProcessEnv,
   cursorAgentUsesApiKeyAuth,
-} from '../../../runtime/harnesses/clients/installed-agent-auth-env.js';
-import { formatSpawnError } from '../../../runtime/harnesses/clients/format-spawn-error.js';
-import { killChildProcessTree } from '../../../runtime/harnesses/clients/kill-process-tree.js';
+} from '@runtime/acp/clients/installed-agent-auth-env.js';
+import { formatSpawnError } from '@runtime/acp/clients/format-spawn-error.js';
+import { killChildProcessTree } from '@runtime/acp/clients/kill-process-tree.js';
 import { buildCursorAcpSpawnCommand } from './cursor-spawn-command.js';
 import { createCursorAcpSessionContext } from './create-cursor-acp-session-context.js';
 import { createCursorAcpHandle } from './create-cursor-acp-handle.js';
 import { initCursorAcpWire } from './cursor-acp-init.js';
 import { spawnCursorAcpProcess } from './spawn-cursor-acp-process.js';
-import { listenForAcpClientAbort } from '../../../runtime/harnesses/clients/listen-for-acp-client-abort.js';
+import { listenForAcpClientAbort } from '@runtime/acp/clients/listen-for-acp-client-abort.js';
 
 export { buildCursorAcpSpawnCommand } from './cursor-spawn-command.js';
 export { BACKEND_LOCAL_AGENT_TYPE, detectLocalAgentPresence } from './cursor-local-agent.js';
@@ -55,6 +55,7 @@ export async function createCursorAcpClient(options: AcpClientOptions): Promise<
     persistedAcpSessionId,
     backendAgentType,
     agentConfig: options.agentConfig,
+    authErrorHints: options.authErrorHints,
     getActiveConfigOptions: options.getActiveConfigOptions,
     onAcpSessionEstablished,
     onAcpConfigOptionsUpdated,

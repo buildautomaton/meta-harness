@@ -1,6 +1,6 @@
 import type { PluginSlots } from './plugin-slots.js';
-import type { SessionPlugin } from '../../types/session/plugin.js';
-import type { SessionBackendWrap } from '../session/types.js';
+import type { SessionPlugin } from '@/types/session/plugin.js';
+import type { SessionBackendWrap } from '@runtime/session/types.js';
 import { addHooksOnce, mergeOptional } from './merge-hooks.js';
 
 const seenSession = new WeakMap<PluginSlots, WeakSet<object>>();

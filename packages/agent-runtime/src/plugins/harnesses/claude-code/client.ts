@@ -5,9 +5,9 @@
  * @see https://agentclientprotocol.com/protocol/session-modes
  */
 
-import type { AcpClientHandle, AcpClientOptions } from '../../../runtime/harnesses/clients/acp-client.js';
-import { execProbeShutdownAware } from '../../../runtime/harnesses/clients/detect-command-on-path.js';
-import { createSdkStdioAcpClient } from '../../../runtime/harnesses/clients/sdk/sdk-stdio-acp-client.js';
+import type { AcpClientHandle, AcpClientOptions } from '@runtime/acp/clients/acp-client.js';
+import { execProbeShutdownAware } from '@runtime/acp/clients/detect-command-on-path.js';
+import { createSdkStdioAcpClient } from '@runtime/acp/clients/sdk/sdk-stdio-acp-client.js';
 
 /** Backend `type` for bridge local agents (align with UI and `resolve-agent-command`). */
 export const BACKEND_LOCAL_AGENT_TYPE = 'claude-code' as const;

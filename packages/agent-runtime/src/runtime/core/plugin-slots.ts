@@ -1,12 +1,12 @@
-import type { AgentHarness } from '../harnesses/types.js';
-import type { HarnessHostImplementation } from '../../types/harness/host.js';
-import type { HarnessHooks } from '../../types/harness/hooks.js';
-import type { SessionHooks } from '../../types/session/hooks.js';
-import type { SessionBackend, SessionBackendWrap } from '../session/types.js';
-import type { ToolsImplementation } from '../../types/tools/implementation.js';
-import type { ToolsHooks } from '../../types/tools/hooks.js';
-import type { HostTransport } from '../transport/types.js';
-import type { TransportHooks } from '../../types/transport/hooks.js';
+import type { AgentHarness } from '@runtime/harnesses/types.js';
+import type { HarnessHostImplementation } from '@/types/harness/host.js';
+import type { HarnessHooks } from '@/types/harness/hooks.js';
+import type { SessionHooks } from '@/types/session/hooks.js';
+import type { SessionBackend, SessionBackendWrap } from '@runtime/session/types.js';
+import type { ToolsImplementation } from '@/types/tools/implementation.js';
+import type { ToolsHooks } from '@/types/tools/hooks.js';
+import type { HostTransport } from '@runtime/transport/types.js';
+import type { TransportHooks } from '@/types/transport/hooks.js';
 
 export type PluginSlots = {
   harnesses: AgentHarness[];

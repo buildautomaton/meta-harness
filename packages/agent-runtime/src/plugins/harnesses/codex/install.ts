@@ -1,5 +1,5 @@
-import { runNpmGlobalInstall } from '../../../runtime/harnesses/install/commands/run-npm-global-install.js';
-import type { AgentInstallContext } from '../../../types/harness/host.js';
+import { runNpmGlobalInstall } from '@runtime/harnesses/install/commands/run-npm-global-install.js';
+import type { AgentInstallContext } from '@/types/harness/host.js';
 
 export const codexInstallDetectCommand = 'codex';
 export const codexInstallTokenEnvVar = 'OPENAI_API_KEY';

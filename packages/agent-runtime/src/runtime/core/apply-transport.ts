@@ -1,5 +1,5 @@
 import type { PluginSlots } from './plugin-slots.js';
-import type { TransportPlugin } from '../../types/transport/plugin.js';
+import type { TransportPlugin } from '@/types/transport/plugin.js';
 import { addHooksOnce, mergeOptional } from './merge-hooks.js';
 
 const seenTransport = new WeakMap<PluginSlots, WeakSet<object>>();

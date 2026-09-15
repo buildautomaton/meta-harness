@@ -1,24 +1,24 @@
-import type { AgentRuntimeManager } from './manager/types.js';
-import type { CommandHost } from '../../types/transport/implementation.js';
-import type { HostTransport } from '../transport/types.js';
-import type { TransportHooks } from '../../types/transport/hooks.js';
-import type { ToolRegistry } from '../../types/tools/implementation.js';
-import type { NotifierHub } from '../../types/notify.js';
+import type { AcpEngine } from '@runtime/acp/engine/types.js';
+import type { CommandHost } from '@/types/transport/implementation.js';
+import type { HostTransport } from '@runtime/transport/types.js';
+import type { TransportHooks } from '@/types/transport/hooks.js';
+import type { ToolRegistry } from '@/types/tools/implementation.js';
+import type { NotifierHub } from '@/types/notify.js';
 import type { RuntimeHandle } from './runtime-types.js';
 
 export function bindHandle(opts: {
   cwd: string;
-  manager: AgentRuntimeManager;
+  engine: AcpEngine;
   transport: HostTransport;
   tools: ToolRegistry;
   transportHooks?: TransportHooks;
   notifier?: NotifierHub;
 }): RuntimeHandle {
-  const { cwd, manager, transport, tools, transportHooks, notifier } = opts;
+  const { cwd, engine, transport, tools, transportHooks, notifier } = opts;
   const host: CommandHost = { cwd, listTools: tools.listTools, callTool: tools.callTool, notifier };
   return {
     cwd,
-    manager,
+    engine,
     start: async () => {
       transportHooks?.onStart?.({ cwd });
       await transport.start(host);
@@ -26,7 +26,7 @@ export function bindHandle(opts: {
     stop: async () => {
       await transport.stop();
       transportHooks?.onStop?.();
-      await manager.disconnect();
+      await engine.disconnect();
     },
   };
 }

@@ -1,4 +1,4 @@
-export { createAgentRuntimeManager } from './core/manager/create-agent-runtime-manager.js';
+export { createAcpEngine } from './acp/engine/create-acp-engine.js';
 export { createRuntime } from './core/create-runtime.js';
 export { runRuntime } from './core/run-runtime.js';
 export { RUNTIME_VERSION } from './core/version.js';
@@ -10,8 +10,8 @@ export type { PluginSlots } from './core/plugin-slots.js';
 export { mergeToolRegistries } from './tools/merge-registries.js';
 export type { SessionBackend, SessionBackendWrap } from './session/types.js';
 export type { HostTransport } from './transport/types.js';
-export type { AgentHarness, AgentHarnessRegistry } from './harnesses/types.js';
-export * from './core/manager/types.js';
+export type { AgentHarness, AgentHarnessRegistry, GetAgentHarnessFn } from './harnesses/types.js';
+export * from './acp/engine/types.js';
 export type {
   AcpClientHandle,
   AcpClientOptions,
@@ -19,23 +19,23 @@ export type {
   PromptImagePayload,
   SendPromptOptions,
   AgentSessionLifecycle,
-} from './harnesses/client-types.js';
+} from './acp/client-types.js';
 export type { DiscoveredAgent, AgentDiscovery } from './harnesses/discovery-types.js';
-export type { AgentCapabilities, ReportAgentCapabilitiesFn } from './harnesses/capability-types.js';
+export type { AgentCapabilities, ReportAgentCapabilitiesFn } from './acp/capability-types.js';
 export type {
   AgentSessionUpdateKind,
   AgentSessionUpdateEvent,
   AgentRuntimeRequest,
   AgentFileChangeEvent,
   AgentRuntimeEvents,
-} from './harnesses/lifecycle.js';
+} from './acp/session-kinds.js';
 export type {
   AcpSessionContext,
   AfterAcpSessionEstablished,
-} from './harnesses/session-context.js';
+} from './acp/session-context.js';
 export type {
   AcpSessionTransport,
   AcpTextPromptPart,
   AcpImagePromptPart,
   AcpPromptContentBlock,
-} from './harnesses/acp-session-transport.js';
+} from './acp/acp-session-transport.js';

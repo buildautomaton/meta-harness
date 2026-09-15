@@ -1,5 +1,5 @@
 import { jsonRpcError, jsonRpcResult, type JsonRpcMessage } from './jsonrpc.js';
-import type { ToolsPrompt } from '../../../types/tools/prompts.js';
+import type { ToolsPrompt } from '@/types/tools/prompts.js';
 
 export function listMcpPrompts(id: JsonRpcMessage['id'], prompts: ToolsPrompt[]): JsonRpcMessage {
   return jsonRpcResult(id, {

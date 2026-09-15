@@ -1,4 +1,4 @@
-import type { LaunchAgentParams } from '../session/records.js';
+import type { LaunchAgentParams } from '@/types/session/records.js';
 
 export type PermissionRequest = {
   requestId: string;

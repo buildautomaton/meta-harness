@@ -1,4 +1,4 @@
-import type { RemoteCommand, RemoteTransportImplementation } from '../../../types/transport/options.js';
+import type { RemoteCommand, RemoteTransportImplementation } from '@/types/transport/options.js';
 
 /**
  * POST `{ type: 'register' }` to the URL, then poll `{url}/commands`.

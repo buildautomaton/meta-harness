@@ -1,6 +1,6 @@
 import type { PluginSlots } from './plugin-slots.js';
-import type { HarnessPlugin } from '../../types/harness/plugin.js';
-import type { AgentHarness } from '../harnesses/types.js';
+import type { HarnessPlugin } from '@/types/harness/plugin.js';
+import type { AgentHarness } from '@runtime/harnesses/types.js';
 import { addHooksOnce, mergeHarnessHooks, mergeHarnessHost } from './merge-hooks.js';
 import { hasHostMethods, hostSkipKey, pickHarnessHost } from './pick-harness-host.js';
 

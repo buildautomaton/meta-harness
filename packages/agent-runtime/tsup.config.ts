@@ -1,4 +1,7 @@
+import path from 'node:path';
 import { defineConfig } from 'tsup';
+
+const src = path.resolve(__dirname, 'src');
 
 export default defineConfig({
   entry: {
@@ -12,4 +15,11 @@ export default defineConfig({
   sourcemap: true,
   dts: true,
   tsconfig: './tsconfig.json',
+  esbuildOptions(options) {
+    options.alias = {
+      '@/types': `${src}/types`,
+      '@runtime': `${src}/runtime`,
+      '@plugins': `${src}/plugins`,
+    };
+  },
 });

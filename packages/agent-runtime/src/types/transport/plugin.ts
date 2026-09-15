@@ -1,4 +1,4 @@
-import type { PluginFactory, PluginInit, PluginRuntimeContext } from '../plugin.js';
+import type { PluginFactory, PluginInit, PluginRuntimeContext } from '@/types/plugin.js';
 import type { TransportHooks } from './hooks.js';
 import type { TransportImplementation } from './implementation.js';
 import type { McpTransportOptions, RemoteTransportImplementation } from './options.js';

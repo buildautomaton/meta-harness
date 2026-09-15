@@ -1,5 +1,5 @@
-import type { AcpSessionContext } from '../../../runtime/harnesses/clients/acp-session-context.js';
-import { acpReadTextFileInProcess, acpWriteTextFileInProcess } from '../../../runtime/harnesses/clients/shared/acp-fs-read-write.js';
+import type { AcpSessionContext } from '@runtime/acp/clients/acp-session-context.js';
+import { acpReadTextFileInProcess, acpWriteTextFileInProcess } from '@runtime/acp/clients/shared/acp-fs-read-write.js';
 import {
   isCursorFsReadMethod,
   isCursorFsWriteMethod,

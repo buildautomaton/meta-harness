@@ -1,4 +1,4 @@
-import type { PluginFactory, PluginInit, PluginRuntimeContext } from '../plugin.js';
+import type { PluginFactory, PluginInit, PluginRuntimeContext } from '@/types/plugin.js';
 import type { HarnessHooks } from './hooks.js';
 import type { HarnessImplementation } from './implementation.js';
 import type { HarnessOptions } from './options.js';

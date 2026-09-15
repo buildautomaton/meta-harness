@@ -1,6 +1,6 @@
 import type { IncomingMessage, ServerResponse } from 'node:http';
-import type { LogFn } from '../../../types/log.js';
-import type { ToolRegistry } from '../../../types/tools/implementation.js';
+import type { LogFn } from '@/types/log.js';
+import type { ToolRegistry } from '@/types/tools/implementation.js';
 import { writeSseMessage } from './sse-write.js';
 import { handleMcpMethod } from './methods.js';
 import type { JsonRpcMessage } from './jsonrpc.js';

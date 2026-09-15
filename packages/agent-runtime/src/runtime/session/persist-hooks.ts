@@ -1,5 +1,5 @@
-import type { SessionImplementation } from '../../types/session/implementation.js';
-import type { HarnessHostImplementation } from '../../types/harness/host.js';
+import type { SessionImplementation } from '@/types/session/implementation.js';
+import type { HarnessHostImplementation } from '@/types/harness/host.js';
 
 export async function persistHooksFromBackend(
   backend: SessionImplementation,

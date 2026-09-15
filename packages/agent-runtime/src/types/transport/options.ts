@@ -1,4 +1,4 @@
-import type { McpToolDefinition } from '../tools/definitions.js';
+import type { McpToolDefinition } from '@/types/tools/definitions.js';
 
 export type TransportKind = 'mcp' | 'remote';
 export type McpTransportOptions = {

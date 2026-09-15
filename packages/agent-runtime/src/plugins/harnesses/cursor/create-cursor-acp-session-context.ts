@@ -1,7 +1,7 @@
-import { logDebug } from '../../../runtime/core/util/log.js';
-import type { AcpClientOptions } from '../../../runtime/harnesses/clients/acp-client.js';
-import type { AcpSessionContext } from '../../../runtime/harnesses/clients/acp-session-context.js';
-import { createStderrCapture } from '../../../runtime/harnesses/clients/agent-stderr-capture.js';
+import { logDebug } from '@runtime/core/util/log.js';
+import type { AcpClientOptions } from '@runtime/acp/clients/acp-client.js';
+import type { AcpSessionContext } from '@runtime/acp/clients/acp-session-context.js';
+import { createStderrCapture } from '@runtime/acp/clients/agent-stderr-capture.js';
 
 export function createCursorAcpSessionContext(options: {
   cwd: string;
@@ -9,6 +9,7 @@ export function createCursorAcpSessionContext(options: {
   persistedAcpSessionId?: string | null;
   backendAgentType?: string | null;
   agentConfig?: Record<string, unknown> | null;
+  authErrorHints?: readonly RegExp[];
   getActiveConfigOptions?: AcpClientOptions['getActiveConfigOptions'];
   onAcpSessionEstablished?: AcpClientOptions['onAcpSessionEstablished'];
   onAcpConfigOptionsUpdated?: AcpClientOptions['onAcpConfigOptionsUpdated'];
@@ -28,6 +29,7 @@ export function createCursorAcpSessionContext(options: {
     suppressLoadReplay: suppressLoadReplayRef,
     backendAgentType: options.backendAgentType ?? null,
     agentConfig: options.agentConfig,
+    authErrorHints: options.authErrorHints,
     getActiveConfigOptions: options.getActiveConfigOptions,
     onAcpSessionEstablished: (info) => {
       ctx.acpSessionId = info.acpSessionId;
