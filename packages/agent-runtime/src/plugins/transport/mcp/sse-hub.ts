@@ -6,6 +6,7 @@ const PING_MS = 15_000;
 
 export type McpSseHub = {
   addClient(res: ServerResponse, headers: Record<string, string>): void;
+  addWriter(write: (msg: JsonRpcMessage) => void): () => void;
   broadcast(msg: JsonRpcMessage): void;
   request(method: string, params: unknown): Promise<unknown>;
   complete(id: string | number, result?: unknown, error?: { message?: string }): void;
@@ -16,6 +17,7 @@ export type McpSseHub = {
 
 export function createMcpSseHub(): McpSseHub {
   const clients = new Set<ServerResponse>();
+  const writers = new Set<(msg: JsonRpcMessage) => void>();
   const pending = new Map<number, { resolve: (value: unknown) => void; reject: (err: Error) => void }>();
   let nextId = 1;
   let elicitation = false;
@@ -38,8 +40,15 @@ export function createMcpSseHub(): McpSseHub {
         clients.delete(res);
       });
     },
+    addWriter(write) {
+      writers.add(write);
+      return () => {
+        writers.delete(write);
+      };
+    },
     broadcast(msg) {
       for (const res of clients) writeSseMessage(res, msg);
+      for (const write of writers) write(msg);
     },
     request(method, params) {
       const id = nextId++;
@@ -67,6 +76,7 @@ export function createMcpSseHub(): McpSseHub {
       timer = undefined;
       for (const res of clients) res.end();
       clients.clear();
+      writers.clear();
     },
   };
 }

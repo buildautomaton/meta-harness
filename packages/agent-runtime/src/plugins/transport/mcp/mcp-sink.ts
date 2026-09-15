@@ -1,8 +1,9 @@
-import type { MinionEvent, NotifierSink } from '@/types/notify.js';
+import type { MinionAsk, MinionEvent, NotifierSink } from '@/types/notify.js';
 import { elicitationParams } from './elicitation.js';
 import type { McpSseHub } from './sse-hub.js';
 
 export function mcpNotifierSink(sse: McpSseHub): NotifierSink {
+  let queue = Promise.resolve<unknown>(undefined);
   return {
     notify(event) {
       sse.broadcast({
@@ -11,15 +12,17 @@ export function mcpNotifierSink(sse: McpSseHub): NotifierSink {
         params: { level: levelFor(event.type), logger: 'minion', data: event },
       });
     },
-    async ask(request) {
-      if (!sse.supportsElicitation()) return undefined;
-      try {
-        return await sse.request('elicitation/create', elicitationParams(request));
-      } catch {
-        return undefined;
-      }
+    ask(request) {
+      if (!sse.supportsElicitation()) return Promise.resolve(undefined);
+      const run = queue.then(() => elicit(sse, request), () => elicit(sse, request));
+      queue = run.then(() => undefined, () => undefined);
+      return run.catch(() => undefined);
     },
   };
+}
+
+function elicit(sse: McpSseHub, request: MinionAsk): Promise<unknown> {
+  return sse.request('elicitation/create', elicitationParams(request));
 }
 
 function levelFor(type: MinionEvent['type']): string {

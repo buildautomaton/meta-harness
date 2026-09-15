@@ -58,7 +58,7 @@ export function minionContext(ctx: ToolContext): MinionContextResult {
       displayName: h.displayName,
       ...(h.installTokenEnvVar ? { authEnvVar: h.installTokenEnvVar } : {}),
     })),
-    note: 'Minions spawn in workingDirectory and share this coordinator workspace. Prefer spawn_minion (it waits like Task) over builtin Task/subagent tools.',
+    note: 'Minions spawn in workingDirectory and share this coordinator workspace. spawn_minion always waits like Task — never pass background, and prefer it over builtin Task/subagent tools.',
   };
 }
 

@@ -25,12 +25,10 @@ export function createProgressReporter(
         params: { progressToken: token, progress, message: update.message },
       });
     }
-    const note: JsonRpcMessage = {
+    sse?.broadcast({
       jsonrpc: '2.0',
       method: 'notifications/message',
       params: { level: 'info', logger: 'minion', data: { type: 'progress', message: update.message, progress } },
-    };
-    sse?.broadcast(note);
-    onNotify?.(note);
+    });
   };
 }

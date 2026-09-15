@@ -5,7 +5,7 @@ export const RESOLVE_MINION_DEFINITION: McpToolDefinition = {
   name: RESOLVE_MINION_REQUEST_TOOL,
   title: 'Answer minion permission or auth',
   description:
-    'After asking the user, resolve a minion permission, question, or provider-login request. Pending items use the same shape in notifications and get_minion: title, message, and options with human-readable labels (e.g. Allow all) plus optionId. Pass optionId or the label, or a token for harness auth.',
+    'Resolve a minion permission, question, or provider-login request. Call this WHILE spawn_minion is still in flight when you see a permission notification — do not wait for other minions to finish. Apply your current permission mode: resolve immediately if that mode would auto-run the action; seek the user if it would ask them. Pending items share one shape: title, message, and options with labels (e.g. Allow all) plus optionId. Pass optionId or the label, or a token for harness auth.',
   inputSchema: {
     type: 'object',
     properties: {

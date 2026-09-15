@@ -57,6 +57,15 @@ async function spawn(host: CoreToolHost, args: Record<string, unknown>) {
   if (!harness || !prompt) {
     return jsonToolResult({ error: 'harness and prompt are required' }, true);
   }
+  if (args.background != null || args.is_background != null || args.run_in_background != null) {
+    return jsonToolResult(
+      {
+        error:
+          'spawn_minion has no background parameter; it always waits. Retry with only harness, prompt, and optional model.',
+      },
+      true,
+    );
+  }
   const result = await host.spawnMinion({ harness, prompt, model });
   if (!result) return jsonToolResult({ error: 'Failed to spawn minion' }, true);
   return jsonToolResult(result);

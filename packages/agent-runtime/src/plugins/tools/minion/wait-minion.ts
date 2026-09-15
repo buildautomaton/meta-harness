@@ -55,5 +55,5 @@ export async function waitForMinion(options: {
 }
 
 function isSettled(status: SessionStatusResult): boolean {
-  return status.status !== 'running' || Boolean(status.needsUser) || status.pendingRequests.length > 0;
+  return status.status !== 'running';
 }

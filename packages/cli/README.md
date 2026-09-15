@@ -13,16 +13,16 @@ The MCP (or remote) server exposes minion tools (not subagents, to avoid clashin
 
 | Tool | Arguments | Result |
 | --- | --- | --- |
-| `spawn_minion` | `harness`, `prompt`, optional `model` | Waits until done or `needsUser`; returns transcript. No background spawn. |
-| `await_minion` | `minionId` | Blocks with live progress until done or `needsUser`. Use after `resolve_minion_request`. |
+| `spawn_minion` | `harness`, `prompt`, optional `model` | Waits until done; returns transcript. No background parameter. |
+| `await_minion` | `minionId` | Blocks with live progress until done. Use only if spawn already returned. |
 | `get_minion_context` | none | cwd, harnesses, shared workspace note |
 | `get_minion` | `minionId` | status, pending requests, compacted agent transcript |
 | `get_minion_transcript` | `minionId` | agent messages only (no tool/reasoning dumps) |
 | `resolve_minion_request` | `minionId`, optional `requestId`, `outcome`, `token` | approve/deny a permission or store a provider token |
 
-`spawn_minion` / `await_minion` stream progress on the in-flight MCP tool call (SSE + `notifications/progress`). Do not poll `get_minion` in a loop. Permission and auth requests share one shape (`title`, `message`, labeled options). Sessions append `{id}.jsonl` while running, then compact to `{id}.json` (metadata + structured log) and `{id}.md` (messages).
+`spawn_minion` / `await_minion` stream progress and permission prompts on the in-flight MCP tool call (SSE + `notifications/progress` / elicitation). Do not poll `get_minion` in a loop. Resolve permissions with `resolve_minion_request` while those calls are still running. Permission and auth requests share one shape (`title`, `message`, labeled options). Sessions append `{id}.jsonl` while running, then compact to `{id}.json` (metadata + structured log) and `{id}.md` (messages).
 
-The initialize **instructions** tell coordinators to use `spawn_minion` instead of Task because it waits the same way Task does. Restart the MCP connection after upgrading.
+The initialize **instructions** tell coordinators to use `spawn_minion` instead of Task, never pass `background`, and apply their current permission mode to in-flight minion permission notifications — resolving immediately if that mode would auto-run, or seeking the user if it would ask. Restart the MCP connection after upgrading.
 
 Sessions are stored on disk (`<cwd>/.harness/sessions` by default) via `diskSessionPlugin`.
 
