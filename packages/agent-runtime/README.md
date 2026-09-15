@@ -1,11 +1,12 @@
 # @buildautomaton/agent-runtime
 
-ACP agent runtime with a small kernel and a catalog of plugins.
+ACP agent runtime: a small kernel, four plugin kinds, and a catalog of built-in plugins. The host (CLI or Node) supplies plugins; the kernel fills slots and returns a handle.
 
 ```text
-CLI  →  createRuntime({ plugins: coreSet({ options, hooks, implementation, runtime }) })
-     →  ACP manager (runtime/core)
-     →  harness / session / transport / tools plugins
+Host (CLI / Node)
+  → createRuntime({ plugins })   // coreSet() or a custom list
+  → applyPlugins → PluginSlots
+  → RuntimeHandle (ACP manager + transport)
 ```
 
 ## Who this is for
@@ -35,30 +36,56 @@ const runtime = await createRuntime({
 
 Requires **Node.js 18+**. Plugins are also exported from `@buildautomaton/agent-runtime/plugins`.
 
-## Layout
-
-| Folder | Holds |
-| --- | --- |
-| `src/types/` | Public plugin contracts: options, hooks, implementation |
-| `src/runtime/core/` | `createRuntime`, plugin kernel, ACP manager |
-| `src/runtime/harnesses/` | ACP client, install, discovery |
-| `src/runtime/session/` | Session runtime helpers |
-| `src/runtime/transport/` | Transport runtime helpers |
-| `src/runtime/tools/` | Tools runtime helpers |
-| `src/plugins/` | `coreSet()` plus one folder per plugin (`harnesses/cursor`, `session/disk`, `tools/minion`, `transport/mcp`, …) |
-
-`createRuntime` does not register plugins on its own. It requires a **session** plugin and a **transport** plugin.
-
 ## Plugin architecture
 
-Every plugin factory takes one named-args object `{ options, hooks, implementation, runtime }`. Start with `src/types/`. Core applies plugins with internal setup calls — there is no public `PluginApi`.
+A host (the CLI or a Node app) calls `createRuntime({ plugins })`. `applyPlugins` walks the array by `kind` and fills `PluginSlots`. Session and transport are required; harness and tools plugins are optional and compose additively. The ACP manager starts with an empty harness registry until a harness plugin (or `manager.registerHarness`) registers one.
+
+```mermaid
+flowchart TB
+  host["Host<br/>CLI / Node"]
+  create["createRuntime<br/>plugin kernel"]
+  slots["PluginSlots<br/>applyPlugins"]
+  subgraph kinds [PluginKind]
+    harness["harness — many"]
+    session["session — required"]
+    tools["tools — merged"]
+    transport["transport — required"]
+  end
+  handle["RuntimeHandle<br/>start / stop"]
+  host --> create --> slots
+  slots --> harness
+  slots --> session
+  slots --> tools
+  slots --> transport
+  harness --> handle
+  session --> handle
+  tools --> handle
+  transport --> handle
+```
+
+Host supplies plugins. Kernel fills slots. Handle starts the transport.
+
+### Four plugin kinds
+
+| Kind | Slot write | Cardinality | Role |
+| --- | --- | --- | --- |
+| `harness` | Push onto `harnesses[]`; merge hooks and host methods | many | ACP agent types: detect, install, spawn, prompt |
+| `session` | Set the backend, or push a `wrapBackend` layer | one backend; wraps stack | Create, append, patch, get, list session records |
+| `transport` | Set transport (last plugin wins) | one | `start` / `stop` the host channel; receives the tool registry |
+| `tools` | Push implementation; registries merge | many | `listTools` / `callTool` on the MCP CommandHost |
+
+A plugin object is `{ name, kind, options, hooks, implementation, runtime }`. `kind` is `harness | session | transport | tools`.
+
+### Factory contract
+
+Every factory takes one named-args object `{ options, hooks, implementation, runtime }`. Start with `src/types/`. Core applies plugins with internal setup calls — there is no public `PluginApi`.
 
 | Piece | Meaning |
 | --- | --- |
-| **options** | Config data (`dir`, `remoteUrl`, …) |
-| **hooks** | Notifications to the host (`onSessionUpdate`, `onStart`, …) |
-| **implementation** | How the plugin does its work (simple functions) |
-| **runtime** | `{ cwd, log }` at construction |
+| **options** | Config data: harness type and command, session dir, transport id, `remoteUrl` |
+| **hooks** | Host notifications: `onSessionUpdate`, `onStart`, `resolvePermission`, … |
+| **implementation** | How the plugin works: `createClient`, session CRUD, `start`/`stop`, `listTools`/`callTool` |
+| **runtime** | `{ cwd, log }` at construction. `coreSet()` shares one context across the bundle |
 
 | Kind | Options | Hooks | Implementation |
 | --- | --- | --- | --- |
@@ -89,9 +116,21 @@ const runtime = await createRuntime({
 await runtime.start();
 ```
 
-`coreSet({ options, hooks, implementation, runtime })` is the usual bundle used by the CLI. It includes every built-in harness plugin plus disk sessions, MCP (or remote), and `minionToolsPlugin` unless `minionTools: false`. Register any other `kind: 'tools'` plugin beside it — minion tools are not the tools layer.
+`coreSet({ options, hooks, implementation, runtime })` is the CLI bundle: all five harness plugins, disk sessions, then MCP — or remote when `transport: "remote"`. `minionToolsPlugin` is included by default (`minionTools: false` skips it). Other `kind: 'tools'` plugins can be registered the same way — minion tools are not the tools layer. If `backend: "stream"`, a stream wrap is stacked on disk so `subscribe()` sits on the file backend. Detect order for built-in harnesses: Cursor, Codex, Kiro, Claude Code, OpenCode.
 
-The ACP manager starts with an **empty** harness registry. Register harnesses through a plugin (or `manager.registerHarness`) before prompting.
+## Layout
+
+| Folder | Holds |
+| --- | --- |
+| `src/types/` | Public plugin contracts: options, hooks, implementation |
+| `src/runtime/core/` | `createRuntime`, `applyPlugins`, `PluginSlots`, ACP manager |
+| `src/runtime/harnesses/` | ACP client, install, discovery |
+| `src/runtime/session/` | Session runtime helpers |
+| `src/runtime/transport/` | Transport runtime helpers |
+| `src/runtime/tools/` | Tools runtime helpers |
+| `src/plugins/` | `coreSet()` plus one folder per plugin (`harnesses/cursor`, `session/disk`, `tools/minion`, `transport/mcp`, …) |
+
+`createRuntime` does not register plugins on its own. It requires a **session** plugin and a **transport** plugin.
 
 ## Available plugins
 
@@ -101,27 +140,27 @@ Located in `src/plugins/`.
 
 Each agent type is its own plugin. `coreSet()` / `coreHarnessPlugins()` include all of them:
 
-| Plugin | `type` | Display name | Detect | Install | Prompts |
-| --- | --- | --- | --- | --- | --- |
-| `cursorHarnessPlugin` | `cursor-cli` | Cursor | yes | yes (`CURSOR_API_KEY`) | yes |
-| `codexHarnessPlugin` | `codex-acp` | Codex | yes | yes (`OPENAI_API_KEY`) | yes |
-| `claudeCodeHarnessPlugin` | `claude-code` | Claude Code | yes | yes (`ANTHROPIC_API_KEY`) | yes |
-| `kiroHarnessPlugin` | `kiro-acp` | Kiro | yes | no | yes |
-| `opencodeHarnessPlugin` | `opencode` | OpenCode | no | yes | not yet (install-only) |
+| Plugin | `name` | `type` | Display name | Detect | Install | Prompts |
+| --- | --- | --- | --- | --- | --- | --- |
+| `cursorHarnessPlugin` | `harness-cursor` | `cursor-cli` | Cursor | yes | yes (`CURSOR_API_KEY`) | yes |
+| `codexHarnessPlugin` | `harness-codex` | `codex-acp` | Codex | yes | yes (`OPENAI_API_KEY`) | yes |
+| `claudeCodeHarnessPlugin` | `harness-claude-code` | `claude-code` | Claude Code | yes | yes (`ANTHROPIC_API_KEY`) | yes |
+| `kiroHarnessPlugin` | `harness-kiro` | `kiro-acp` | Kiro | yes | no | yes |
+| `opencodeHarnessPlugin` | `harness-opencode` | `opencode` | OpenCode | no | yes | not yet (install-only) |
 
 ### Sessions
 
-- **`diskSessionPlugin({ options: { dir } })`** — `{id}.jsonl` event log while running; compact at the end to `{id}.md` messages and a structured `log` on `{id}.json`. Default dir: `<cwd>/.harness/sessions`.
-- **`streamSessionPlugin()`** — wraps the current backend with in-memory `subscribe()`.
+- **`diskSessionPlugin({ options: { dir } })`** (`session-disk`) — `{id}.jsonl` event log while running; compact at the end to `{id}.md` messages and a structured `log` on `{id}.json`. Default dir: `<cwd>/.harness/sessions`.
+- **`streamSessionPlugin()`** (`session-stream`) — wraps the current backend with in-memory `subscribe()`.
 
 ### Transports
 
-- **`mcpTransportPlugin()`** — JSON-RPC MCP over localhost HTTP (Streamable HTTP POST + SSE GET). Options: `host`, `port`, `path` (defaults `127.0.0.1:3333/mcp`).
-- **`remoteTransportPlugin({ implementation })`** — register with a control plane. `createHttpRemoteAdapter(url)` POSTs `/register`, polls `/commands`, POSTs `/results`.
+- **`mcpTransportPlugin()`** (`transport-mcp`) — JSON-RPC MCP over localhost HTTP (Streamable HTTP POST + SSE GET). Options: `host`, `port`, `path` (defaults `127.0.0.1:3333/mcp`).
+- **`remoteTransportPlugin({ implementation })`** (`transport-remote`) — register with a control plane. `createHttpRemoteAdapter(url)` POSTs `/register`, polls `/commands`, POSTs `/results`.
 
 ### Tools
 
-Any plugin with `kind: 'tools'` can register MCP tools via `ToolsImplementation` (`listTools` / `callTool`). Optional `instructions()` and `prompts()` supply MCP initialize instructions and `prompts/list` entries. The MCP transport does not contribute that text. Multiple tools plugins merge. **`minionToolsPlugin()`** is one such plugin:
+Any plugin with `kind: 'tools'` can register MCP tools via `ToolsImplementation` (`listTools` / `callTool`). Optional `instructions()` and `prompts()` supply MCP initialize instructions and `prompts/list` entries. The MCP transport does not contribute that text. Multiple tools plugins merge. **`minionToolsPlugin()`** (`tools-minion`) is one such plugin:
 
 `spawn_minion` — `{ harness, prompt, model?, background? }` waits like Task by default (streams MCP progress on the same tool call) and returns compacted agent messages. `background: true` returns `minionId` immediately.
 
