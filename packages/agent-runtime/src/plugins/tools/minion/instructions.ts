@@ -7,9 +7,7 @@ Workflow:
 1. get_minion_context once if you need harness ids (cursor-cli, claude-code, …).
 2. spawn_minion with only harness + a complete prompt (optional model). It stays in-flight until the minion finishes.
 3. For several minions in parallel, call spawn_minion multiple times in one turn (each call waits on its own).
-4. Permission/auth requests arrive as MCP notifications and elicitation WHILE spawn_minion is still running. Do not wait for other minions to finish. Apply your current permission mode — the same mode that governs your own tools in this session.
-   - If that mode would auto-run the action, call resolve_minion_request immediately. Do not ask the human.
-   - If that mode would ask the user, leave it for them (elicitation) or ask them the same way you would for your own tools.
+4. Permission/auth requests arrive as MCP notifications and elicitation WHILE spawn_minion is still running. Do not wait for other minions to finish. The server first asks you (via sampling, when the client supports it) to apply your current permission mode — the same mode that governs your own tools. If that mode would auto-run, it resolves without bothering the user. If it would ask, the user sees elicitation; cancelled or missed prompts are shown again until resolved. You may also call resolve_minion_request in-flight.
 5. spawn_minion keeps waiting after you resolve. Use await_minion only if a spawn already returned. Do not poll get_minion.
 6. Read messages via the returned transcript or get_minion_transcript — never by opening session JSON/JSONL files.`;
 

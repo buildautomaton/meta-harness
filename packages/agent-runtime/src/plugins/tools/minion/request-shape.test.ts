@@ -22,5 +22,8 @@ describe('unwrapAgentRequest', () => {
     expect(summarizeMinionRequest(rec.method, rec.params)).toBe('npm test');
     expect(requestOptions(rec.params)).toEqual([{ optionId: 'allow-once', label: 'Allow once' }]);
     expect(minionRequestKind(rec.kind, rec.method)).toBe('permission');
+    expect(unwrapAgentRequest({ requestId: 7, payload: { method: 'session/request_permission', params: {} } }).requestId).toBe(
+      '7',
+    );
   });
 });

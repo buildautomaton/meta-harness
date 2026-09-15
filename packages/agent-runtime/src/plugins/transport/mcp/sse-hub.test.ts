@@ -3,7 +3,7 @@ import { createMcpSseHub } from './sse-hub.js';
 import type { JsonRpcMessage } from './jsonrpc.js';
 
 describe('createMcpSseHub', () => {
-  it('mirrors broadcasts and requests onto in-flight writers', async () => {
+  it('sends session requests to writers only when no GET clients are connected', async () => {
     const sse = createMcpSseHub();
     const seen: JsonRpcMessage[] = [];
     const detach = sse.addWriter((msg) => seen.push(msg));

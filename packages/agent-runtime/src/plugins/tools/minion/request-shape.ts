@@ -11,7 +11,7 @@ export type UnwrappedRequest = {
 export function unwrapAgentRequest(payload: unknown): UnwrappedRequest {
   const rec = asRecord(payload) ?? {};
   const inner = asRecord(rec.payload) ?? {};
-  const requestId = str(rec.requestId) ?? str(inner.requestId);
+  const requestId = idOf(rec.requestId) ?? idOf(inner.requestId);
   const method = str(rec.method) ?? str(inner.method) ?? '';
   const params = asRecord(rec.params) ?? asRecord(inner.params) ?? {};
   const kind = str(rec.kind) ?? mapRequestKind(method);
@@ -46,6 +46,12 @@ function asRecord(value: unknown): Record<string, unknown> | undefined {
   return value && typeof value === 'object' && !Array.isArray(value)
     ? (value as Record<string, unknown>)
     : undefined;
+}
+
+function idOf(value: unknown): string | undefined {
+  if (typeof value === 'string' && value.trim()) return value.trim();
+  if (typeof value === 'number' && Number.isFinite(value)) return String(value);
+  return undefined;
 }
 
 function str(value: unknown): string | undefined {

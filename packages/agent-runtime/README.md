@@ -270,7 +270,7 @@ Any plugin with `kind: 'tools'` can register MCP tools via `ToolsImplementation`
 
 `resolve_minion_request` — approve/deny a minion permission (pass `optionId` or the label, e.g. Allow all) or store a provider API token.
 
-While a spawn/await tool call is in flight, progress and permission events are sent as MCP `notifications/progress` / `notifications/message` (and `elicitation/create` when the client supports it) on the Streamable HTTP SSE response so the coordinator can resolve permissions without polling or waiting for other minions.
+While a spawn/await tool call is in flight, a short human-readable tool-call summary is sent about every 10s as MCP `notifications/progress` (not raw JSON). Permission events use `notifications/message` and `elicitation/create`; if the client supports sampling, the coordinator's current permission mode is applied first. Missed or cancelled prompts are redelivered until resolved.
 
 On disk, a running session appends `{id}.jsonl`. When it ends, that log is compacted to `{id}.md` (concatenated agent messages) and a structured `log` on `{id}.json` (messages, thoughts, and tool calls). The JSONL file is then removed.
 

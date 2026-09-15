@@ -20,7 +20,7 @@ The MCP (or remote) server exposes minion tools (not subagents, to avoid clashin
 | `get_minion_transcript` | `minionId` | agent messages only (no tool/reasoning dumps) |
 | `resolve_minion_request` | `minionId`, optional `requestId`, `outcome`, `token` | approve/deny a permission or store a provider token |
 
-`spawn_minion` / `await_minion` stream progress and permission prompts on the in-flight MCP tool call (SSE + `notifications/progress` / elicitation). Do not poll `get_minion` in a loop. Resolve permissions with `resolve_minion_request` while those calls are still running. Permission and auth requests share one shape (`title`, `message`, labeled options). Sessions append `{id}.jsonl` while running, then compact to `{id}.json` (metadata + structured log) and `{id}.md` (messages).
+`spawn_minion` / `await_minion` stream a short tool-call progress summary about every 10s on the in-flight MCP tool call (SSE + `notifications/progress`). Permission prompts use elicitation and are redelivered if missed; sampling applies the coordinator's permission mode when the client supports it. Do not poll `get_minion` in a loop.
 
 The initialize **instructions** tell coordinators to use `spawn_minion` instead of Task, never pass `background`, and apply their current permission mode to in-flight minion permission notifications — resolving immediately if that mode would auto-run, or seeking the user if it would ask. Restart the MCP connection after upgrading.
 
