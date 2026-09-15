@@ -20,10 +20,7 @@ describe('createProgressReporter', () => {
     const report = createProgressReporter(hub(broadcast), (msg) => notified.push(msg), 3);
     report({ message: 'Minion completed', progress: 311 });
     expect(broadcast.map((msg) => msg.method)).toEqual(['notifications/message']);
-    expect(notified.map((msg) => msg.method)).toEqual([
-      'notifications/progress',
-      'notifications/message',
-    ]);
+    expect(notified.map((msg) => msg.method)).toEqual(['notifications/progress']);
     expect(notified[0]?.params).toMatchObject({
       progressToken: 3,
       progress: 311,

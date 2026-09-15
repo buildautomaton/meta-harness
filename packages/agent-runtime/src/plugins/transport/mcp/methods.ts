@@ -1,6 +1,6 @@
 import type { LogFn } from '@/types/log.js';
 import type { ToolRegistry } from '@/types/tools/implementation.js';
-import { clientSupportsElicitation } from './client-caps.js';
+import { clientSupportsElicitation, clientSupportsSampling } from './client-caps.js';
 import { mcpInitializeResult } from './initialize-result.js';
 import { jsonRpcError, jsonRpcResult, rpcParams, type JsonRpcMessage } from './jsonrpc.js';
 import { createProgressReporter, progressTokenFromParams } from './progress-reporter.js';
@@ -33,6 +33,7 @@ export async function handleMcpMethod(
   if (method === 'initialize') {
     initialized.value = true;
     sse?.setElicitation(clientSupportsElicitation(params));
+    sse?.setSampling(clientSupportsSampling(params));
     log('[MCP] Initialize complete; server ready');
     return mcpInitializeResult(id, await tools.instructions?.());
   }

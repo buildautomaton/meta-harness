@@ -260,9 +260,9 @@ Each agent type is its own plugin. `coreSet()` / `coreHarnessPlugins()` include 
 
 Any plugin with `kind: 'tools'` can register MCP tools via `ToolsImplementation` (`listTools` / `callTool`). Optional `instructions()` and `prompts()` supply MCP initialize instructions and `prompts/list` entries. The MCP transport does not contribute that text. Multiple tools plugins merge. **`minionToolsPlugin()`** (`tools-minion`) is one such plugin:
 
-`spawn_minion` — `{ harness, prompt, model? }` waits until the minion finishes or needs the user (streams MCP progress on the same tool call) and returns compacted agent messages. There is no background spawn. For several minions, call `spawn_minion` multiple times in one turn (each call waits on its own). Permission requests arrive as MCP notifications while the call is in flight; resolve with `resolve_minion_request` on a separate call, then `await_minion`.
+`spawn_minion` — `{ harness, prompt, model? }` waits until the minion finishes (streams MCP progress on the same tool call) and returns compacted agent messages. There is no background parameter. For several minions, call `spawn_minion` multiple times in one turn (each call waits on its own). Permission requests arrive as MCP notifications and elicitation while the call is still in flight; the coordinator applies its current permission mode via `resolve_minion_request` (or seeks the user if that mode would) without waiting for other minions.
 
-`await_minion` — block until a minion finishes or needs the user, with live progress. Use after `resolve_minion_request`. Do not poll.
+`await_minion` — block until a minion finishes, with live progress. `spawn_minion` already waits; use this only if a spawn already returned. Do not poll.
 
 `get_minion_context` — working directory and harness list minions inherit.
 
@@ -270,7 +270,7 @@ Any plugin with `kind: 'tools'` can register MCP tools via `ToolsImplementation`
 
 `resolve_minion_request` — approve/deny a minion permission (pass `optionId` or the label, e.g. Allow all) or store a provider API token.
 
-While a spawn/await tool call is in flight, progress is sent as MCP `notifications/progress` (and `notifications/message`) on the Streamable HTTP SSE response so the coordinator sees updates without polling.
+While a spawn/await tool call is in flight, a short human-readable tool-call summary is sent about every 10s as MCP `notifications/progress` (not raw JSON). Permission events use `notifications/message` and `elicitation/create`; if the client supports sampling, the coordinator's current permission mode is applied first. Missed or cancelled prompts are redelivered until resolved.
 
 On disk, a running session appends `{id}.jsonl`. When it ends, that log is compacted to `{id}.md` (concatenated agent messages) and a structured `log` on `{id}.json` (messages, thoughts, and tool calls). The JSONL file is then removed.
 

@@ -6,7 +6,7 @@ import type { SessionEvent } from '@/types/session/records.js';
 import type { NotifierHub } from '@/types/notify.js';
 import { isoNow } from '@runtime/core/iso-now.js';
 import { localAgentErrorSuggestsAuth } from '@runtime/harnesses/auth/local-agent-auth.js';
-import { emitMinionEvent, maybeProgressNotify } from './emit-progress.js';
+import { emitMinionEvent } from './emit-progress.js';
 import { compactAgentTranscript } from '@plugins/session/transcript.js';
 import { compactSessionLog } from '@plugins/session/compact-log.js';
 import { authCoordinatorRequest, coordinatorNotice } from './coordinator-request.js';
@@ -31,7 +31,6 @@ export async function appendSessionEvent(
   await options.backend.append(sessionId, event);
   const snapshot = await options.backend.get(sessionId);
   if (snapshot) options.sessionHooks?.onSessionEvent?.(sessionId, event, snapshot);
-  if (kind === 'update') maybeProgressNotify(options.notifier, sessionId, 'Minion progress', payload);
 }
 
 export async function finishSession(

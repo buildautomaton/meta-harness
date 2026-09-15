@@ -6,19 +6,24 @@ const PING_MS = 15_000;
 
 export type McpSseHub = {
   addClient(res: ServerResponse, headers: Record<string, string>): void;
+  addWriter(write: (msg: JsonRpcMessage) => void): () => void;
   broadcast(msg: JsonRpcMessage): void;
   request(method: string, params: unknown): Promise<unknown>;
   complete(id: string | number, result?: unknown, error?: { message?: string }): void;
   setElicitation(supported: boolean): void;
+  setSampling(supported: boolean): void;
   supportsElicitation(): boolean;
+  supportsSampling(): boolean;
   close(): void;
 };
 
 export function createMcpSseHub(): McpSseHub {
   const clients = new Set<ServerResponse>();
+  const writers = new Set<(msg: JsonRpcMessage) => void>();
   const pending = new Map<number, { resolve: (value: unknown) => void; reject: (err: Error) => void }>();
   let nextId = 1;
   let elicitation = false;
+  let sampling = false;
   let timer: ReturnType<typeof setInterval> | undefined;
 
   function ping(): void {
@@ -38,14 +43,26 @@ export function createMcpSseHub(): McpSseHub {
         clients.delete(res);
       });
     },
+    addWriter(write) {
+      writers.add(write);
+      return () => {
+        writers.delete(write);
+      };
+    },
     broadcast(msg) {
       for (const res of clients) writeSseMessage(res, msg);
+      for (const write of writers) write(msg);
     },
     request(method, params) {
       const id = nextId++;
+      const msg = { jsonrpc: '2.0', id, method, params };
       return new Promise((resolve, reject) => {
         pending.set(id, { resolve, reject });
-        this.broadcast({ jsonrpc: '2.0', id, method, params });
+        if (clients.size > 0) {
+          for (const res of clients) writeSseMessage(res, msg);
+          return;
+        }
+        for (const write of writers) write(msg);
       });
     },
     complete(id, result, error) {
@@ -59,14 +76,21 @@ export function createMcpSseHub(): McpSseHub {
     setElicitation(supported) {
       elicitation = supported;
     },
+    setSampling(supported) {
+      sampling = supported;
+    },
     supportsElicitation() {
       return elicitation;
+    },
+    supportsSampling() {
+      return sampling;
     },
     close() {
       if (timer) clearInterval(timer);
       timer = undefined;
       for (const res of clients) res.end();
       clients.clear();
+      writers.clear();
     },
   };
 }

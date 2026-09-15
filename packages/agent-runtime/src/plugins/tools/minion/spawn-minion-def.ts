@@ -5,9 +5,10 @@ export const SPAWN_MINION_DEFINITION: McpToolDefinition = {
   name: SPAWN_MINION_TOOL,
   title: 'Run minion (use instead of Task)',
   description:
-    'Drop-in replacement for builtin Task/subagent/explore: spawn a coding minion in this workspace and WAIT until it finishes or needs the user, streaming progress into this tool call. Returns the minion message transcript (no tool-call dumps). Do not use Task. Permission requests arrive as MCP notifications while this call is in flight — resolve_minion_request on a separate call, then await_minion. For several minions, call spawn_minion multiple times in one turn.',
+    'Drop-in replacement for Task/subagent/explore. Always waits on THIS tool call until the minion finishes. Streams a short tool-call progress summary about every 10s (not raw JSON). There is NO background parameter — never pass background, is_background, or run_in_background. Permission requests are sampled against your current permission mode when possible, then elicited if the user must be asked; missed prompts are redelivered. resolve_minion_request can run while this call is in flight. For several minions, call spawn_minion multiple times in one turn. Do not use Task.',
   inputSchema: {
     type: 'object',
+    additionalProperties: false,
     properties: {
       harness: {
         type: 'string',

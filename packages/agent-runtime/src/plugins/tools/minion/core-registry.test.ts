@@ -46,8 +46,16 @@ describe('createCoreToolRegistry', () => {
       'resolve_minion_request',
     ]);
     const spawnDef = listed.find((t) => t.name === SPAWN_MINION_TOOL);
-    const props = (spawnDef?.inputSchema as { properties?: Record<string, unknown> }).properties;
-    expect(props).not.toHaveProperty('background');
+    const schema = spawnDef?.inputSchema as { properties?: Record<string, unknown>; additionalProperties?: boolean };
+    expect(schema.properties).not.toHaveProperty('background');
+    expect(schema.additionalProperties).toBe(false);
+    const background = await tools.callTool(SPAWN_MINION_TOOL, {
+      harness: 'cursor-cli',
+      prompt: 'do it',
+      background: true,
+    });
+    expect(background.isError).toBe(true);
+    expect(background.content[0]?.text).toContain('no background parameter');
     const launched = await tools.callTool(SPAWN_MINION_TOOL, {
       harness: 'cursor-cli',
       prompt: 'do it',

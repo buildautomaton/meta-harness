@@ -1,4 +1,5 @@
 import type { SessionEventHost } from './session-events.js';
+import type { MinionAsk } from '@/types/notify.js';
 import { appendSessionEvent } from './session-events.js';
 import { emitMinionEvent } from './emit-progress.js';
 import { decisionFromElicitation, permissionResultFromDecision } from './permission-result.js';
@@ -13,7 +14,7 @@ export async function handleAgentRequest(
 ): Promise<void> {
   await appendSessionEvent(options, sessionId, 'request', payload);
   const rec = unwrapAgentRequest(payload);
-  if (typeof rec.requestId !== 'string' || !options.engine) return;
+  if (!rec.requestId || !options.engine) return;
   const kind = minionRequestKind(rec.kind, rec.method);
   const ask = coordinatorRequest(
     sessionId,
@@ -39,11 +40,26 @@ export async function handleAgentRequest(
     return;
   }
   const waited = options.pending?.add(ask);
-  void options.notifier?.ask(ask).then(async (elicited) => {
-    await storeElicitedAuth(options.engine!, options.backend, sessionId, elicited);
-    const decided = decisionFromElicitation(elicited);
-    if (decided !== undefined) options.pending?.complete(rec.requestId!, decided);
-  });
+  void retryAsk(options, sessionId, rec.requestId, rec.params, ask);
   const result = waited ?? permissionResultFromDecision({ outcome: 'allow-once' }, rec.params);
   options.engine.resolveRequest(rec.requestId, await result);
+}
+
+async function retryAsk(
+  options: SessionEventHost,
+  sessionId: string,
+  requestId: string,
+  params: Record<string, unknown>,
+  ask: MinionAsk,
+): Promise<void> {
+  while (options.pending?.has(requestId)) {
+    const elicited = await options.notifier?.ask(ask);
+    await storeElicitedAuth(options.engine!, options.backend, sessionId, elicited);
+    const decided = decisionFromElicitation(elicited, params);
+    if (decided !== undefined) {
+      options.pending?.complete(requestId, decided);
+      return;
+    }
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+  }
 }

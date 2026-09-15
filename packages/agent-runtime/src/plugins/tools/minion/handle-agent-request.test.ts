@@ -5,7 +5,7 @@ import { createStreamBackend } from '@plugins/session/stream/backend.js';
 import type { MinionEvent } from '@/types/notify.js';
 
 describe('handleAgentRequest', () => {
-  it('notifies and resolves when the coordinator completes the pending request', async () => {
+  it('notifies and waits for the coordinator to apply its permission mode', async () => {
     const backend = createStreamBackend();
     await backend.create({
       id: 'm1',
@@ -36,12 +36,14 @@ describe('handleAgentRequest', () => {
         requestId: 'req-1',
         payload: {
           method: 'session/request_permission',
-          params: { toolCall: { title: 'ls' }, options: [{ optionId: 'allow-once' }, { optionId: 'allow-always' }, { optionId: 'reject' }] },
+          params: {
+            toolCall: { title: 'ls' },
+            options: [{ optionId: 'allow-once' }, { optionId: 'allow-always' }, { optionId: 'reject' }],
+          },
         },
       },
     );
     await until(() => pending.list('m1').length > 0);
-    expect(pending.list('m1')[0]?.requestId).toBe('req-1');
     expect(pending.list('m1')[0]).toMatchObject({
       title: 'Permission needed',
       message: 'ls',

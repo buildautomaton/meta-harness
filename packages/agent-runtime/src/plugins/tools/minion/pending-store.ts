@@ -5,6 +5,7 @@ type Entry = MinionAsk & { resolve: (result: unknown) => void };
 export type PendingStore = {
   add(req: MinionAsk): Promise<unknown>;
   list(minionId: string): MinionPendingRequest[];
+  has(requestId: string): boolean;
   complete(requestId: string, result: unknown): boolean;
   denyAll(minionId: string, result: unknown): void;
 };
@@ -21,6 +22,9 @@ export function createPendingStore(): PendingStore {
       return [...map.values()]
         .filter((entry) => entry.minionId === minionId)
         .map(({ resolve: _resolve, minionId: _id, ...rest }) => rest);
+    },
+    has(requestId) {
+      return map.has(requestId);
     },
     complete(requestId, result) {
       const entry = map.get(requestId);

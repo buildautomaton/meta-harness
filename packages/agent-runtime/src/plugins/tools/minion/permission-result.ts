@@ -18,14 +18,19 @@ export function permissionResultFromDecision(
   return defaultAllowPermission(params);
 }
 
-export function decisionFromElicitation(result: unknown): unknown | undefined {
-  if (result == null || typeof result !== 'object') return result ?? undefined;
+export function decisionFromElicitation(
+  result: unknown,
+  params?: Record<string, unknown>,
+): unknown | undefined {
+  if (result == null || typeof result !== 'object') return undefined;
   const rec = result as { action?: string; content?: Record<string, unknown> };
-  if (rec.action === 'decline' || rec.action === 'cancel') {
-    return { outcome: { outcome: 'denied' } };
+  if (rec.action === 'cancel') return undefined;
+  if (rec.action === 'decline') return { outcome: { outcome: 'denied' } };
+  if (rec.action === 'accept') {
+    return permissionResultFromDecision(rec.content ?? {}, params ?? rec.content);
   }
-  if (rec.action === 'accept' && rec.content) {
-    return permissionResultFromDecision(rec.content, rec.content);
+  if ('optionId' in rec || 'outcome' in rec) {
+    return permissionResultFromDecision(rec as Record<string, unknown>, params);
   }
-  return result;
+  return undefined;
 }

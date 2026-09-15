@@ -5,7 +5,7 @@ export const GET_MINION_DEFINITION: McpToolDefinition = {
   name: GET_MINION_TOOL,
   title: 'Minion status and transcript',
   description:
-    'Snapshot of a minion: status, pending permission/auth (same shape as notifications: title, message, labeled options), and compacted agent-message transcript. Prefer await_minion for live waiting. Do not read session files — use this or get_minion_transcript.',
+    'Snapshot of a minion: status, pending permission/auth (same shape as in-flight notifications: title, message, labeled options), and compacted agent-message transcript. spawn_minion already waits; prefer it over polling. Do not read session files — use this or get_minion_transcript.',
   inputSchema: {
     type: 'object',
     properties: {

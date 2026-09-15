@@ -21,15 +21,20 @@ export async function handleStreamingToolCall(
     Connection: 'keep-alive',
     ...headers,
   });
-  const reply = await handleMcpMethod(
-    msg,
-    ctx.tools,
-    ctx.initialized,
-    ctx.log,
-    ctx.sse,
-    (note) => writeSseMessage(res, note),
-  );
-  if (reply) writeSseMessage(res, reply);
-  res.end();
+  const detach = ctx.sse.addWriter((note) => writeSseMessage(res, note));
+  try {
+    const reply = await handleMcpMethod(
+      msg,
+      ctx.tools,
+      ctx.initialized,
+      ctx.log,
+      ctx.sse,
+      (note) => writeSseMessage(res, note),
+    );
+    if (reply) writeSseMessage(res, reply);
+  } finally {
+    detach();
+    res.end();
+  }
   return true;
 }
