@@ -13,7 +13,7 @@ export async function handleAgentRequest(
 ): Promise<void> {
   await appendSessionEvent(options, sessionId, 'request', payload);
   const rec = unwrapAgentRequest(payload);
-  if (typeof rec.requestId !== 'string' || !options.manager) return;
+  if (typeof rec.requestId !== 'string' || !options.engine) return;
   const kind = minionRequestKind(rec.kind, rec.method);
   const ask = coordinatorRequest(
     sessionId,
@@ -35,15 +35,15 @@ export async function handleAgentRequest(
       method: rec.method,
       params: rec.params,
     });
-    options.manager.resolveRequest(rec.requestId, result);
+    options.engine.resolveRequest(rec.requestId, result);
     return;
   }
   const waited = options.pending?.add(ask);
   void options.notifier?.ask(ask).then(async (elicited) => {
-    await storeElicitedAuth(options.manager!, options.backend, sessionId, elicited);
+    await storeElicitedAuth(options.engine!, options.backend, sessionId, elicited);
     const decided = decisionFromElicitation(elicited);
     if (decided !== undefined) options.pending?.complete(rec.requestId!, decided);
   });
   const result = waited ?? permissionResultFromDecision({ outcome: 'allow-once' }, rec.params);
-  options.manager.resolveRequest(rec.requestId, await result);
+  options.engine.resolveRequest(rec.requestId, await result);
 }

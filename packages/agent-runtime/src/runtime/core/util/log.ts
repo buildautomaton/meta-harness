@@ -1,4 +1,4 @@
-import type { LogFn } from '../../../types/log.js';
+import type { LogFn } from '@/types/log.js';
 
 let defaultLog: LogFn = (line) => {
   console.log(line);

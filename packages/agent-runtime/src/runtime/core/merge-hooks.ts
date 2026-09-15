@@ -1,5 +1,5 @@
-import type { HarnessHooks } from '../../types/harness/hooks.js';
-import type { HarnessHostImplementation } from '../../types/harness/host.js';
+import type { HarnessHooks } from '@/types/harness/hooks.js';
+import type { HarnessHostImplementation } from '@/types/harness/host.js';
 
 function both<A extends unknown[]>(
   a?: (...args: A) => void,

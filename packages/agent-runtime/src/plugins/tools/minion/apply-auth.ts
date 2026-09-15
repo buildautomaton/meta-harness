@@ -1,13 +1,13 @@
-import type { AgentRuntimeManager } from '../../../runtime/core/manager/types.js';
-import type { SessionImplementation } from '../../../types/session/implementation.js';
-import { setInstalledAgentAuthEnv } from '../../../runtime/harnesses/clients/installed-agent-auth-env.js';
+import type { AcpEngine } from '@runtime/acp/engine/types.js';
+import type { SessionImplementation } from '@/types/session/implementation.js';
+import { setInstalledAgentAuthEnv } from '@runtime/acp/clients/installed-agent-auth-env.js';
 
 export function applyMinionAuthToken(
-  manager: AgentRuntimeManager,
+  engine: AcpEngine,
   harnessType: string,
   token: string,
 ): { envVar?: string; stored: boolean } {
-  const envVar = manager.getHarness(harnessType)?.installTokenEnvVar;
+  const envVar = engine.getHarness(harnessType)?.installTokenEnvVar;
   const trimmed = token.trim();
   if (!envVar || !trimmed) return { stored: false };
   setInstalledAgentAuthEnv([{ envVar, token: trimmed }]);
@@ -15,7 +15,7 @@ export function applyMinionAuthToken(
 }
 
 export async function storeElicitedAuth(
-  manager: AgentRuntimeManager,
+  engine: AcpEngine,
   backend: SessionImplementation,
   sessionId: string,
   elicited: unknown,
@@ -23,7 +23,7 @@ export async function storeElicitedAuth(
   const token = elicitationToken(elicited);
   if (!token) return;
   const snapshot = await backend.get(sessionId);
-  if (snapshot) applyMinionAuthToken(manager, snapshot.session.harness, token);
+  if (snapshot) applyMinionAuthToken(engine, snapshot.session.harness, token);
 }
 
 function elicitationToken(elicited: unknown): string | undefined {

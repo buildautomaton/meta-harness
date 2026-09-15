@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest';
 import { handleAgentRequest } from './handle-agent-request.js';
 import { createPendingStore } from './pending-store.js';
-import { createStreamBackend } from '../../session/stream/backend.js';
-import type { MinionEvent } from '../../../types/notify.js';
+import { createStreamBackend } from '@plugins/session/stream/backend.js';
+import type { MinionEvent } from '@/types/notify.js';
 
 describe('handleAgentRequest', () => {
   it('notifies and resolves when the coordinator completes the pending request', async () => {
@@ -24,7 +24,7 @@ describe('handleAgentRequest', () => {
       {
         backend,
         pending,
-        manager: { resolveRequest: (_id: string, result: unknown) => resolved.push(result) } as never,
+        engine: { resolveRequest: (_id: string, result: unknown) => resolved.push(result) } as never,
         notifier: {
           notify: (event) => events.push(event),
           ask: async () => undefined,

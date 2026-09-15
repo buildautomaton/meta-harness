@@ -1,4 +1,4 @@
-import type { MinionAsk, MinionPendingRequest } from '../../../types/notify.js';
+import type { MinionAsk, MinionPendingRequest } from '@/types/notify.js';
 
 type Entry = MinionAsk & { resolve: (result: unknown) => void };
 

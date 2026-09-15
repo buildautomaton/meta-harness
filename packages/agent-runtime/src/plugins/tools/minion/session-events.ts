@@ -1,20 +1,20 @@
-import type { AgentRuntimeManager } from '../../../runtime/core/manager/types.js';
-import type { SessionHooks } from '../../../types/session/hooks.js';
-import type { ToolsHooks } from '../../../types/tools/hooks.js';
-import type { SessionImplementation } from '../../../types/session/implementation.js';
-import type { SessionEvent } from '../../../types/session/records.js';
-import type { NotifierHub } from '../../../types/notify.js';
-import { isoNow } from '../../../runtime/core/iso-now.js';
-import { localAgentErrorSuggestsAuth } from '../../../runtime/harnesses/auth/local-agent-auth.js';
+import type { AcpEngine } from '@runtime/acp/engine/types.js';
+import type { SessionHooks } from '@/types/session/hooks.js';
+import type { ToolsHooks } from '@/types/tools/hooks.js';
+import type { SessionImplementation } from '@/types/session/implementation.js';
+import type { SessionEvent } from '@/types/session/records.js';
+import type { NotifierHub } from '@/types/notify.js';
+import { isoNow } from '@runtime/core/iso-now.js';
+import { localAgentErrorSuggestsAuth } from '@runtime/harnesses/auth/local-agent-auth.js';
 import { emitMinionEvent, maybeProgressNotify } from './emit-progress.js';
-import { compactAgentTranscript } from '../../session/transcript.js';
-import { compactSessionLog } from '../../session/compact-log.js';
+import { compactAgentTranscript } from '@plugins/session/transcript.js';
+import { compactSessionLog } from '@plugins/session/compact-log.js';
 import { authCoordinatorRequest, coordinatorNotice } from './coordinator-request.js';
 import type { PendingStore } from './pending-store.js';
 
 export type SessionEventHost = {
   backend: SessionImplementation;
-  manager?: AgentRuntimeManager;
+  engine?: AcpEngine;
   sessionHooks?: SessionHooks;
   toolsHooks?: ToolsHooks;
   notifier?: NotifierHub;
@@ -51,7 +51,10 @@ export async function finishSession(
   const log = compactSessionLog(events);
   await options.backend.patch(sessionId, { transcript, log });
   await options.backend.compact?.(sessionId, { transcript, log });
-  const authRequired = localAgentErrorSuggestsAuth(snapshot?.session.harness, result.error);
+  const authRequired = localAgentErrorSuggestsAuth(
+    options.engine?.getHarness(snapshot?.session.harness)?.authErrorHints,
+    result.error,
+  );
   options.pending?.denyAll(sessionId, { outcome: { outcome: 'cancelled' } });
   emitMinionEvent(options.notifier, finishEvent(sessionId, result, authRequired, snapshot?.session.harness));
 }

@@ -1,5 +1,5 @@
-import type { ToolsPlugin, ToolsPluginInit } from '../../../types/tools/plugin.js';
-import type { ToolsImplementation } from '../../../types/tools/implementation.js';
+import type { ToolsPlugin, ToolsPluginInit } from '@/types/tools/plugin.js';
+import type { ToolsImplementation } from '@/types/tools/implementation.js';
 import { CORE_TOOL_DEFINITIONS } from './definitions.js';
 import { createCoreToolRegistry } from './core-registry.js';
 import { bindMinionHost } from './bind-host.js';

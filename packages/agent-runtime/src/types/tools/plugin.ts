@@ -1,4 +1,4 @@
-import type { PluginFactory, PluginInit, PluginRuntimeContext } from '../plugin.js';
+import type { PluginFactory, PluginInit, PluginRuntimeContext } from '@/types/plugin.js';
 import type { ToolsHooks } from './hooks.js';
 import type { ToolsImplementation } from './implementation.js';
 import type { ToolsOptions } from './options.js';

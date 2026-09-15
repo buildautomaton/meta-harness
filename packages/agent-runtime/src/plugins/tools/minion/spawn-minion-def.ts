@@ -1,4 +1,4 @@
-import type { McpToolDefinition } from '../../../types/tools/definitions.js';
+import type { McpToolDefinition } from '@/types/tools/definitions.js';
 import { SPAWN_MINION_TOOL } from './names.js';
 
 export const SPAWN_MINION_DEFINITION: McpToolDefinition = {

@@ -1,5 +1,5 @@
-import { runNpmGlobalInstall } from '../../../runtime/harnesses/install/commands/run-npm-global-install.js';
-import type { AgentInstallContext } from '../../../types/harness/host.js';
+import { runNpmGlobalInstall } from '@runtime/harnesses/install/commands/run-npm-global-install.js';
+import type { AgentInstallContext } from '@/types/harness/host.js';
 
 export const claudeCodeInstallDetectCommand = 'claude';
 export const claudeCodeInstallTokenEnvVar = 'ANTHROPIC_API_KEY';

@@ -1,4 +1,4 @@
-import type { MinionAsk } from '../../../types/notify.js';
+import type { MinionAsk } from '@/types/notify.js';
 
 export function elicitationParams(ask: MinionAsk): Record<string, unknown> {
   const message = notice(ask);

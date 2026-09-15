@@ -1,5 +1,5 @@
-import type { SessionEvent } from '../../types/session/records.js';
-import type { SessionLogEntry } from '../../types/session/log.js';
+import type { SessionEvent } from '@/types/session/records.js';
+import type { SessionLogEntry } from '@/types/session/log.js';
 import { entryFromEvent } from './entry-from-event.js';
 
 export function mergeSessionLog(log: SessionLogEntry[], event: SessionEvent): SessionLogEntry[] {

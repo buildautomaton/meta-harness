@@ -1,4 +1,4 @@
-import type { MinionEvent, NotifierSink } from '../../../types/notify.js';
+import type { MinionEvent, NotifierSink } from '@/types/notify.js';
 import { elicitationParams } from './elicitation.js';
 import type { McpSseHub } from './sse-hub.js';
 

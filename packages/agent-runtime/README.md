@@ -6,7 +6,7 @@ ACP agent runtime: a small kernel, four plugin kinds, and a catalog of built-in 
 Host (CLI / Node)
   → createRuntime({ plugins })   // coreSet() or a custom list
   → applyPlugins → PluginSlots
-  → RuntimeHandle (ACP manager + transport)
+  → RuntimeHandle (ACP engine + transport)
 ```
 
 ## Who this is for
@@ -38,7 +38,7 @@ Requires **Node.js 18+**. Plugins are also exported from `@buildautomaton/agent-
 
 ## Plugin architecture
 
-A host (the CLI or a Node app) calls `createRuntime({ plugins })`. `applyPlugins` walks the array by `kind` and fills `PluginSlots`. Session and transport are required; harness and tools plugins are optional and compose additively. The ACP manager starts with an empty harness registry until a harness plugin (or `manager.registerHarness`) registers one.
+A host (the CLI or a Node app) calls `createRuntime({ plugins })`. `applyPlugins` walks the array by `kind` and fills `PluginSlots`. Session and transport are required; harness and tools plugins are optional and compose additively. The ACP engine starts with an empty harness registry until a harness plugin (or `engine.registerHarness`) registers one.
 
 ```mermaid
 flowchart TB
@@ -118,13 +118,88 @@ await runtime.start();
 
 `coreSet({ options, hooks, implementation, runtime })` is the CLI bundle: all five harness plugins, disk sessions, then MCP — or remote when `transport: "remote"`. `minionToolsPlugin` is included by default (`minionTools: false` skips it). Other `kind: 'tools'` plugins can be registered the same way — minion tools are not the tools layer. If `backend: "stream"`, a stream wrap is stacked on disk so `subscribe()` sits on the file backend. Detect order for built-in harnesses: Cursor, Codex, Kiro, Claude Code, OpenCode.
 
+## ACP engine
+
+The **ACP engine** (`AcpEngine`) lives on the runtime handle. It is not a second runtime. Harness plugins register agent types into it. Session plugins persist `acpSessionId`. Transport and tools sit beside it on the handle.
+
+```text
+createRuntime({ plugins })
+  → applyPlugins → PluginSlots
+  → buildClientHostHooks(session backend)   // persist + harness hooks
+  → createAcpEngine
+  → registerHarness from slots
+  → RuntimeHandle { start, stop, engine }
+```
+
+`createRuntime` is the host path. `createAcpEngine` is the same engine without a transport — useful for tests or embedding. There is one engine factory.
+
+### Prompt pipeline
+
+```mermaid
+flowchart LR
+  prompt["engine.prompt"]
+  resolve["resolve run<br/>runId / keys"]
+  acquire["acquire / spawn<br/>harness.createClient"]
+  dispatch["session/prompt"]
+  result["sendResult"]
+  prompt --> resolve --> acquire --> dispatch --> result
+```
+
+`handlePrompt` → `resolvePromptRunContext` → `runPrompt` → `acquireAcpClient` → `spawnAcpClient` → `harness.createClient` → `dispatchPrompt`.
+
+A harness plugin's `createClient` returns a live ACP subprocess. The engine reuses that subprocess when `cwd` and spawn identity still match; otherwise it disconnects and spawns again. Completions are fire-and-forget via `sendResult`; live updates go through `sendSessionUpdate`.
+
+Harnesses live on the engine's registry only. `registerHarness` does not write to a process-wide global.
+
+### Identifiers
+
+"Session" means three different things. Host ids are opaque to ACP; protocol ids belong to the subprocess; internal keys are map keys inside the engine.
+
+| Id | Who owns it | Purpose |
+| --- | --- | --- |
+| `runId` | Host (**required** for prompts) | One prompt turn; cancel key |
+| `sessionId` | Host | Logical session (session-plugin record id) |
+| `scopeId` | Host (defaults to `sessionId`) | Isolates ACP subprocesses |
+| `acpSessionId` | Agent subprocess | ACP protocol session; persist via host hooks |
+| `acpAgentKey` | Engine (internal) | Spawn identity: type + argv + config |
+| `acpSessionAgentKey` | Engine (internal) | `scopeId` + `acpAgentKey`; one live subprocess |
+
+### Advanced: engine without a transport
+
+```ts
+import { randomUUID } from 'node:crypto';
+import {
+  createAcpEngine,
+  BUILTIN_HARNESSES,
+} from '@buildautomaton/agent-runtime';
+
+const engine = await createAcpEngine({
+  log: (line) => console.error(line),
+  isShutdownRequested: () => false,
+});
+for (const harness of BUILTIN_HARNESSES) engine.registerHarness(harness);
+
+engine.setPreferredHarnessType('cursor-cli');
+engine.prompt({
+  promptText: 'Summarize this repository in three bullets.',
+  runId: randomUUID(),
+  sessionId: 'dev',
+  cwd: process.cwd(),
+  sendResult: (result) => console.log(result.output ?? result.error),
+  sendSessionUpdate: (payload) => console.error(JSON.stringify(payload)),
+});
+```
+
+Prefer `createRuntime` for CLIs. `prompt()` is fire-and-forget; completion arrives through `sendResult`.
+
 ## Layout
 
 | Folder | Holds |
 | --- | --- |
 | `src/types/` | Public plugin contracts: options, hooks, implementation |
-| `src/runtime/core/` | `createRuntime`, `applyPlugins`, `PluginSlots`, ACP manager |
-| `src/runtime/harnesses/` | ACP client, install, discovery |
+| `src/runtime/core/` | Plugin kernel: `createRuntime`, `applyPlugins`, `PluginSlots`, `buildClientHostHooks` |
+| `src/runtime/acp/` | ACP engine, subprocess lifecycle, clients, keys |
+| `src/runtime/harnesses/` | Harness catalog: registry, discovery, install |
 | `src/runtime/session/` | Session runtime helpers |
 | `src/runtime/transport/` | Transport runtime helpers |
 | `src/runtime/tools/` | Tools runtime helpers |
@@ -178,43 +253,6 @@ On disk, a running session appends `{id}.jsonl`. When it ends, that log is compa
 
 Override permission handling with `hooks.resolvePermission` when you do not want to wait for the coordinator.
 
-## Quick start (manager only)
-
-```ts
-import { randomUUID } from 'node:crypto';
-import {
-  createAgentRuntimeManager,
-  BUILTIN_HARNESSES,
-} from '@buildautomaton/agent-runtime';
-
-const manager = await createAgentRuntimeManager({
-  log: (line) => console.error(line),
-  isShutdownRequested: () => false,
-});
-for (const harness of BUILTIN_HARNESSES) manager.registerHarness(harness);
-
-manager.setPreferredHarnessType('cursor-cli');
-manager.prompt({
-  promptText: 'Summarize this repository in three bullets.',
-  runId: randomUUID(),
-  sessionId: 'dev',
-  cwd: process.cwd(),
-  sendResult: (result) => console.log(result.output ?? result.error),
-  sendSessionUpdate: (payload) => console.error(JSON.stringify(payload)),
-});
-```
-
-Prefer `createRuntime` for CLIs. `prompt()` is fire-and-forget; completion arrives through `sendResult`.
-
-## Identifiers
-
-| Id | Who owns it | Purpose |
-| --- | --- | --- |
-| `runId` | Host (**required** for prompts) | One prompt turn; cancel key |
-| `sessionId` | Host | Logical session (runtime session id) |
-| `scopeId` | Host (defaults to `sessionId`) | Isolates ACP subprocesses |
-| `acpSessionId` | Agent subprocess | Protocol session; persist via host hooks |
-
 ## Custom plugins
 
 ```ts
@@ -246,17 +284,17 @@ Same `type` on `registerHarness` replaces an existing harness.
 ## API overview
 
 ```ts
-createAgentRuntimeManager(options): Promise<AgentRuntimeManager>
 createRuntime(options: RuntimeOptions): Promise<RuntimeHandle>
 runRuntime(options: RuntimeOptions): Promise<void>
 coreSet({ options, hooks?, implementation?, runtime? }): AgentRuntimePlugin[]
+createAcpEngine(options): Promise<AcpEngine>
 ```
 
-**Manager:** `registerHarness` / `getHarness` / `listHarnesses` / `discoverAgents` / `probeCapabilities` / `setPreferredHarnessType` / `prompt` / `cancelRun` / `isRegisteredRun` / `resolveRequest` / `disconnect`.
+**Runtime handle:** `start` / `stop` / `engine`.
 
-**Runtime handle:** `start` / `stop` / `manager`.
+**ACP engine:** `registerHarness` / `getHarness` / `listHarnesses` / `discoverAgents` / `probeCapabilities` / `setPreferredHarnessType` / `prompt` / `cancelRun` / `isRegisteredRun` / `resolveRequest` / `disconnect`.
 
-Constructor options: `log`, `reportAgentCapabilities?`, `clientHostHooks?`, `isShutdownRequested?`, `clientInfo?`.
+`createRuntime` wires session persist through `buildClientHostHooks`, then calls `createAcpEngine`. Engine options: `log`, `reportAgentCapabilities?`, `clientHostHooks?`, `isShutdownRequested?`, `clientInfo?`.
 
 ## Development
 
@@ -267,6 +305,8 @@ pnpm --filter @buildautomaton/agent-runtime test
 ```
 
 Keep new source files under **100 lines** (see root `AGENTS.md`).
+
+Internal imports use path aliases instead of long `../` chains: `@/types/…`, `@runtime/…`, `@plugins/…`. (`@types/…` is reserved by TypeScript for DefinitelyTyped.) Same-folder `./` imports stay relative.
 
 ## Related packages
 

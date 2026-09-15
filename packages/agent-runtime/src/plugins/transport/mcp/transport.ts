@@ -1,8 +1,8 @@
 import * as http from 'node:http';
-import type { LogFn } from '../../../types/log.js';
-import type { McpTransportOptions } from '../../../types/transport/options.js';
-import type { HostTransport } from '../../../runtime/transport/types.js';
-import { logToStderr } from '../shared/log-to-stderr.js';
+import type { LogFn } from '@/types/log.js';
+import type { McpTransportOptions } from '@/types/transport/options.js';
+import type { HostTransport } from '@runtime/transport/types.js';
+import { logToStderr } from '@plugins/transport/shared/log-to-stderr.js';
 import { handleMcpHttpRequest } from './http-handler.js';
 import { closeServer, listenLocalhost, waitForClose } from './http-listen.js';
 import { MCP_DEFAULT_HOST, MCP_DEFAULT_PATH, MCP_DEFAULT_PORT, mcpListenUrl, normalizeMcpPath } from './http-path.js';

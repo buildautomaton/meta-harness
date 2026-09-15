@@ -1,5 +1,5 @@
-import type { LaunchAgentParams, SessionStatusResult } from '../../../types/session/records.js';
-import type { ToolRegistry } from '../../../types/tools/implementation.js';
+import type { LaunchAgentParams, SessionStatusResult } from '@/types/session/records.js';
+import type { ToolRegistry } from '@/types/tools/implementation.js';
 import { CORE_TOOL_DEFINITIONS } from './definitions.js';
 import { jsonToolResult } from './json-result.js';
 import {

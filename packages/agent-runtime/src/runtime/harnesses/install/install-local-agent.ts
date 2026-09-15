@@ -1,15 +1,14 @@
-import { applyAgentPathToProcessEnv } from '../clients/agent-path.js';
-import { waitForCommandOnPath } from '../clients/detect-command-on-path.js';
-import { getAgentHarness } from '../registry.js';
-import type { GetAgentHarnessFn } from '../keys/resolve-agent-command.js';
+import { applyAgentPathToProcessEnv } from '@runtime/acp/clients/agent-path.js';
+import { waitForCommandOnPath } from '@runtime/acp/clients/detect-command-on-path.js';
+import type { GetAgentHarnessFn } from '@runtime/harnesses/types.js';
 
 export async function installLocalAgentOnBridge(params: {
   agentType: string;
   authToken: string;
   onProgress?: (message: string, logOutput?: string) => void;
-  getHarness?: GetAgentHarnessFn;
+  getHarness: GetAgentHarnessFn;
 }): Promise<{ success: boolean; error?: string }> {
-  const harness = (params.getHarness ?? getAgentHarness)(params.agentType);
+  const harness = params.getHarness(params.agentType);
   if (!harness?.install || !harness.installDetectCommand || !harness.installTokenEnvVar) {
     return { success: false, error: `Unsupported agent type: ${params.agentType}` };
   }

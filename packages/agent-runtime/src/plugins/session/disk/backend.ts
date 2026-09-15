@@ -1,8 +1,8 @@
 import { mkdirSync, readdirSync } from 'node:fs';
 import { join } from 'node:path';
-import type { SessionBackend } from '../../../runtime/session/types.js';
-import type { SessionRecord } from '../../../types/session/records.js';
-import type { SessionCompactPayload } from '../../../types/session/log.js';
+import type { SessionBackend } from '@runtime/session/types.js';
+import type { SessionRecord } from '@/types/session/records.js';
+import type { SessionCompactPayload } from '@/types/session/log.js';
 import { diskPaths } from './paths.js';
 import { appendEvent, readMeta, sessionEvents, unlinkIfExists, writeJson, writeMarkdown } from './files.js';
 

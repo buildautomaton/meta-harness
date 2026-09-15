@@ -1,11 +1,11 @@
 import { describe, expect, it } from 'vitest';
 import { applyPlugins } from './plugin-apply.js';
-import { cursorHarnessPlugin } from '../../plugins/harnesses/cursor/plugin.js';
-import { codexHarnessPlugin } from '../../plugins/harnesses/codex/plugin.js';
-import { diskSessionPlugin } from '../../plugins/session/disk/plugin.js';
-import { streamSessionPlugin } from '../../plugins/session/stream/plugin.js';
-import { mcpTransportPlugin } from '../../plugins/transport/mcp/plugin.js';
-import { minionToolsPlugin } from '../../plugins/tools/minion/plugin.js';
+import { cursorHarnessPlugin } from '@plugins/harnesses/cursor/plugin.js';
+import { codexHarnessPlugin } from '@plugins/harnesses/codex/plugin.js';
+import { diskSessionPlugin } from '@plugins/session/disk/plugin.js';
+import { streamSessionPlugin } from '@plugins/session/stream/plugin.js';
+import { mcpTransportPlugin } from '@plugins/transport/mcp/plugin.js';
+import { minionToolsPlugin } from '@plugins/tools/minion/plugin.js';
 import { mkdtempSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';

@@ -1,4 +1,4 @@
-import { mapRequestKind } from '../../../runtime/harnesses/client-lifecycle/map-request-kind.js';
+import { mapRequestKind } from '@runtime/acp/lifecycle/map-request-kind.js';
 import { permissionOptionsFromParams, type PermissionOptionView } from './permission-label.js';
 
 export type UnwrappedRequest = {

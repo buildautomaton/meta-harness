@@ -1,4 +1,4 @@
-import type { AcpSessionContext } from '../../../runtime/harnesses/clients/acp-session-context.js';
+import type { AcpSessionContext } from '@runtime/acp/clients/acp-session-context.js';
 import { handleCursorIncomingCursorMethods, handleCursorIncomingCursorNotification } from './cursor-incoming-cursor-methods.js';
 import { handleCursorIncomingFsRequest } from './cursor-incoming-fs-request.js';
 import { handleCursorIncomingPermissionRequest } from './cursor-incoming-permission-request.js';

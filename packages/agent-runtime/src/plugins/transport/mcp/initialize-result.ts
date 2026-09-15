@@ -1,4 +1,4 @@
-import { RUNTIME_VERSION } from '../../../runtime/core/version.js';
+import { RUNTIME_VERSION } from '@runtime/core/version.js';
 import { jsonRpcResult, type JsonRpcMessage } from './jsonrpc.js';
 
 export const MCP_PROTOCOL_VERSION = '2025-03-26';

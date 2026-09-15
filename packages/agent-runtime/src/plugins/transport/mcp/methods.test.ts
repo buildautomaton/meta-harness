@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { handleMcpMethod } from './methods.js';
-import type { ToolRegistry } from '../../../types/tools/implementation.js';
+import type { ToolRegistry } from '@/types/tools/implementation.js';
 
 const tools: ToolRegistry = {
   listTools: async () => [{ name: 'ping', description: '', inputSchema: {} }],

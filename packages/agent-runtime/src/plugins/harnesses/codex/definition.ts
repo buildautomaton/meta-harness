@@ -1,5 +1,5 @@
-import type { HarnessOptions } from '../../../types/harness/options.js';
-import type { HarnessImplementation } from '../../../types/harness/implementation.js';
+import type { HarnessOptions } from '@/types/harness/options.js';
+import type { HarnessImplementation } from '@/types/harness/implementation.js';
 import { applyCodexAfterSessionEstablished } from './after-session.js';
 import { codexAuthErrorHints } from './auth.js';
 import {

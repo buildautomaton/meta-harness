@@ -1,4 +1,4 @@
-import type { AcpClientHandle, AcpClientOptions } from '../../runtime/harnesses/client-types.js';
+import type { AcpClientHandle, AcpClientOptions } from '@runtime/acp/client-types.js';
 import type { AgentInstallContext, HarnessHostImplementation } from './host.js';
 
 /**

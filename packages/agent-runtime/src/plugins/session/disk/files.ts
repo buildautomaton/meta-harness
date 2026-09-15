@@ -1,6 +1,6 @@
 import { appendFileSync, existsSync, readFileSync, unlinkSync, writeFileSync } from 'node:fs';
-import type { SessionEvent, SessionRecord } from '../../../types/session/records.js';
-import { logToEvents } from '../log-to-events.js';
+import type { SessionEvent, SessionRecord } from '@/types/session/records.js';
+import { logToEvents } from '@plugins/session/log-to-events.js';
 
 export function readMeta(path: string): SessionRecord | null {
   try {

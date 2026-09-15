@@ -1,8 +1,8 @@
-import type { SessionPlugin } from '../../../types/session/plugin.js';
-import type { SessionHooks } from '../../../types/session/hooks.js';
-import type { SessionImplementation } from '../../../types/session/implementation.js';
-import type { PluginInit } from '../../../types/plugin.js';
-import type { DiskSessionOptions } from '../../../types/session/options.js';
+import type { SessionPlugin } from '@/types/session/plugin.js';
+import type { SessionHooks } from '@/types/session/hooks.js';
+import type { SessionImplementation } from '@/types/session/implementation.js';
+import type { PluginInit } from '@/types/plugin.js';
+import type { DiskSessionOptions } from '@/types/session/options.js';
 import { createDiskBackend } from './backend.js';
 
 export function diskSessionPlugin(

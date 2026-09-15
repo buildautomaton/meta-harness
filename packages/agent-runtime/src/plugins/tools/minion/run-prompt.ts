@@ -1,18 +1,18 @@
-import type { AgentRuntimeManager } from '../../../runtime/core/manager/types.js';
-import type { LaunchAgentParams, SessionRecord } from '../../../types/session/records.js';
-import { AGENT_CONFIG_AGENT_MODEL_KEY } from '../../../runtime/core/util/agent-config.js';
+import type { AcpEngine } from '@runtime/acp/engine/types.js';
+import type { LaunchAgentParams, SessionRecord } from '@/types/session/records.js';
+import { AGENT_CONFIG_AGENT_MODEL_KEY } from '@runtime/core/util/agent-config.js';
 import { handleAgentRequest } from './handle-agent-request.js';
 import { appendSessionEvent, finishSession, type SessionEventHost } from './session-events.js';
 
 export function wirePrompt(options: SessionEventHost & {
-  manager: AgentRuntimeManager;
+  engine: AcpEngine;
   record: SessionRecord;
   params: LaunchAgentParams;
 }): void {
-  const { manager, record, params } = options;
+  const { engine, record, params } = options;
   const agentConfig = params.model ? { [AGENT_CONFIG_AGENT_MODEL_KEY]: params.model } : undefined;
-  manager.setPreferredHarnessType(params.harness);
-  manager.prompt({
+  engine.setPreferredHarnessType(params.harness);
+  engine.prompt({
     promptText: params.prompt,
     sessionId: record.id,
     runId: record.runId,

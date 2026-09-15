@@ -1,8 +1,8 @@
-import { log } from '../../../runtime/core/util/log.js';
-import type { PromptResult } from '../../../runtime/harnesses/clients/acp-client.js';
-import type { AcpSessionContext } from '../../../runtime/harnesses/clients/acp-session-context.js';
-import type { AcpImagePromptPart, AcpSessionTransport } from '../../../runtime/harnesses/clients/acp-session-transport.js';
-import { sendAcpPromptViaTransport } from '../../../runtime/harnesses/clients/shared/send-acp-prompt-via-transport.js';
+import { log } from '@runtime/core/util/log.js';
+import type { PromptResult } from '@runtime/acp/clients/acp-client.js';
+import type { AcpSessionContext } from '@runtime/acp/clients/acp-session-context.js';
+import type { AcpImagePromptPart, AcpSessionTransport } from '@runtime/acp/clients/acp-session-transport.js';
+import { sendAcpPromptViaTransport } from '@runtime/acp/clients/shared/send-acp-prompt-via-transport.js';
 import {
   consumePendingPlanExecute,
   CURSOR_PLAN_CONTINUE_PROMPT,

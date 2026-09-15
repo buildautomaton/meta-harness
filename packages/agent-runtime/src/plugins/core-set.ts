@@ -1,8 +1,8 @@
-import type { AgentRuntimePlugin } from '../types/plugin.js';
-import type { PluginInit, PluginRuntimeContext } from '../types/plugin.js';
-import type { LogFn } from '../types/log.js';
-import type { TransportKind } from '../types/transport/options.js';
-import type { SessionBackendKind } from '../types/session/options.js';
+import type { AgentRuntimePlugin } from '@/types/plugin.js';
+import type { PluginInit, PluginRuntimeContext } from '@/types/plugin.js';
+import type { LogFn } from '@/types/log.js';
+import type { TransportKind } from '@/types/transport/options.js';
+import type { SessionBackendKind } from '@/types/session/options.js';
 import type { CoreSetHooks } from './core-set-hooks.js';
 import type { CoreSetImplementation } from './core-set-implementation.js';
 import { coreHarnessPlugins } from './harnesses/plugins.js';

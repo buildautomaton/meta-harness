@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { createRemoteTransport } from './transport.js';
-import type { RemoteCommand, RemoteTransportImplementation } from '../../../types/transport/options.js';
+import type { RemoteCommand, RemoteTransportImplementation } from '@/types/transport/options.js';
 
 describe('createRemoteTransport', () => {
   it('registers tools then dispatches call_tool commands', async () => {

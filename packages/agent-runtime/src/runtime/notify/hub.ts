@@ -1,4 +1,4 @@
-import type { MinionAsk, NotifierHub, NotifierSink } from '../../types/notify.js';
+import type { MinionAsk, NotifierHub, NotifierSink } from '@/types/notify.js';
 
 export function createNotifierHub(): NotifierHub {
   const sinks = new Set<NotifierSink>();

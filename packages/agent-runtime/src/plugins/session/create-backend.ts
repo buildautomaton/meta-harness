@@ -1,6 +1,6 @@
 import { join } from 'node:path';
-import type { SessionBackend } from '../../runtime/session/types.js';
-import type { SessionBackendKind } from '../../types/session/options.js';
+import type { SessionBackend } from '@runtime/session/types.js';
+import type { SessionBackendKind } from '@/types/session/options.js';
 import { createDiskBackend } from './disk/backend.js';
 import { createStreamBackend } from './stream/backend.js';
 

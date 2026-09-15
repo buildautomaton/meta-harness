@@ -3,7 +3,7 @@ import * as path from 'node:path';
 import { afterEach, describe, expect, it } from 'vitest';
 import { enrichCreatePlanRpcResult } from './enrich-create-plan-rpc-result.js';
 import { cleanupSessionPlans } from './cleanup-session-plans.js';
-import { getSessionPlansDir } from '../../../runtime/core/util/session-plans-paths.js';
+import { getSessionPlansDir } from '@runtime/core/util/session-plans-paths.js';
 
 const SESSION = `plan-test-${Date.now()}`;
 

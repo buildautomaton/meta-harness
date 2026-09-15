@@ -1,6 +1,6 @@
-import { agentPathEnv } from '../../../runtime/harnesses/clients/agent-path.js';
-import { runStreamingCommand } from '../../../runtime/harnesses/install/run-streaming-command.js';
-import type { AgentInstallContext } from '../../../types/harness/host.js';
+import { agentPathEnv } from '@runtime/acp/clients/agent-path.js';
+import { runStreamingCommand } from '@runtime/harnesses/install/run-streaming-command.js';
+import type { AgentInstallContext } from '@/types/harness/host.js';
 
 export const cursorInstallDetectCommand = 'agent';
 export const cursorInstallAlternateDetectCommands = ['cursor-agent'];

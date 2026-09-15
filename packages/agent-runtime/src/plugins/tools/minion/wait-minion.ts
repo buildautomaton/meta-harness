@@ -1,8 +1,8 @@
-import type { MinionEvent, NotifierHub } from '../../../types/notify.js';
-import type { SessionStatusResult } from '../../../types/session/records.js';
-import type { ToolCallExtras } from '../../../types/tools/implementation.js';
-import type { AgentRuntimeManager } from '../../../runtime/core/manager/types.js';
-import type { SessionImplementation } from '../../../types/session/implementation.js';
+import type { MinionEvent, NotifierHub } from '@/types/notify.js';
+import type { SessionStatusResult } from '@/types/session/records.js';
+import type { ToolCallExtras } from '@/types/tools/implementation.js';
+import type { AcpEngine } from '@runtime/acp/engine/types.js';
+import type { SessionImplementation } from '@/types/session/implementation.js';
 import type { PendingStore } from './pending-store.js';
 import { getSessionStatus } from './session-status.js';
 
@@ -11,17 +11,17 @@ const POLL_MS = 400;
 export async function waitForMinion(options: {
   backend: SessionImplementation;
   pending: PendingStore;
-  manager?: AgentRuntimeManager;
+  engine?: AcpEngine;
   notifier?: NotifierHub;
   minionId: string;
   extras?: ToolCallExtras;
 }): Promise<SessionStatusResult | null> {
-  const { backend, pending, manager, notifier, minionId, extras } = options;
+  const { backend, pending, engine, notifier, minionId, extras } = options;
   let progress = 0;
   let settled = false;
   const tick = async (message: string) => {
     if (settled) return null;
-    const status = await getSessionStatus(backend, minionId, pending.list(minionId), manager);
+    const status = await getSessionStatus(backend, minionId, pending.list(minionId), engine);
     if (settled) return null;
     if (status && !isSettled(status)) {
       progress += 1;

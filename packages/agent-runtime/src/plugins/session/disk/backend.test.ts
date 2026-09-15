@@ -3,7 +3,7 @@ import { existsSync, readFileSync, mkdtempSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { createDiskBackend } from './backend.js';
-import { compactSessionLog, markdownFromLog } from '../compact-log.js';
+import { compactSessionLog, markdownFromLog } from '@plugins/session/compact-log.js';
 
 const record = {
   id: 'abc',

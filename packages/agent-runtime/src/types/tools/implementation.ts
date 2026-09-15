@@ -1,7 +1,7 @@
-import type { AgentRuntimeManager } from '../../runtime/core/manager/types.js';
-import type { NotifierHub } from '../notify.js';
-import type { SessionHooks } from '../session/hooks.js';
-import type { SessionImplementation } from '../session/implementation.js';
+import type { AcpEngine } from '@runtime/acp/engine/types.js';
+import type { NotifierHub } from '@/types/notify.js';
+import type { SessionHooks } from '@/types/session/hooks.js';
+import type { SessionImplementation } from '@/types/session/implementation.js';
 import type { ToolsHooks } from './hooks.js';
 import type { McpToolCallResult, McpToolDefinition } from './definitions.js';
 import type { ToolsPrompt } from './prompts.js';
@@ -13,7 +13,7 @@ export type ToolCallExtras = {
 /** Passed into tools implementation methods when they are invoked. */
 export type ToolContext = {
   cwd: string;
-  manager: AgentRuntimeManager;
+  engine: AcpEngine;
   backend: SessionImplementation;
   sessionHooks?: SessionHooks;
   toolsHooks?: ToolsHooks;

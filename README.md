@@ -14,7 +14,7 @@ See [`packages/agent-runtime/README.md`](packages/agent-runtime/README.md) for t
 
 ## Project structure
 
-- `packages/agent-runtime`: ACP runtime (`src/runtime/{core,harnesses,session,transport,tools}`) plus plugins (`src/plugins/`)
+- `packages/agent-runtime`: ACP runtime (`src/runtime/{core,acp,harnesses,session,transport,tools}`) plus plugins (`src/plugins/`)
 - `packages/cli`: thin CLI that registers `coreSet()` (MCP HTTP or remote)
 
 ## Getting started

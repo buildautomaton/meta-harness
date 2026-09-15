@@ -1,4 +1,4 @@
-import { enrichAcpPermissionRpcResultFromRequestParams } from '../../../runtime/harnesses/permission/enrich-acp-permission-rpc-result.js';
+import { enrichAcpPermissionRpcResultFromRequestParams } from '@runtime/acp/permission/enrich-acp-permission-rpc-result.js';
 import { enrichCreatePlanRpcResult } from './enrich-create-plan-rpc-result.js';
 import {
   isAcceptedCreatePlanRpcResult,

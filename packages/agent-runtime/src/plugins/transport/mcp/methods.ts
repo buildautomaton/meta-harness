@@ -1,5 +1,5 @@
-import type { LogFn } from '../../../types/log.js';
-import type { ToolRegistry } from '../../../types/tools/implementation.js';
+import type { LogFn } from '@/types/log.js';
+import type { ToolRegistry } from '@/types/tools/implementation.js';
 import { clientSupportsElicitation } from './client-caps.js';
 import { mcpInitializeResult } from './initialize-result.js';
 import { jsonRpcError, jsonRpcResult, rpcParams, type JsonRpcMessage } from './jsonrpc.js';

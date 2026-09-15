@@ -5,7 +5,7 @@ export type RuntimeHarnessRegistry = AgentHarnessRegistry & {
   notifyPromptTurnFinished(sessionId: string | undefined): void;
 };
 
-/** Isolated harness registry (one per runtime manager). */
+/** Isolated harness registry (one per ACP engine). */
 export function createHarnessRegistry(
   initial: readonly AgentHarness[] = [],
 ): RuntimeHarnessRegistry {

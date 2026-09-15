@@ -1,4 +1,4 @@
-import type { MinionAsk, MinionPendingRequest } from '../../../types/notify.js';
+import type { MinionAsk, MinionPendingRequest } from '@/types/notify.js';
 import { AUTH_OPTIONS, permissionOptionsFromParams, type PermissionOptionView } from './permission-label.js';
 
 const TITLES = {
