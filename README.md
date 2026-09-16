@@ -70,7 +70,7 @@ pnpm --filter @buildautomaton/local-cli test
 
 ## Publishing
 
-`@buildautomaton/agent-runtime` and `@buildautomaton/local-cli` publish publicly to npm under the `@buildautomaton` org. A GitHub Release (or the **Publish npm packages** workflow) builds and publishes both. Locally, bump versions then run `pnpm build && pnpm publish:packages`. CI needs an `NPM_TOKEN` secret with publish rights on `@buildautomaton`.
+`@buildautomaton/agent-runtime` and `@buildautomaton/local-cli` publish publicly to npm under the `@buildautomaton` org. Bump versions, then run `pnpm publish:packages`.
 
 ## License
 
