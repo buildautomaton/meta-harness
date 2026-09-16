@@ -4,7 +4,7 @@ import { MCP_DEFAULT_PATH, MCP_DEFAULT_PORT } from '@buildautomaton/agent-runtim
 
 describe('parseCli', () => {
   it('defaults to disk MCP HTTP in cwd', () => {
-    const parsed = parseCli(['node', 'meta-harness', '--cwd', '/work']);
+    const parsed = parseCli(['node', 'local-cli', '--cwd', '/work']);
     expect(parsed).toMatchObject({
       cwd: '/work',
       backend: 'disk',
@@ -18,7 +18,7 @@ describe('parseCli', () => {
   it('parses MCP HTTP port and path', () => {
     const parsed = parseCli([
       'node',
-      'meta-harness',
+      'local-cli',
       '--port',
       '4010',
       '--mcp-path',
@@ -29,14 +29,14 @@ describe('parseCli', () => {
   });
 
   it('normalizes MCP path without a leading slash', () => {
-    const parsed = parseCli(['node', 'meta-harness', '--mcp-path', 'mcp']);
+    const parsed = parseCli(['node', 'local-cli', '--mcp-path', 'mcp']);
     expect(parsed.mcpPath).toBe('/mcp');
   });
 
   it('parses remote transport flags', () => {
     const parsed = parseCli([
       'node',
-      'meta-harness',
+      'local-cli',
       '--transport',
       'remote',
       '--remote-url',

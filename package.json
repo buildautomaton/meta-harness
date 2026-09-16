@@ -1,7 +1,8 @@
 {
-  "name": "@buildautomaton/meta-harness",
+  "name": "meta-harness",
   "version": "0.1.0",
   "private": true,
+  "license": "MIT",
   "repository": {
     "type": "git",
     "url": "https://github.com/buildautomaton/meta-harness.git"
@@ -16,7 +17,8 @@
     "start": "turbo run start",
     "lint": "turbo run lint",
     "test": "turbo run test",
-    "type-check": "turbo run type-check"
+    "type-check": "turbo run type-check",
+    "publish:packages": "pnpm -r publish --filter=@buildautomaton/agent-runtime --filter=@buildautomaton/local-cli --access public"
   },
   "devDependencies": {
     "turbo": "^1.12.4"

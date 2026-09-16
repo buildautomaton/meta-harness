@@ -19,4 +19,6 @@ generated/
 
 .harness/
 .meta-harness/
+.pack/
+*.tgz
 
