@@ -39,6 +39,7 @@
   "dependencies": {
     "@agentclientprotocol/codex-acp": "^1.1.4",
     "@agentclientprotocol/sdk": "^0.14.0",
+    "node-sqlite3-wasm": "^0.8.57",
     "tree-kill": "^1.2.2"
   },
   "devDependencies": {

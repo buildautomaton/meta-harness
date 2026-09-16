@@ -1,0 +1,32 @@
+export const ASK_WHAT_TO_WORK_ON_DESCRIPTION = [
+  'Ask what to work on next. Call this at the start of a session, before planning or building.',
+  'It returns the next draft from the queue and a sessionId.',
+  'Plan that work, then do the work.',
+  'When you finish, call tell_what_was_built and pass the same sessionId.',
+  'Held drafts are paused and will not be returned.',
+].join('\n');
+
+export const TELL_WHAT_WAS_BUILT_DESCRIPTION = [
+  'Tell the work plugin what you just built. Call this after the work is done, at the end of the session.',
+  'Always pass the sessionId from ask_what_to_work_on, plus title and description (what changed and why).',
+  'Pass every applicable artifact kind. Omit kinds that do not apply. At least one artifact kind is required.',
+  '',
+  'Summary',
+  'UI HTML is a visual preview in the same style and design system as the app being built.',
+  'Preview a changed screen, or a changed component when the scope was smaller. Use realistic mock data.',
+  'The review questionnaire is the questions param (shown under the preview). The HTML is the product UI.',
+  '',
+  'Details',
+  'ui: one self-contained HTML document per changed screen or component. Match type, color, spacing, and components.',
+  'Fill it with realistic mock data for this product’s scenarios and use cases (real names, amounts, statuses, dates).',
+  'Not lorem ipsum or placeholders. Inline CSS and JS. No bundler, no local asset URLs. CDN fonts or icons are OK.',
+  'Include the app’s own controls (radios, forms, notes, submit, iframes) when those are part of the product.',
+  'The HTML does not need a review questionnaire — that is the separate questions param, rendered below the preview.',
+  'Each ui.pages entry is one surface. Split unrelated screens or components into several entries.',
+  'questions: structured payload the dashboard shows under the matching preview. questions.ui filename matches a ui.pages file.',
+  'api: every HTTP route added, modified, or removed — real paths from this app, with method, path, and what changed.',
+  'algorithm: name, what changed vs before, and post-change pseudocode using this product’s real steps and domain terms.',
+  'dataModel: Mermaid erDiagram or classDiagram of the model after the change, with real entities, fields, and relations.',
+  'moduleStructure: Mermaid of the modules after the change, with real module names. Module questions go in questions.modules.',
+  'backend: plain English for other backend work not covered by the other kinds.',
+].join('\n');

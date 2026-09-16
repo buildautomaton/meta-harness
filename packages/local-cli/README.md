@@ -3,7 +3,7 @@
 Thin CLI around `@buildautomaton/agent-runtime`. It only parses flags and registers `coreSet()`. MIT licensed.
 
 ```text
-local-cli  →  coreSet (harnesses + disk + minion tools + MCP or remote)
+local-cli  →  coreSet (harnesses + disk + minion tools + sqlite work + MCP or remote)
               →  createRuntime / runRuntime
 ```
 
@@ -19,12 +19,14 @@ The MCP (or remote) server exposes minion tools (not subagents, to avoid clashin
 | `get_minion` | `minionId` | status, pending requests, compacted agent transcript |
 | `get_minion_transcript` | `minionId` | agent messages only (no tool/reasoning dumps) |
 | `resolve_minion_request` | `minionId`, optional `requestId`, `outcome`, `token` | approve/deny a permission or store a provider token |
+| `ask_what_to_work_on` | none | Next draft plus a `sessionId` |
+| `tell_what_was_built` | `title`, `description`, artifacts, optional `sessionId` / `questions` | Stores markdown, mermaid, HTML, and review questions |
 
 `spawn_minion` / `await_minion` stream a short tool-call progress summary about every 10s on the in-flight MCP tool call (SSE + `notifications/progress`). Permission prompts use elicitation and are redelivered if missed; sampling applies the coordinator's permission mode when the client supports it. Do not poll `get_minion` in a loop.
 
 The initialize **instructions** tell coordinators to use `spawn_minion` instead of Task, never pass `background`, and apply their current permission mode to in-flight minion permission notifications — resolving immediately if that mode would auto-run, or seeking the user if it would ask. Restart the MCP connection after upgrading.
 
-Sessions are stored on disk (`<cwd>/.harness/sessions` by default) via `diskSessionPlugin`.
+Sessions are stored on disk (`<cwd>/.harness/sessions` by default) via `diskSessionPlugin`. Work is stored in WASM SQLite (`<cwd>/.harness/work.sqlite`). The same HTTP server exposes `/api/work` for the `@buildautomaton/ui` dashboard.
 
 ## Install
 

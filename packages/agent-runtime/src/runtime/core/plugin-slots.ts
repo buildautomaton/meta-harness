@@ -7,6 +7,8 @@ import type { ToolsImplementation } from '@/types/tools/implementation.js';
 import type { ToolsHooks } from '@/types/tools/hooks.js';
 import type { HostTransport } from '@runtime/transport/types.js';
 import type { TransportHooks } from '@/types/transport/hooks.js';
+import type { WorkBackend, WorkBackendWrap } from '@/types/work/implementation.js';
+import type { WorkHooks } from '@/types/work/hooks.js';
 
 export type PluginSlots = {
   harnesses: AgentHarness[];
@@ -19,8 +21,11 @@ export type PluginSlots = {
   sessionHooks?: SessionHooks;
   transportHooks?: TransportHooks;
   toolsHooks?: ToolsHooks;
+  work?: WorkBackend;
+  workWraps: WorkBackendWrap[];
+  workHooks?: WorkHooks;
 };
 
 export function createPluginSlots(): PluginSlots {
-  return { harnesses: [], tools: [], backendWraps: [] };
+  return { harnesses: [], tools: [], backendWraps: [], workWraps: [] };
 }

@@ -9,8 +9,10 @@ import { applySessionPlugin } from './apply-session.js';
 import type { SessionPlugin } from '@/types/session/plugin.js';
 import { applyTransportPlugin } from './apply-transport.js';
 import { applyToolsPlugin } from './apply-tools.js';
+import { applyWorkPlugin } from './apply-work.js';
+import type { WorkPlugin } from '@/types/work/plugin.js';
 
-/** Fill `PluginSlots` by `kind`: harnesses[], session backend/wraps, tools, transport. */
+/** Fill `PluginSlots` by `kind`: harnesses[], session, tools, work, transport. */
 export function applyPlugins(
   plugins: readonly AgentRuntimePlugin[],
   _options: { log: LogFn; cwd: string },
@@ -35,6 +37,9 @@ function applyOne(slots: PluginSlots, plugin: AgentRuntimePlugin): void {
       return;
     case 'tools':
       applyToolsPlugin(slots, plugin as ToolsPlugin);
+      return;
+    case 'work':
+      applyWorkPlugin(slots, plugin as WorkPlugin);
       return;
   }
 }
