@@ -8,11 +8,11 @@ import type { CoreSetImplementation } from './core-set-implementation.js';
 import { coreHarnessPlugins } from './harnesses/plugins.js';
 import { diskSessionPlugin } from './session/disk/plugin.js';
 import { streamSessionPlugin } from './session/stream/plugin.js';
-import { mcpTransportPlugin } from './transport/mcp/plugin.js';
-import { remoteTransportPlugin } from './transport/remote/plugin.js';
-import { createHttpRemoteAdapter } from './transport/remote/http-adapter.js';
 import { defaultSessionsDir } from './session/create-backend.js';
 import { minionToolsPlugin } from './tools/minion/plugin.js';
+import { sqliteWorkPlugin } from './work/sqlite/plugin.js';
+import { workToolsPlugin } from './work-tools/plugin.js';
+import { coreSetTransport } from './core-set-transport.js';
 
 export type CoreSetOptions = {
   cwd: string;
@@ -26,6 +26,9 @@ export type CoreSetOptions = {
   mcpPath?: string;
   /** Register minionToolsPlugin (default true). Other tools plugins can still be added. */
   minionTools?: boolean;
+  /** Register sqlite work plugin + work MCP tools (default true). */
+  work?: boolean;
+  workFile?: string;
 };
 
 function defaultLog(line: string): void {
@@ -33,9 +36,8 @@ function defaultLog(line: string): void {
 }
 
 /**
- * Default plugin bundle: harnesses, disk session, minion tools, then MCP
- * (or remote). Pass the array to `createRuntime`. `minionTools: false` skips
- * minion tools; `backend: "stream"` wraps disk with `subscribe()`.
+ * Default plugin bundle: harnesses, disk session, minion tools, sqlite work,
+ * then MCP (or remote). `minionTools: false` / `work: false` skip those plugins.
  */
 export function coreSet(
   init: PluginInit<CoreSetOptions, CoreSetHooks, CoreSetImplementation> & { options: CoreSetOptions },
@@ -66,6 +68,17 @@ export function coreSet(
       }),
     );
   }
+  if (opts.work !== false) {
+    plugins.push(
+      sqliteWorkPlugin({
+        options: { file: opts.workFile },
+        hooks: init.hooks?.work,
+        implementation: init.implementation?.work,
+        ...shared,
+      }),
+      workToolsPlugin({ ...shared }),
+    );
+  }
   if (opts.backend === 'stream') {
     plugins.push(
       streamSessionPlugin({
@@ -75,25 +88,6 @@ export function coreSet(
       }),
     );
   }
-  if (opts.transport === 'remote') {
-    const adapter =
-      init.implementation?.transport ?? (opts.remoteUrl ? createHttpRemoteAdapter(opts.remoteUrl) : undefined);
-    if (!adapter) throw new Error('Remote transport requires a RemoteTransportImplementation or remoteUrl');
-    plugins.push(
-      remoteTransportPlugin({
-        implementation: adapter,
-        hooks: init.hooks?.transport,
-        ...shared,
-      }),
-    );
-  } else {
-    plugins.push(
-      mcpTransportPlugin({
-        hooks: init.hooks?.transport,
-        options: { host: opts.mcpHost, port: opts.mcpPort, path: opts.mcpPath },
-        ...shared,
-      }),
-    );
-  }
+  plugins.push(coreSetTransport(opts, init, shared));
   return plugins;
 }

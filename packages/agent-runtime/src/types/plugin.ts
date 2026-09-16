@@ -1,6 +1,6 @@
 import type { LogFn } from './log.js';
 
-export type PluginKind = 'harness' | 'session' | 'transport' | 'tools';
+export type PluginKind = 'harness' | 'session' | 'transport' | 'tools' | 'work';
 
 export type PluginRuntimeContext = {
   cwd: string;

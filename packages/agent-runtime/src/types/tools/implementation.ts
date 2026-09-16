@@ -5,6 +5,7 @@ import type { SessionImplementation } from '@/types/session/implementation.js';
 import type { ToolsHooks } from './hooks.js';
 import type { McpToolCallResult, McpToolDefinition } from './definitions.js';
 import type { ToolsPrompt } from './prompts.js';
+import type { WorkImplementation } from '@/types/work/implementation.js';
 
 export type ToolCallExtras = {
   reportProgress?: (update: { message: string; progress?: number }) => void;
@@ -18,6 +19,7 @@ export type ToolContext = {
   sessionHooks?: SessionHooks;
   toolsHooks?: ToolsHooks;
   notifier?: NotifierHub;
+  work?: WorkImplementation;
 };
 
 /** How a tools plugin exposes MCP tools. Context is an argument, not a factory. */

@@ -49,3 +49,14 @@ export { jsonToolResult } from './tools/minion/json-result.js';
 export { createCoreToolRegistry } from './tools/minion/core-registry.js';
 export { launchSession } from './tools/minion/launch-session.js';
 export { getSessionStatus } from './tools/minion/session-status.js';
+
+// work
+export { sqliteWorkPlugin, memoryWorkPlugin, defaultWorkFile } from './work/sqlite/plugin.js';
+export { createSqliteWorkBackend } from './work/sqlite/backend.js';
+export { createWorkHttpHandler } from './work/http/handler.js';
+export { buildArtifactFiles } from './work/artifacts/build-files.js';
+
+// work-tools
+export { workToolsPlugin } from './work-tools/plugin.js';
+export { WORK_TOOL_DEFINITIONS } from './work-tools/definitions.js';
+export { ASK_WHAT_TO_WORK_ON_TOOL, TELL_WHAT_WAS_BUILT_TOOL } from './work-tools/names.js';

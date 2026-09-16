@@ -10,14 +10,15 @@ Published on npm as [`@buildautomaton/agent-runtime`](https://www.npmjs.com/pack
 
 ## Architecture
 
-The host (CLI or Node app) stays small. `@buildautomaton/agent-runtime` is the kernel: `createRuntime({ plugins })` fills slots for harness, session, transport, and tools.
+The host (CLI or Node app) stays small. `@buildautomaton/agent-runtime` is the kernel: `createRuntime({ plugins })` fills slots for harness, session, transport, tools, and work.
 
 See [`packages/agent-runtime/README.md`](packages/agent-runtime/README.md) for the plugin architecture, factories, types, and custom plugins, and [`packages/local-cli/README.md`](packages/local-cli/README.md) for the CLI.
 
 ## Project structure
 
-- `packages/agent-runtime`: ACP runtime (`src/runtime/{core,acp,harnesses,session,transport,tools}`) plus plugins (`src/plugins/`)
+- `packages/agent-runtime`: ACP runtime plus plugins (`src/plugins/`)
 - `packages/local-cli`: thin CLI that registers `coreSet()` (MCP HTTP or remote)
+- `packages/ui`: composable dashboard (plugin core, design system, work surfaces)
 
 ## Getting started
 
@@ -66,6 +67,13 @@ pnpm --filter @buildautomaton/agent-runtime type-check
 ```bash
 pnpm --filter @buildautomaton/local-cli build
 pnpm --filter @buildautomaton/local-cli test
+```
+
+### Dashboard
+
+```bash
+pnpm --filter @buildautomaton/ui dev
+pnpm --filter @buildautomaton/ui test
 ```
 
 ## Publishing

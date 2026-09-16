@@ -39,7 +39,7 @@ export type {
   SessionBackendWrap,
 } from './session/plugin.js';
 
-export type { TransportImplementation, CommandHost } from './transport/implementation.js';
+export type { TransportImplementation, CommandHost, HttpExtraHandler } from './transport/implementation.js';
 export type { TransportHooks } from './transport/hooks.js';
 export type {
   TransportKind,
@@ -64,3 +64,4 @@ export type {
   NotifierSink,
 } from './notify.js';
 export type { ToolsPlugin, ToolsPluginFactory, ToolsPluginInit } from './tools/plugin.js';
+export * from './work/index.js';

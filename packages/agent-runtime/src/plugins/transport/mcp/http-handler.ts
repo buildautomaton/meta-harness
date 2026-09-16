@@ -20,6 +20,7 @@ export type McpHttpContext = {
   initialized: { value: boolean };
   log: LogFn;
   sse: McpSseHub;
+  handleHttp?: (req: IncomingMessage, res: ServerResponse) => boolean | Promise<boolean>;
 };
 
 export async function handleMcpHttpRequest(
@@ -34,6 +35,7 @@ export async function handleMcpHttpRequest(
   }
   const pathname = new URL(req.url ?? '/', 'http://127.0.0.1').pathname;
   if (pathname !== ctx.path) {
+    if (ctx.handleHttp && (await ctx.handleHttp(req, res))) return;
     res.writeHead(404, MCP_CORS);
     res.end('Not found');
     return;

@@ -48,6 +48,16 @@ export {
   createCoreToolRegistry,
   launchSession,
   getSessionStatus,
+  sqliteWorkPlugin,
+  memoryWorkPlugin,
+  defaultWorkFile,
+  createSqliteWorkBackend,
+  workToolsPlugin,
+  WORK_TOOL_DEFINITIONS,
+  ASK_WHAT_TO_WORK_ON_TOOL,
+  TELL_WHAT_WAS_BUILT_TOOL,
+  createWorkHttpHandler,
+  buildArtifactFiles,
 } from './plugins/index.js';
 export type {
   CoreSetOptions,

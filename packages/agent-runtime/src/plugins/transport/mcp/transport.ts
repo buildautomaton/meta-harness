@@ -30,7 +30,14 @@ export function createMcpTransport(init: CreateMcpTransportInit = {}): HostTrans
       unsub = commandHost.notifier?.subscribe(mcpNotifierSink(sse));
       const initialized = { value: false };
       server = http.createServer((req, res) => {
-        void handleMcpHttpRequest(req, res, { path, tools: commandHost, initialized, log, sse });
+        void handleMcpHttpRequest(req, res, {
+          path,
+          tools: commandHost,
+          initialized,
+          log,
+          sse,
+          handleHttp: commandHost.handleHttp,
+        });
       });
       const bound = await listenLocalhost(server, port, host);
       const names = (await commandHost.listTools()).map((t) => t.name);
