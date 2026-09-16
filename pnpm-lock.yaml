@@ -37,7 +37,7 @@ importers:
         specifier: ^2.0.0
         version: 2.1.9(@types/node@22.20.1)
 
-  packages/cli:
+  packages/local-cli:
     dependencies:
       '@buildautomaton/agent-runtime':
         specifier: workspace:*

@@ -1,6 +1,6 @@
 # @buildautomaton/agent-runtime
 
-ACP agent runtime: a small kernel, four plugin kinds, and a catalog of built-in plugins. The host (CLI or Node) supplies plugins; the kernel fills slots and returns a handle.
+ACP agent runtime: a small kernel, four plugin kinds, and a catalog of built-in plugins. The host (CLI or Node) supplies plugins; the kernel fills slots and returns a handle. MIT licensed.
 
 ```text
 Host (CLI / Node)
@@ -14,11 +14,17 @@ Host (CLI / Node)
 | You are… | Use |
 | --- | --- |
 | Building a CLI or Node host around local coding agents | This library + `coreSet()` or individual plugins |
-| Shipping the default MCP CLI | [`@buildautomaton/cli`](../cli) |
+| Shipping the default MCP CLI | [`@buildautomaton/local-cli`](../local-cli) |
 
 The **runtime** owns ACP subprocesses, prompt routing, and plugin interfaces. Hosts stay small: parse argv, pick plugins, call `createRuntime` / `runRuntime`.
 
 ## Install
+
+```bash
+npm install @buildautomaton/agent-runtime
+```
+
+From this repo:
 
 ```bash
 pnpm install
@@ -335,8 +341,8 @@ Internal imports use path aliases instead of long `../` chains: `@/types/…`, `
 
 ## Related packages
 
-- [`@buildautomaton/cli`](../cli) — MCP/remote CLI that registers `coreSet()`
+- [`@buildautomaton/local-cli`](../local-cli) — MCP/remote CLI that registers `coreSet()`
 
 ## License
 
-Private package in the [@buildautomaton/meta-harness](https://github.com/buildautomaton/meta-harness) monorepo.
+MIT. See [LICENSE](LICENSE).

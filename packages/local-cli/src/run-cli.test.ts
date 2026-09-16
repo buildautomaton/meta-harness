@@ -15,7 +15,7 @@ describe('formatCliStartup', () => {
         verbose: false,
       }),
     ).toBe(
-      `[CLI] Starting meta-harness ${CLI_VERSION} transport=mcp cwd=/work backend=disk url=http://127.0.0.1:3333/mcp`,
+      `[CLI] Starting local-cli ${CLI_VERSION} transport=mcp cwd=/work backend=disk url=http://127.0.0.1:3333/mcp`,
     );
   });
 

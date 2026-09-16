@@ -44,7 +44,7 @@ export function parseCli(argv: string[]): ParsedCli {
 }
 
 function printHelp(): void {
-  process.stdout.write(`meta-harness ${CLI_VERSION}
+  process.stdout.write(`local-cli ${CLI_VERSION}
 Launch a local MCP HTTP server (spawn_minion waits like Task; await_minion, get_minion_transcript) or register remotely.
 
   --cwd <path>            Working directory for spawned minions

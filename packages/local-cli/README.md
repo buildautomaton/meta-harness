@@ -1,9 +1,9 @@
-# @buildautomaton/cli
+# @buildautomaton/local-cli
 
-Thin CLI around `@buildautomaton/agent-runtime`. It only parses flags and registers `coreSet()`.
+Thin CLI around `@buildautomaton/agent-runtime`. It only parses flags and registers `coreSet()`. MIT licensed.
 
 ```text
-meta-harness  →  coreSet (harnesses + disk + minion tools + MCP or remote)
+local-cli  →  coreSet (harnesses + disk + minion tools + MCP or remote)
               →  createRuntime / runRuntime
 ```
 
@@ -26,20 +26,35 @@ The initialize **instructions** tell coordinators to use `spawn_minion` instead 
 
 Sessions are stored on disk (`<cwd>/.harness/sessions` by default) via `diskSessionPlugin`.
 
-## Usage
+## Install
 
 ```bash
-pnpm --filter @buildautomaton/cli build
-node packages/cli/dist/cli.js --cwd /path/to/repo
+npm install -g @buildautomaton/local-cli
+local-cli --cwd /path/to/repo
+```
+
+Or without a global install:
+
+```bash
+npx @buildautomaton/local-cli --cwd /path/to/repo
+```
+
+## Usage
+
+From this repo:
+
+```bash
+pnpm --filter @buildautomaton/local-cli build
+node packages/local-cli/dist/cli.js --cwd /path/to/repo
 ```
 
 MCP HTTP on localhost is the default transport (`http://127.0.0.1:3333/mcp`).
 
 ```bash
-meta-harness --cwd /path/to/repo --port 3333 --mcp-path /mcp
+local-cli --cwd /path/to/repo --port 3333 --mcp-path /mcp
 
 # Remote HTTP registration instead of local MCP
-meta-harness --transport remote --remote-url https://control.example
+local-cli --transport remote --remote-url https://control.example
 ```
 
 | Flag | Meaning |
@@ -68,7 +83,11 @@ Add more by calling `createRuntime` from `@buildautomaton/agent-runtime` instead
 ## Development
 
 ```bash
-pnpm --filter @buildautomaton/cli build
-pnpm --filter @buildautomaton/cli test
-pnpm --filter @buildautomaton/cli type-check
+pnpm --filter @buildautomaton/local-cli build
+pnpm --filter @buildautomaton/local-cli test
+pnpm --filter @buildautomaton/local-cli type-check
 ```
+
+## License
+
+MIT. See [LICENSE](LICENSE).

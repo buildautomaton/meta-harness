@@ -9,7 +9,7 @@ export function formatCliStartup(parsed: ParsedCli): string {
     parsed.transport === 'mcp'
       ? ` url=http://${MCP_DEFAULT_HOST}:${parsed.mcpPort}${parsed.mcpPath}`
       : '';
-  return `[CLI] Starting meta-harness ${CLI_VERSION} transport=${parsed.transport} cwd=${parsed.cwd} backend=${parsed.backend}${mcp}${remote}`;
+  return `[CLI] Starting local-cli ${CLI_VERSION} transport=${parsed.transport} cwd=${parsed.cwd} backend=${parsed.backend}${mcp}${remote}`;
 }
 
 export function runtimeOptionsFromCli(parsed: ParsedCli): RuntimeOptions {
