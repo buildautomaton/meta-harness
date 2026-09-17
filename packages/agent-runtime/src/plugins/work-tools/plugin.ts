@@ -1,8 +1,9 @@
 import type { ToolsPlugin, ToolsPluginInit } from '@/types/tools/plugin.js';
 import type { ToolsImplementation } from '@/types/tools/implementation.js';
 import { WORK_TOOL_DEFINITIONS } from './definitions.js';
-import { ASK_WHAT_TO_WORK_ON_TOOL, TELL_WHAT_WAS_BUILT_TOOL } from './names.js';
+import { ASK_INTERVIEW_QUESTIONS_TOOL, ASK_WHAT_TO_WORK_ON_TOOL, TELL_WHAT_WAS_BUILT_TOOL } from './names.js';
 import { handleAskWhatToWorkOn } from './ask-handle.js';
+import { handleAskInterviewQuestions } from './interview-handle.js';
 import { handleTellWhatWasBuilt } from './tell-handle.js';
 import { WORK_INSTRUCTIONS } from './instructions.js';
 
@@ -11,6 +12,7 @@ export function workToolsPlugin(init: ToolsPluginInit = {}): ToolsPlugin {
     listTools: () => WORK_TOOL_DEFINITIONS,
     callTool: async (name, args, ctx) => {
       if (name === ASK_WHAT_TO_WORK_ON_TOOL) return handleAskWhatToWorkOn(ctx);
+      if (name === ASK_INTERVIEW_QUESTIONS_TOOL) return handleAskInterviewQuestions(args, ctx);
       if (name === TELL_WHAT_WAS_BUILT_TOOL) return handleTellWhatWasBuilt(args, ctx);
       return { content: [{ type: 'text', text: `Unknown work tool: ${name}` }], isError: true };
     },

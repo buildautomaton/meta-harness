@@ -15,4 +15,5 @@ function applyOne(slots: UiSlots, plugin: UiPlugin): void {
   if (!impl) return;
   if (impl.surfaces) slots.surfaces.push(...impl.surfaces);
   if (impl.providers) slots.providers.push(...impl.providers);
+  if (impl.layout) slots.layout = impl.layout;
 }

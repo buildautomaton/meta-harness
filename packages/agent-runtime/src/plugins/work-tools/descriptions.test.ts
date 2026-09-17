@@ -15,6 +15,8 @@ describe('tell_what_was_built copy', () => {
     expect(UI_HTML_DESCRIPTION).toMatch(/does not need a review questionnaire/i);
     expect(UI_HTML_DESCRIPTION).not.toMatch(/do not include review questions, radios/i);
     expect(TELL_WHAT_WAS_BUILT_DESCRIPTION).toMatch(/own controls/i);
+    expect(TELL_WHAT_WAS_BUILT_DESCRIPTION).toMatch(/highlight/i);
+    expect(TELL_WHAT_WAS_BUILT_DESCRIPTION).toMatch(/assets/i);
     expect(WORK_INSTRUCTIONS).toMatch(/design system/i);
     const schema = TELL_WHAT_WAS_BUILT_DEFINITION.inputSchema as {
       properties: Record<string, { properties?: Record<string, { description?: string }> }>;

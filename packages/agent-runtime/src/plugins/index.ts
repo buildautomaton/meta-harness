@@ -63,4 +63,4 @@ export { buildArtifactFiles } from './work/artifacts/build-files.js';
 // work-tools
 export { workToolsPlugin } from './work-tools/plugin.js';
 export { WORK_TOOL_DEFINITIONS } from './work-tools/definitions.js';
-export { ASK_WHAT_TO_WORK_ON_TOOL, TELL_WHAT_WAS_BUILT_TOOL } from './work-tools/names.js';
+export { ASK_WHAT_TO_WORK_ON_TOOL, TELL_WHAT_WAS_BUILT_TOOL, ASK_INTERVIEW_QUESTIONS_TOOL } from './work-tools/names.js';

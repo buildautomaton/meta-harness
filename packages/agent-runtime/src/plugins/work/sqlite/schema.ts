@@ -6,6 +6,10 @@ CREATE TABLE IF NOT EXISTS work (
   status TEXT NOT NULL,
   priority TEXT NOT NULL,
   queue_rank INTEGER NOT NULL DEFAULT 0,
+  paused INTEGER NOT NULL DEFAULT 0,
+  prompt TEXT NOT NULL DEFAULT '',
+  agent_context TEXT NOT NULL DEFAULT '',
+  source_key TEXT,
   created_at TEXT NOT NULL,
   updated_at TEXT NOT NULL,
   completed_at TEXT
@@ -46,5 +50,30 @@ CREATE TABLE IF NOT EXISTS artifact_question (
   choices TEXT NOT NULL,
   answer_id TEXT,
   PRIMARY KEY (artifact_id, subject, question_id)
+);
+CREATE TABLE IF NOT EXISTS work_question (
+  work_id TEXT NOT NULL,
+  question_id TEXT NOT NULL,
+  prompt TEXT NOT NULL,
+  context TEXT NOT NULL,
+  choices TEXT NOT NULL,
+  answer_id TEXT,
+  PRIMARY KEY (work_id, question_id)
+);
+CREATE TABLE IF NOT EXISTS work_decision (
+  work_id TEXT NOT NULL,
+  ordinal INTEGER NOT NULL,
+  text TEXT NOT NULL,
+  PRIMARY KEY (work_id, ordinal)
+);
+CREATE TABLE IF NOT EXISTS work_asset (
+  id TEXT PRIMARY KEY,
+  session_id TEXT,
+  work_id TEXT,
+  artifact_id TEXT,
+  filename TEXT NOT NULL,
+  mime_type TEXT NOT NULL,
+  content TEXT NOT NULL,
+  created_at TEXT NOT NULL
 );
 `;

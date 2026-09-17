@@ -25,9 +25,18 @@ export async function handleArtifactRoutes(
     return;
   }
   if (method === 'POST' && action === 'answers') {
-    await work.answerQuestions(artifactId, (await readJson(req)) as QuestionAnswer[]);
-    writeJson(res, 204, null);
+    const raw = await readJson(req);
+    const queued = await work.answerQuestions(artifactId, coerceAnswers(raw));
+    writeJson(res, 200, queued);
     return;
   }
   writeJson(res, 404, { error: 'Not found' });
+}
+
+function coerceAnswers(raw: unknown): QuestionAnswer[] {
+  if (Array.isArray(raw)) return raw as QuestionAnswer[];
+  if (raw && typeof raw === 'object' && Array.isArray((raw as { answers?: unknown }).answers)) {
+    return (raw as { answers: QuestionAnswer[] }).answers;
+  }
+  return [];
 }

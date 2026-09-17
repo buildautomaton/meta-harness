@@ -16,6 +16,16 @@ export function questionsBySubject(input: SubmitWorkInput): Record<string, Desig
   return bySubject;
 }
 
+export function parseQuestionsFile(content: string): Record<string, DesignQuestion[]> {
+  try {
+    const parsed = JSON.parse(content) as Record<string, DesignQuestion[]>;
+    if (!parsed || typeof parsed !== 'object' || Array.isArray(parsed)) return {};
+    return parsed;
+  } catch {
+    return {};
+  }
+}
+
 export function buildQuestionsFile(input: SubmitWorkInput): ArtifactFile[] {
   const bySubject = questionsBySubject(input);
   if (Object.keys(bySubject).length === 0) return [];

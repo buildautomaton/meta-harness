@@ -13,8 +13,12 @@ export function expandWorkMount(endpoint: TransportEndpoint): ExpandedEndpoint[]
   if (endpoint.kind !== 'work') return [endpoint];
   const work = endpoint.routes?.work ?? 'work';
   const artifacts = endpoint.routes?.artifacts ?? 'artifacts';
+  const assets = endpoint.routes?.assets ?? 'assets';
+  const workPath = joinHttpPath(endpoint.path, work);
   return [
-    { ...endpoint, path: joinHttpPath(endpoint.path, work) },
+    { ...endpoint, path: workPath },
     { ...endpoint, path: joinHttpPath(endpoint.path, artifacts), surface: 'artifacts' },
+    { ...endpoint, path: joinHttpPath(endpoint.path, assets), surface: 'assets' },
+    { ...endpoint, path: joinHttpPath(workPath, 'events'), surface: 'events' },
   ];
 }

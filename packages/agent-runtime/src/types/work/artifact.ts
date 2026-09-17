@@ -7,6 +7,7 @@ export const ARTIFACT_KIND_KEYS = [
   'dataModel',
   'moduleStructure',
   'backend',
+  'outline',
 ] as const;
 
 export type ArtifactKindKey = (typeof ARTIFACT_KIND_KEYS)[number];

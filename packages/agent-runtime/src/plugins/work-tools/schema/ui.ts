@@ -1,4 +1,5 @@
 import {
+  UI_CHANGED_DESCRIPTION,
   UI_FILENAME_DESCRIPTION,
   UI_HTML_DESCRIPTION,
   UI_PAGES_DESCRIPTION,
@@ -13,6 +14,7 @@ export const UI_PAGE_SCHEMA = {
     filename: { type: 'string', description: UI_FILENAME_DESCRIPTION },
     title: { type: 'string', description: UI_TITLE_DESCRIPTION },
     html: { type: 'string', description: UI_HTML_DESCRIPTION },
+    whatChanged: { type: 'string', description: UI_CHANGED_DESCRIPTION },
   },
 };
 

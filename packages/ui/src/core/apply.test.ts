@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { applyUiPlugins } from './apply.js';
+import { layoutPlugin } from './layout-plugin.js';
 import type { UiPlugin } from './plugin.js';
 
 const queue: UiPlugin = {
@@ -23,5 +24,16 @@ describe('applyUiPlugins', () => {
     const slots = applyUiPlugins([theme, queue]);
     expect(slots.providers.map((p) => p.id)).toEqual(['theme']);
     expect(slots.surfaces.map((s) => s.id)).toEqual(['queue']);
+    expect(slots.layout).toBe('sidebar');
+  });
+
+  it('uses the last contributed layout', () => {
+    const work: UiPlugin = {
+      name: 'work',
+      kind: 'surface',
+      implementation: { layout: 'columns', surfaces: [] },
+    };
+    const slots = applyUiPlugins([layoutPlugin('sidebar'), work, layoutPlugin('master-detail')]);
+    expect(slots.layout).toBe('master-detail');
   });
 });

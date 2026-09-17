@@ -6,7 +6,7 @@ Composable dashboard for the local development environment. Same plugin shape as
 Host (Vite app or embedder)
   → createUi({ plugins })
   → applyUiPlugins → UiSlots
-  → Dashboard shell (nav + centered feed)
+  → Dashboard shell (sidebar | master-detail | columns)
 ```
 
 ## Plugin kinds
@@ -15,9 +15,16 @@ Host (Vite app or embedder)
 | --- | --- |
 | `provider` | React context providers (work client, theme, future auth) |
 | `surface` | Views contributed to named panels |
+| `layout` | Chooses a constrained shell; last plugin that sets `layout` wins |
 | `theme` | Optional; design tokens live in `src/design/tokens.css` |
 
-The dashboard shell is a narrow nav plus a centered feed column (`main`). Plugins register views into those panels.
+Layouts are a small set, not free-form CSS. Plugins register views into the panels that layout owns:
+
+| Layout | Panels | Shape |
+| --- | --- | --- |
+| `sidebar` | `nav`, `sidebar`, `main` | Rail, side pane, remaining main |
+| `master-detail` | `nav`, `master`, `detail` | Rail, list, selected detail |
+| `columns` | `nav`, `column`, `header` | Rail, equal columns, header overlay on the right |
 
 ```ts
 import { createUi, workUiPlugin } from '@buildautomaton/ui';
@@ -25,11 +32,15 @@ import { createUi, workUiPlugin } from '@buildautomaton/ui';
 const { App } = createUi({ plugins: [workUiPlugin()] });
 ```
 
-The work plugin talks to the local-cli HTTP API (`/api/work`, `/api/artifacts` on the same HTTP server as MCP tools). Completed artifacts show as a Twitter-style feed of cards with HTML thumbnails. Artifacts with no work item still appear (title **Unnamed** if empty). Click a thumbnail to open a full preview.
+The work plugin uses the **columns** layout: completed artifacts on the left, draft work plus a prompt composer on the right. Completed cards show numbered review questions. Artifacts with no work item still appear (title **Unnamed** if empty). Click a thumbnail to open a full preview.
+
+Use `layoutPlugin('sidebar')` (or `master-detail` / `columns`) when another plugin should pick the shell. Shared `Column`, `PromptComposer`, and `NumberedQuestion` components live in the design system.
+
+The work plugin talks to the local-cli HTTP API (`/api/work`, `/api/artifacts` on the same HTTP server as MCP tools).
 
 ## Design system
 
-`src/design` ports the IDE/UI tokens (`--background`, `--card`, …) plus Button, Card, Tabs, fields, EmptyState, and multiple-choice radios. Import `@buildautomaton/ui/design`.
+`src/design` ports the IDE/UI tokens (`--background`, `--card`, …) plus Button, Card, Tabs, fields, EmptyState, multiple-choice radios, column chrome, numbered questions, and the prompt composer. Import `@buildautomaton/ui/design`.
 
 ## Develop
 

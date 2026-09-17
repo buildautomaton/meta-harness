@@ -7,10 +7,14 @@ export function listWorkRows(db: Database, status?: WorkItem['status']): WorkIte
   const rows = status
     ? all(db, 'SELECT * FROM work WHERE status = ? ORDER BY queue_rank DESC, created_at ASC', [status])
     : all(db, 'SELECT * FROM work ORDER BY queue_rank DESC, created_at ASC');
-  return rows.map((row) => mapWorkRow(row, sessionIdsFor(db, String(row.id))));
+  return rows.map((row) => mapWorkRow(row, sessionIdsFor(db, String(row.id)), db));
 }
 
 export function getWorkRow(db: Database, id: string): WorkItem | null {
   const row = one(db, 'SELECT * FROM work WHERE id = ?', [id]);
-  return row ? mapWorkRow(row, sessionIdsFor(db, id)) : null;
+  return row ? mapWorkRow(row, sessionIdsFor(db, id), db) : null;
+}
+
+export function nextQueued(db: Database): WorkItem | null {
+  return listWorkRows(db, 'queued').find((item) => !item.paused) ?? null;
 }

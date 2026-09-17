@@ -2,22 +2,21 @@ import { describe, expect, it } from 'vitest';
 import { createSqliteWorkBackend } from './backend.js';
 
 describe('sqlite work backend', () => {
-  it('queues draft work, picks it with a session, and stores artifacts', async () => {
+  it('queues work, picks it with a session, and stores artifacts', async () => {
     const work = createSqliteWorkBackend();
-    const item = await work.addWork({ title: 'Ship checkout', content: 'Build the checkout flow.' });
-    expect(item.status).toBe('draft');
-    expect(item.sessionIds).toEqual([]);
+    const item = await work.addWork({ title: 'Ship checkout', content: 'Build the checkout flow.', queued: true });
+    expect(item.status).toBe('queued');
 
     const picked = await work.pickNextWork('session-1');
     expect(picked?.id).toBe(item.id);
     expect(picked?.status).toBe('in_progress');
-    expect(picked?.sessionIds).toContain('session-1');
 
     const artifact = await work.recordSubmission({
       title: 'Checkout',
       description: 'Added checkout page',
       sessionId: 'session-1',
-      ui: { pages: [{ filename: 'checkout.html', title: 'Checkout', html: '<html></html>' }] },
+      ui: { pages: [{ filename: 'checkout.html', title: 'Checkout', html: '<html><img src="logo.png"></html>' }] },
+      assets: [{ filename: 'logo.png', mimeType: 'image/png', base64: 'aaaa' }],
       questions: {
         overview: [
           {
@@ -32,14 +31,19 @@ describe('sqlite work backend', () => {
         ],
       },
     });
-    expect(artifact.kinds).toContain('ui');
-    expect(artifact.files.some((f) => f.path === 'ui/checkout.html')).toBe(true);
-    expect(artifact.questions.__overview__?.[0]?.id).toBe('q1');
+    expect(artifact.files.some((f) => f.path === 'ui/checkout.html' && f.content.includes('data:image/png'))).toBe(true);
 
-    await work.answerQuestions(artifact.id, [
+    const queued = await work.answerQuestions(artifact.id, [
       { subject: '__overview__', questionId: 'q1', choiceId: 'keep' },
     ]);
-    const answered = await work.getArtifact(artifact.id);
-    expect(answered?.questions.__overview__?.[0]?.answerId).toBe('keep');
+    expect(queued.queued[0]?.status).toBe('queued');
+    expect(queued.queued[0]?.prompt).toBe('Keep this layout?');
+    expect(queued.queued[0]?.agentContext).toContain('checkout.html');
+
+    const again = await work.answerQuestions(artifact.id, [
+      { subject: '__overview__', questionId: 'q1', choiceId: 'change' },
+    ]);
+    expect(again.queued[0]?.id).toBe(queued.queued[0]?.id);
+    expect(again.queued[0]?.decisions).toEqual(['Change']);
   });
 });

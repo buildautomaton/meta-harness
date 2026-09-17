@@ -1,5 +1,7 @@
-import { artifactTabLabel, previewHtmlFiles } from './preview-files.js';
+import { X } from 'lucide-react';
+import { previewHtmlFiles } from './preview-files.js';
 import { WorkCardPreviewStrip } from './work-card-preview-strip.js';
+import { withMermaidStyle } from './with-mermaid-style.js';
 import type { ArtifactFile } from './types.js';
 
 export function WorkCardPreview(props: {
@@ -17,17 +19,21 @@ export function WorkCardPreview(props: {
       onClick={props.onClose}
     >
       <div
-        className="flex h-[85vh] w-full max-w-5xl flex-col overflow-hidden rounded-lg border bg-card shadow-lg"
+        className="relative flex h-[85vh] w-full max-w-5xl flex-col overflow-hidden rounded-lg border bg-card shadow-lg"
         onClick={(event) => event.stopPropagation()}
       >
-        <WorkCardPreviewStrip files={html} path={props.path} onOpen={props.onOpen} />
-        <div className="flex items-center justify-between border-b border-border px-4 py-3">
-          <h3 className="text-sm font-semibold capitalize">{artifactTabLabel(file.path)}</h3>
-          <button type="button" className="text-sm" onClick={props.onClose}>
-            Close
+        <div className="flex items-start border-b border-border">
+          <WorkCardPreviewStrip files={html} path={props.path} onOpen={props.onOpen} />
+          <button
+            type="button"
+            aria-label="Close"
+            onClick={props.onClose}
+            className="m-2 shrink-0 rounded-md p-1.5 text-muted-foreground hover:bg-muted hover:text-foreground"
+          >
+            <X className="h-4 w-4" aria-hidden />
           </button>
         </div>
-        <iframe title={file.path} srcDoc={file.content} className="min-h-0 flex-1 bg-white" />
+        <iframe title={file.path} srcDoc={withMermaidStyle(file.content)} className="min-h-0 flex-1 bg-[#101218]" />
       </div>
     </div>
   );

@@ -6,6 +6,6 @@ export type TransportEndpoint = {
   kind: PluginKind;
   /** Destination plugin `name`. Required for work; omit for merged tools. */
   plugin?: string;
-  /** Work route segments under `path` (defaults `work` and `artifacts`). */
-  routes?: { work?: string; artifacts?: string };
+  /** Work route segments under `path` (defaults `work`, `artifacts`, and `assets`). */
+  routes?: { work?: string; artifacts?: string; assets?: string };
 };

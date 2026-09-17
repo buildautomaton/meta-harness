@@ -1,9 +1,12 @@
 import type { ReviewQuestions } from './questions.js';
+import type { OutlineArtifactInput } from './outline.js';
+import type { WorkAssetInput } from './events.js';
 
 export type UiPageInput = {
   filename: string;
   title: string;
   html: string;
+  whatChanged?: string;
 };
 
 export type ApiRouteInput = {
@@ -24,5 +27,7 @@ export type SubmitWorkInput = {
   dataModel?: { mermaid: string; whatChanged: string };
   moduleStructure?: { mermaid: string; whatChanged: string };
   backend?: { description: string };
+  outline?: OutlineArtifactInput;
+  assets?: WorkAssetInput[];
   questions?: ReviewQuestions;
 };

@@ -9,6 +9,7 @@ import { HTTP_DEFAULT_HOST, HTTP_DEFAULT_PORT, MCP_DEFAULT_PATH, httpListenUrl, 
 import { mcpNotifierSink } from './mcp-sink.js';
 import { createMcpSseHub } from './sse-hub.js';
 import { resolveHttpEndpoints } from './resolve-endpoints.js';
+import { attachWorkWebSocket } from './bind-work-ws.js';
 
 export type CreateHttpTransportInit = HttpTransportOptions & {
   log?: LogFn;
@@ -24,6 +25,7 @@ export function createHttpTransport(init: CreateHttpTransportInit = {}): HostTra
   const sse = createMcpSseHub();
   let server: http.Server | undefined;
   let unsub: (() => void) | undefined;
+  let detachWs: (() => void) | undefined;
   return {
     id: 'http',
     async start(commandHost) {
@@ -41,6 +43,7 @@ export function createHttpTransport(init: CreateHttpTransportInit = {}): HostTra
           sse,
         });
       });
+      detachWs = attachWorkWebSocket(server, endpoints, commandHost).detach;
       const bound = await listenLocalhost(server, port, host);
       await logListening(commandHost, host, bound, path, endpoints, log);
       init.onListening?.({ url: httpListenUrl(host, bound, path), port: bound });
@@ -50,6 +53,7 @@ export function createHttpTransport(init: CreateHttpTransportInit = {}): HostTra
     async stop() {
       log('[HTTP] Stopping');
       unsub?.();
+      detachWs?.();
       sse.close();
       await closeServer(server);
     },

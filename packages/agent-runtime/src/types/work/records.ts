@@ -1,4 +1,6 @@
-export const WORK_STATUSES = ['draft', 'held', 'in_progress', 'completed'] as const;
+import type { DesignQuestion } from './questions.js';
+
+export const WORK_STATUSES = ['draft', 'queued', 'held', 'in_progress', 'completed'] as const;
 export type WorkStatus = (typeof WORK_STATUSES)[number];
 
 export const WORK_PRIORITIES = ['high', 'medium', 'low'] as const;
@@ -11,6 +13,11 @@ export type WorkItem = {
   status: WorkStatus;
   priority: WorkPriority;
   queueRank: number;
+  paused: boolean;
+  prompt: string;
+  agentContext: string;
+  decisions: string[];
+  questions: DesignQuestion[];
   sessionIds: string[];
   createdAt: string;
   updatedAt: string;
@@ -31,6 +38,12 @@ export type AddWorkInput = {
   content?: string;
   priority?: WorkPriority;
   held?: boolean;
+  queued?: boolean;
+  paused?: boolean;
+  prompt?: string;
+  agentContext?: string;
+  decisions?: string[];
+  sourceKey?: string;
 };
 
 export type WorkPatch = {
@@ -39,4 +52,8 @@ export type WorkPatch = {
   status?: WorkStatus;
   priority?: WorkPriority;
   held?: boolean;
+  paused?: boolean;
+  queue?: 'top' | 'bottom';
+  prompt?: string;
+  agentContext?: string;
 };

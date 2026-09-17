@@ -43,10 +43,10 @@ export function parseQuestions(value: unknown): ReviewQuestions | undefined {
   };
 }
 
-function parseQuestionList(value: unknown): DesignQuestion[] | undefined {
+export function parseQuestionList(value: unknown, max = 3): DesignQuestion[] | undefined {
   if (!Array.isArray(value)) return undefined;
   const items = value.map(parseQuestion).filter((q): q is DesignQuestion => q !== undefined);
-  return items.length ? items.slice(0, 3) : undefined;
+  return items.length ? items.slice(0, max) : undefined;
 }
 
 function parseQuestion(value: unknown): DesignQuestion | undefined {

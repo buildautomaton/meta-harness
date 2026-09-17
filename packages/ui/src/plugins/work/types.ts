@@ -1,4 +1,4 @@
-export type WorkStatus = 'draft' | 'held' | 'in_progress' | 'completed';
+export type WorkStatus = 'draft' | 'queued' | 'held' | 'in_progress' | 'completed';
 export type WorkPriority = 'high' | 'medium' | 'low';
 
 export type WorkItem = {
@@ -8,6 +8,11 @@ export type WorkItem = {
   status: WorkStatus;
   priority: WorkPriority;
   queueRank: number;
+  paused: boolean;
+  prompt: string;
+  agentContext: string;
+  decisions: string[];
+  questions: DesignQuestion[];
   sessionIds: string[];
   createdAt: string;
   updatedAt: string;
@@ -21,6 +26,7 @@ export type DesignQuestion = {
   context: string;
   choices: DesignChoice[];
   answerId?: string | null;
+  locked?: boolean;
 };
 
 export type ArtifactFile = { path: string; content: string; contentType: string };
@@ -46,14 +52,30 @@ export type ArtifactSummary = {
   sessionId?: string | null;
 };
 
+export type AnswerQuestionsResult = {
+  queued: WorkItem[];
+  removed: string[];
+};
+
+export type WorkPatch = {
+  held?: boolean;
+  paused?: boolean;
+  status?: WorkStatus;
+  queue?: 'top' | 'bottom';
+};
+
 export type WorkClient = {
   listWork(): Promise<WorkItem[]>;
   addWork(input: { title: string; content?: string; held?: boolean }): Promise<WorkItem>;
-  updateWork(id: string, patch: { held?: boolean; status?: WorkStatus }): Promise<WorkItem | null>;
+  updateWork(id: string, patch: WorkPatch): Promise<WorkItem | null>;
   listArtifacts(workId?: string): Promise<ArtifactSummary[]>;
   getArtifact(id: string): Promise<WorkArtifact | null>;
   answerQuestions(
     artifactId: string,
     answers: { subject: string; questionId: string; choiceId: string }[],
-  ): Promise<void>;
+  ): Promise<AnswerQuestionsResult>;
+  answerWorkQuestions(
+    workId: string,
+    answers: { subject: string; questionId: string; choiceId: string }[],
+  ): Promise<WorkItem | null>;
 };
