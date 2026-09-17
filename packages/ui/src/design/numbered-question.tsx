@@ -8,6 +8,7 @@ export function NumberedQuestion(props: {
   choices: ChoiceOption[];
   selectedId?: string | null;
   disabled?: boolean;
+  clearable?: boolean;
   onSelect: (choiceId: string) => void;
 }) {
   return (
@@ -19,6 +20,7 @@ export function NumberedQuestion(props: {
           choices={props.choices}
           selectedId={props.selectedId}
           disabled={props.disabled}
+          clearable={props.clearable}
           onSelect={props.onSelect}
         />
       </fieldset>

@@ -4,8 +4,10 @@ import { expandWorkMount, joinHttpPath } from './expand-work.js';
 describe('expandWorkMount', () => {
   it('turns a work root into work and artifacts paths', () => {
     const expanded = expandWorkMount({ kind: 'work', path: '/api', plugin: 'work-sqlite' });
-    expect(expanded.map((e) => e.path)).toEqual(['/api/work', '/api/artifacts']);
+    expect(expanded.map((e) => e.path)).toEqual(['/api/work', '/api/artifacts', '/api/assets', '/api/work/events']);
     expect(expanded[1]?.surface).toBe('artifacts');
+    expect(expanded[2]?.surface).toBe('assets');
+    expect(expanded[3]?.surface).toBe('events');
   });
 
   it('joins custom route segments', () => {
@@ -16,6 +18,6 @@ describe('expandWorkMount', () => {
       plugin: 'work-sqlite',
       routes: { work: 'queue', artifacts: 'built' },
     });
-    expect(expanded.map((e) => e.path)).toEqual(['/v1/queue', '/v1/built']);
+    expect(expanded.map((e) => e.path)).toEqual(['/v1/queue', '/v1/built', '/v1/assets', '/v1/queue/events']);
   });
 });

@@ -1,5 +1,6 @@
 import type { SubmitWorkInput, UiPageInput, ApiRouteInput } from '@/types/work/submit.js';
 import { parseNamed, parseDiagram, parseBackend, parseQuestions } from './parse-parts.js';
+import { parseAssets, parseOutline } from './parse-extra.js';
 
 function str(value: unknown): string | undefined {
   return typeof value === 'string' && value.length > 0 ? value : undefined;
@@ -26,6 +27,8 @@ export function parseSubmitWork(args: Record<string, unknown>): SubmitWorkInput 
     dataModel: parseDiagram(args.dataModel),
     moduleStructure: parseDiagram(args.moduleStructure),
     backend: parseBackend(args.backend),
+    outline: parseOutline(args.outline),
+    assets: parseAssets(args.assets),
     questions: parseQuestions(args.questions),
   };
 }
@@ -43,7 +46,7 @@ function parsePage(value: unknown): UiPageInput | undefined {
   const title = str(row?.title);
   const html = str(row?.html);
   if (!filename || !title || !html || !filename.endsWith('.html')) return undefined;
-  return { filename, title, html };
+  return { filename, title, html, whatChanged: str(row?.whatChanged) };
 }
 
 function parseApi(value: unknown): SubmitWorkInput['api'] {

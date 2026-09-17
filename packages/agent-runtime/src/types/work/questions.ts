@@ -9,6 +9,7 @@ export type DesignQuestion = {
   context: string;
   choices: DesignChoice[];
   answerId?: string | null;
+  locked?: boolean;
 };
 
 export type UiReviewQuestions = {

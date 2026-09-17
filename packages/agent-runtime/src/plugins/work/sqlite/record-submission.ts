@@ -10,11 +10,14 @@ import { completeSessionRow } from './sessions.js';
 import { buildArtifactFiles } from '@plugins/work/artifacts/build-files.js';
 import { artifactKindsPresent } from '@plugins/work/artifacts/kinds.js';
 import { questionsBySubject } from '@plugins/work/artifacts/questions-file.js';
+import { mergeAssets } from '@plugins/work/artifacts/embed-assets.js';
+import { listAssetRows } from './assets.js';
 
 export function recordSubmission(db: Database, input: SubmitWorkInput): WorkArtifact {
   const id = randomUUID();
   const createdAt = isoNow();
-  const files = buildArtifactFiles(input, createdAt);
+  const assets = mergeAssets(input.sessionId ? listAssetRows(db, input.sessionId) : [], input.assets ?? []);
+  const files = buildArtifactFiles(input, createdAt, assets);
   const workId = workIdForSession(db, input.sessionId);
   run(
     db,

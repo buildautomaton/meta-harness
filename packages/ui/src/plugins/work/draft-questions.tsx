@@ -1,0 +1,26 @@
+import { NumberedQuestion } from '../../design/numbered-question.js';
+import { useWork } from './context.js';
+import type { WorkItem } from './types.js';
+
+export function DraftQuestions({ item }: { item: WorkItem }) {
+  const { client, reload } = useWork();
+  if (item.questions.length === 0) return null;
+  return (
+    <div className="divide-y divide-border/60 border-t border-border/60">
+      {item.questions.map((question, index) => (
+        <NumberedQuestion
+          key={question.id}
+          index={index + 1}
+          prompt={question.prompt}
+          choices={question.choices}
+          selectedId={question.answerId}
+          onSelect={(choiceId) => {
+            void client
+              .answerWorkQuestions(item.id, [{ subject: '__draft__', questionId: question.id, choiceId }])
+              .then(reload);
+          }}
+        />
+      ))}
+    </div>
+  );
+}

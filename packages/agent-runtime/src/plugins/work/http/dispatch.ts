@@ -4,6 +4,7 @@ import { writeJson } from './io.js';
 import { handleWorkCollection } from './collection.js';
 import { handleWorkItem } from './item.js';
 import { handleArtifactRoutes } from './artifact-routes.js';
+import { handleAssetRoutes } from './asset-routes.js';
 import { restAfterPrefix } from './prefix.js';
 
 export async function dispatchWorkHttp(
@@ -25,6 +26,14 @@ export async function dispatchWorkHttp(
       await handleArtifactRoutes(req, res, work, rest, method);
       return;
     }
+    if (surface === 'assets') {
+      await handleAssetRoutes(req, res, work, rest, method);
+      return;
+    }
+    if (surface === 'events') {
+      writeJson(res, 426, { error: 'Upgrade Required' });
+      return;
+    }
     if (!rest) {
       await handleWorkCollection(req, res, work, method);
       return;
@@ -36,6 +45,7 @@ export async function dispatchWorkHttp(
     }
     await handleWorkItem(req, res, work, decodeURIComponent(id), tail.join('/') || undefined, method);
   } catch (err) {
-    writeJson(res, 500, { error: err instanceof Error ? err.message : String(err) });
+    const message = err instanceof Error ? err.message : String(err);
+    writeJson(res, message === 'ANSWER_LOCKED' ? 409 : 500, { error: message });
   }
 }

@@ -71,3 +71,11 @@ export const QUESTIONS_SCHEMA = {
     },
   },
 };
+
+export const INTERVIEW_QUESTIONS_SCHEMA = {
+  type: 'array',
+  maxItems: 4,
+  items: questionItem,
+  description:
+    '2–4 multiple-choice questions for the draft card, or [] when the interview is done and the work should be queued. Each answer is stored as a decision bullet on the work item.',
+};

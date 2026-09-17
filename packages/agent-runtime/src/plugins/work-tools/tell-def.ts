@@ -6,6 +6,8 @@ import { UI_ARTIFACT_SCHEMA } from './schema/ui.js';
 import { API_ARTIFACT_SCHEMA } from './schema/api.js';
 import { ALGORITHM_ARTIFACT_SCHEMA, BACKEND_ARTIFACT_SCHEMA } from './schema/algorithm.js';
 import { DATA_MODEL_ARTIFACT_SCHEMA, MODULE_STRUCTURE_ARTIFACT_SCHEMA } from './schema/diagrams.js';
+import { OUTLINE_ARTIFACT_SCHEMA } from './schema/outline.js';
+import { ASSETS_SCHEMA } from './schema/assets.js';
 
 export const TELL_WHAT_WAS_BUILT_DEFINITION: McpToolDefinition = {
   name: TELL_WHAT_WAS_BUILT_TOOL,
@@ -29,6 +31,8 @@ export const TELL_WHAT_WAS_BUILT_DEFINITION: McpToolDefinition = {
       dataModel: DATA_MODEL_ARTIFACT_SCHEMA,
       moduleStructure: MODULE_STRUCTURE_ARTIFACT_SCHEMA,
       backend: BACKEND_ARTIFACT_SCHEMA,
+      outline: OUTLINE_ARTIFACT_SCHEMA,
+      assets: ASSETS_SCHEMA,
       questions: QUESTIONS_SCHEMA,
     },
   },

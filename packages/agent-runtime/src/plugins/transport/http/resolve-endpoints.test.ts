@@ -22,6 +22,8 @@ describe('resolveHttpEndpoints', () => {
       ['tools', '/mcp', undefined],
       ['work', '/api/work', undefined],
       ['work', '/api/artifacts', 'artifacts'],
+      ['work', '/api/assets', 'assets'],
+      ['work', '/api/work/events', 'events'],
     ]);
     expect(resolved[1]?.work).toBeDefined();
   });

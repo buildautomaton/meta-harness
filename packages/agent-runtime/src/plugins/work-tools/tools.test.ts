@@ -6,7 +6,7 @@ import type { ToolContext } from '@/types/tools/implementation.js';
 
 function ctx(): Promise<ToolContext> {
   const work = createSqliteWorkBackend();
-  return work.addWork({ title: 'Next', content: 'Do the next thing' }).then(() => ({
+  return work.addWork({ title: 'Next', content: 'Do the next thing', queued: true }).then(() => ({
     cwd: '/tmp',
     work,
     engine: {} as ToolContext['engine'],

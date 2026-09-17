@@ -1,24 +1,33 @@
-import type { WorkClient } from './types.js';
-import { loadBoard, type WorkBoard } from './load-board.js';
+function eventsUrl(): string {
+  const explicit = import.meta.env.VITE_WORK_EVENTS_URL;
+  if (explicit) return explicit;
+  if (import.meta.env.DEV) return 'ws://127.0.0.1:3333/api/work/events';
+  const proto = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+  return `${proto}//${window.location.host}/api/work/events`;
+}
 
-export function watchBoard(client: WorkClient, onData: (board: WorkBoard) => void): () => void {
+export function watchBoard(reload: () => void): () => void {
   let cancelled = false;
-  const load = () =>
-    loadBoard(client).then(
-      (next) => {
-        if (!cancelled) onData(next);
-      },
-      () => {
-        if (!cancelled) onData({ artifacts: [], items: [] });
-      },
-    );
-  void load();
-  const timer = window.setInterval(() => void load(), 2500);
-  const onFocus = () => void load();
-  window.addEventListener('focus', onFocus);
+  let socket: WebSocket | undefined;
+  let timer = 0;
+  const ping = () => {
+    if (!cancelled) reload();
+  };
+  const startPoll = () => {
+    if (!timer && !cancelled) timer = window.setInterval(ping, 2500);
+  };
+  const connect = () => {
+    socket = new WebSocket(eventsUrl());
+    socket.onmessage = ping;
+    socket.onopen = ping;
+    socket.onerror = startPoll;
+    socket.onclose = startPoll;
+  };
+  ping();
+  connect();
   return () => {
     cancelled = true;
-    window.clearInterval(timer);
-    window.removeEventListener('focus', onFocus);
+    socket?.close();
+    if (timer) window.clearInterval(timer);
   };
 }

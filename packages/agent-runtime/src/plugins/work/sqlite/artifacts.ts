@@ -1,6 +1,8 @@
 import type { Database } from 'node-sqlite3-wasm';
 import type { DesignQuestion } from '@/types/work/questions.js';
 import type { ArtifactFile, WorkArtifact, WorkArtifactSummary } from '@/types/work/artifact.js';
+import { QUESTIONS_FILE_PATH, parseQuestionsFile } from '@plugins/work/artifacts/questions-file.js';
+import { isPickedUp, sourceKeyFor, sourceStatus } from './source-key.js';
 import { all } from './sql.js';
 import { run } from './sql.js';
 
@@ -62,21 +64,29 @@ export function loadArtifact(db: Database, id: string): WorkArtifact | null {
     contentType: String(f.content_type),
     content: String(f.content),
   }));
-  const questions = groupQuestions(all(db, 'SELECT * FROM artifact_question WHERE artifact_id = ?', [id]));
+  const grouped = groupQuestions(db, id, all(db, 'SELECT * FROM artifact_question WHERE artifact_id = ?', [id]));
+  const file = files.find((entry) => entry.path === QUESTIONS_FILE_PATH);
+  const questions = Object.keys(grouped).length ? grouped : parseQuestionsFile(file?.content ?? '');
   return { ...mapSummary(row), files, questions };
 }
 
-function groupQuestions(rows: Record<string, unknown>[]): Record<string, DesignQuestion[]> {
+function groupQuestions(
+  db: Database,
+  artifactId: string,
+  rows: Record<string, unknown>[],
+): Record<string, DesignQuestion[]> {
   const out: Record<string, DesignQuestion[]> = {};
   for (const row of rows) {
     const subject = String(row.subject);
+    const id = String(row.question_id);
     const list = out[subject] ?? [];
     list.push({
-      id: String(row.question_id),
+      id,
       prompt: String(row.prompt),
       context: String(row.context),
       choices: JSON.parse(String(row.choices)) as DesignQuestion['choices'],
       answerId: row.answer_id == null ? null : String(row.answer_id),
+      locked: isPickedUp(sourceStatus(db, sourceKeyFor(artifactId, subject, id))),
     });
     out[subject] = list;
   }

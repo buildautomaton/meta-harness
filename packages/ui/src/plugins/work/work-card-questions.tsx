@@ -4,7 +4,7 @@ import { useWork } from './context.js';
 import type { WorkArtifact } from './types.js';
 
 export function WorkCardQuestions({ artifact }: { artifact: WorkArtifact }) {
-  const { client, reload } = useWork();
+  const { client, reload, ingestItems, dropItems } = useWork();
   const items = flattenQuestions(artifact.questions);
   if (items.length === 0) return null;
   return (
@@ -17,12 +17,18 @@ export function WorkCardQuestions({ artifact }: { artifact: WorkArtifact }) {
           prompt={item.question.prompt}
           choices={item.question.choices}
           selectedId={item.question.answerId}
+          disabled={item.question.locked}
+          clearable={!item.question.locked}
           onSelect={(choiceId) => {
             void client
               .answerQuestions(artifact.id, [
                 { subject: item.subject, questionId: item.question.id, choiceId },
               ])
-              .then(reload);
+              .then((result) => {
+                ingestItems(result.queued);
+                dropItems(result.removed);
+              })
+              .finally(() => reload());
           }}
         />
       ))}

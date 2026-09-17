@@ -7,9 +7,6 @@ export type WorkBoard = {
 };
 
 export async function loadBoard(client: WorkClient): Promise<WorkBoard> {
-  const [artifacts, items] = await Promise.all([
-    loadArtifacts(client),
-    client.listWork().catch(() => [] as WorkItem[]),
-  ]);
+  const [artifacts, items] = await Promise.all([loadArtifacts(client), client.listWork()]);
   return { artifacts, items };
 }

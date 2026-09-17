@@ -5,7 +5,7 @@ import { useWork } from './context.js';
 import type { WorkItem } from './types.js';
 
 function isOpenDraft(item: WorkItem): boolean {
-  return item.status === 'draft' || item.status === 'held';
+  return item.status === 'draft';
 }
 
 export function DraftList() {

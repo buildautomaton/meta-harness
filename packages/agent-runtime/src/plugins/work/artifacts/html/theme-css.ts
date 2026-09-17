@@ -17,4 +17,7 @@ table { width: 100%; border-collapse: collapse; }
 th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--line); vertical-align: top; }
 th { color: var(--text); font-size: 12px; letter-spacing: .04em; text-transform: uppercase; }
 .badge { display: inline-block; padding: 2px 8px; border-radius: 999px; border: 1px solid var(--line); font-size: 12px; }
+.changed { color: var(--text); background: #1d2a3a; border-left: 3px solid var(--accent); padding: 12px 14px; border-radius: 8px; }
+.diff .add, .diff .added { color: #8ee09a; }
+.diff .del, .diff .removed { color: #f0a0a0; }
 `.trim();

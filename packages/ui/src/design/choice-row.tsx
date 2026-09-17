@@ -6,6 +6,7 @@ export function ChoiceRow(props: {
   choice: ChoiceOption;
   checked: boolean;
   disabled?: boolean;
+  clearable?: boolean;
   onSelect: (choiceId: string) => void;
 }) {
   return (
@@ -27,7 +28,7 @@ export function ChoiceRow(props: {
         <RadioDot checked={props.checked} />
         <span className="leading-snug">{props.choice.label}</span>
       </button>
-      {props.checked ? (
+      {props.checked && props.clearable !== false ? (
         <button
           type="button"
           disabled={props.disabled}

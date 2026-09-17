@@ -1,8 +1,9 @@
+import type { Database } from 'node-sqlite3-wasm';
 import type { WorkItem, WorkPriority, WorkStatus } from '@/types/work/records.js';
 import { all } from './sql.js';
-import type { Database } from 'node-sqlite3-wasm';
+import { listDecisions, listWorkQuestions } from './decisions.js';
 
-const STATUSES: WorkStatus[] = ['draft', 'held', 'in_progress', 'completed'];
+const STATUSES: WorkStatus[] = ['draft', 'queued', 'held', 'in_progress', 'completed'];
 const PRIOS: WorkPriority[] = ['high', 'medium', 'low'];
 
 function asStatus(value: unknown): WorkStatus {
@@ -13,14 +14,20 @@ function asPriority(value: unknown): WorkPriority {
   return PRIOS.includes(value as WorkPriority) ? (value as WorkPriority) : 'medium';
 }
 
-export function mapWorkRow(row: Record<string, unknown>, sessionIds: string[]): WorkItem {
+export function mapWorkRow(row: Record<string, unknown>, sessionIds: string[], db: Database): WorkItem {
+  const id = String(row.id);
   return {
-    id: String(row.id),
+    id,
     title: String(row.title),
     content: String(row.content ?? ''),
     status: asStatus(row.status),
     priority: asPriority(row.priority),
     queueRank: Number(row.queue_rank ?? 0),
+    paused: Number(row.paused ?? 0) === 1,
+    prompt: String(row.prompt ?? ''),
+    agentContext: String(row.agent_context ?? ''),
+    decisions: listDecisions(db, id),
+    questions: listWorkQuestions(db, id),
     sessionIds,
     createdAt: String(row.created_at),
     updatedAt: String(row.updated_at),

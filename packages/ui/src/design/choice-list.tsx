@@ -12,6 +12,7 @@ export function ChoiceList(props: {
   choices: ChoiceOption[];
   selectedId?: string | null;
   disabled?: boolean;
+  clearable?: boolean;
   onSelect: (choiceId: string) => void;
 }) {
   const selectedId = props.selectedId ?? '';
@@ -26,6 +27,7 @@ export function ChoiceList(props: {
             choice={choice}
             checked={selectedId === choice.id}
             disabled={props.disabled}
+            clearable={props.clearable}
             onSelect={(choiceId) => {
               if (choiceId) collapse.collapseNow();
               props.onSelect(choiceId);
