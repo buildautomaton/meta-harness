@@ -1,15 +1,15 @@
 import { escapeHtml, escapeScriptText } from './escape.js';
+import { MERMAID_BOX_CSS } from './mermaid-css.js';
 import { mermaidInit } from './mermaid-init.js';
+import { mermaidErPaintJs } from './mermaid-er-paint.js';
+import { mermaidPaintJs } from './mermaid-paint.js';
+import { THEME_CSS } from './theme-css.js';
 
 const PAGE_CSS = `
-:root { color-scheme: light; }
-* { box-sizing: border-box; }
-html, body { margin: 0; background: #f7f8fa; color: #0f172a; }
-body { font: 15px/1.5 ui-sans-serif, system-ui, sans-serif; }
-main { max-width: 960px; margin: 0 auto; padding: 28px 24px; }
-.kicker { margin: 0 0 6px; color: #64748b; font-size: 11px; letter-spacing: .12em; text-transform: uppercase; }
-h1 { margin: 0 0 10px; font-size: 22px; }
-.changed { margin: 0 0 16px; color: #475569; }
+${THEME_CSS}
+pre.mermaid { background: transparent; border: 0; padding: 8px 0; overflow: visible; }
+.mermaid { margin: 0; }
+${MERMAID_BOX_CSS}
 `.trim();
 
 export function wrapMermaidPage(opts: {
@@ -36,6 +36,8 @@ export function wrapMermaidPage(opts: {
       node.textContent = document.getElementById('diagram-src').textContent;
       await mermaid.run({ nodes: [node] });
     </script>
+    <script>${mermaidPaintJs}</script>
+    <script>${mermaidErPaintJs}</script>
   </main>
 </body></html>`;
 }

@@ -10,22 +10,24 @@ export function WorkCardPreviewStrip(props: {
 }) {
   if (props.files.length < 2) return null;
   return (
-    <div className="flex gap-2 overflow-x-auto border-b border-border px-4 py-3">
+    <div className="flex min-w-0 flex-1 gap-2 overflow-x-auto px-4 py-3">
       {props.files.map((file) => {
         const active = file.path === props.path;
+        const label = artifactTabLabel(file.path);
         return (
           <button
             key={file.path}
             type="button"
             onClick={() => props.onOpen(file.path)}
             aria-current={active ? 'true' : undefined}
-            className={cn('w-28 shrink-0 rounded-xl text-left', active && 'ring-2 ring-foreground/50')}
+            className={cn('flex w-28 shrink-0 flex-col gap-1.5 text-left', active && 'opacity-100')}
           >
             <WorkCardThumbPreview
               html={file.content}
-              label={artifactTabLabel(file.path)}
-              className="h-16 rounded-xl"
+              label={label}
+              className={cn('h-16 rounded-xl', active && 'ring-2 ring-foreground/50')}
             />
+            <span className="truncate text-[11px] font-medium capitalize text-muted-foreground">{label}</span>
           </button>
         );
       })}

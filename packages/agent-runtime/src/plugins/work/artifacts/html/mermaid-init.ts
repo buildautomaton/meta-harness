@@ -1,14 +1,19 @@
+import { MERMAID_BOX_CSS } from './mermaid-css.js';
+import { mermaidThemeVars } from './mermaid-vars.js';
+
 export const mermaidInit = {
   startOnLoad: false,
   securityLevel: 'strict',
   theme: 'base',
-  themeVariables: {
-    fontFamily: '"Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif',
-    primaryColor: '#ffffff',
-    primaryTextColor: '#0f172a',
-    primaryBorderColor: '#d4d4d8',
-    lineColor: '#94a3b8',
-    nodeBkg: '#ffffff',
-    mainBkg: '#ffffff',
+  darkMode: true,
+  themeVariables: mermaidThemeVars,
+  themeCSS: MERMAID_BOX_CSS,
+  flowchart: {
+    curve: 'basis',
+    padding: 24,
+    htmlLabels: true,
+    nodeSpacing: 64,
+    rankSpacing: 72,
+    wrappingWidth: 220,
   },
 };
