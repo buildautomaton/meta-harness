@@ -12,7 +12,7 @@ import { applyToolsPlugin } from './apply-tools.js';
 import { applyWorkPlugin } from './apply-work.js';
 import type { WorkPlugin } from '@/types/work/plugin.js';
 
-/** Fill `PluginSlots` by `kind`: harnesses[], session, tools, work, transport. */
+/** Fill `PluginSlots` by `kind`: harnesses[], session, tools, works, transport. */
 export function applyPlugins(
   plugins: readonly AgentRuntimePlugin[],
   _options: { log: LogFn; cwd: string },

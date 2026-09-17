@@ -1,8 +1,7 @@
 import type { ReactNode } from 'react';
 import type { UiPlugin } from '../../core/plugin.js';
 import { WorkProvider } from './context.js';
-import { WorkSidebar } from './sidebar.js';
-import { WorkDetailView } from './detail-view.js';
+import { WorkFeedView } from './feed-view.js';
 import { WorkNav } from './nav.js';
 import type { WorkClient } from './types.js';
 
@@ -20,8 +19,7 @@ export function workUiPlugin(client?: WorkClient): UiPlugin {
       providers: [{ id: 'work', component: bindProvider(client) }],
       surfaces: [
         { id: 'work-nav', title: 'Work', panel: 'nav', order: 0, component: WorkNav },
-        { id: 'work-queue', title: 'Queue', panel: 'sidebar', order: 0, component: WorkSidebar },
-        { id: 'work-detail', title: 'Detail', panel: 'main', order: 0, component: WorkDetailView },
+        { id: 'work-feed', title: 'Feed', panel: 'main', order: 0, component: WorkFeedView },
       ],
     },
   };

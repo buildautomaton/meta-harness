@@ -39,11 +39,13 @@ export type {
   SessionBackendWrap,
 } from './session/plugin.js';
 
-export type { TransportImplementation, CommandHost, HttpExtraHandler } from './transport/implementation.js';
+export type { TransportImplementation, CommandHost, TransportPlugins } from './transport/implementation.js';
 export type { TransportHooks } from './transport/hooks.js';
+export type { TransportEndpoint } from './transport/endpoints.js';
 export type {
   TransportKind,
-  McpTransportOptions,
+  HttpTransportOptions,
+  StdioTransportOptions,
   RemoteTransportOptions,
   RemoteCommand,
   RemoteTransportImplementation,

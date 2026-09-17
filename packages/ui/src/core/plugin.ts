@@ -9,7 +9,7 @@ export type SurfaceProps = {
 export type UiSurface = {
   id: string;
   title: string;
-  /** Panel id defined by the dashboard shell (`nav`, `sidebar`, `main`). */
+  /** Panel id defined by the dashboard shell (`nav`, `main`). */
   panel: string;
   order?: number;
   component: ComponentType<SurfaceProps>;

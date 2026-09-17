@@ -2,7 +2,7 @@
   "name": "@buildautomaton/local-cli",
   "version": "0.1.0",
   "license": "MIT",
-  "description": "Thin CLI that starts a meta-harness MCP (or remote) server via agent-runtime plugins",
+  "description": "Thin CLI that starts a meta-harness HTTP, stdio, or remote server via agent-runtime plugins",
   "author": "BuildAutomaton",
   "repository": {
     "type": "git",

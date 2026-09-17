@@ -4,7 +4,7 @@ import { cn } from '../design/cn.js';
 export function PanelSlot({ panel, className }: { panel: string; className?: string }) {
   const { surfacesIn } = useUiHost();
   const surfaces = surfacesIn(panel);
-  if (surfaces.length === 0) return <div className={className} />;
+  if (surfaces.length === 0) return null;
   return (
     <div className={cn('flex min-h-0 min-w-0 flex-col', className)}>
       {surfaces.map((surface) => {

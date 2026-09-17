@@ -1,4 +1,10 @@
-import type { WorkArtifact, WorkClient, WorkItem } from './types.js';
+import type { ArtifactSummary, WorkArtifact, WorkClient, WorkItem } from './types.js';
+
+export type HttpWorkClientOptions = {
+  base?: string;
+  workPath?: string;
+  artifactsPath?: string;
+};
 
 async function json<T>(res: Promise<Response>): Promise<T> {
   const resolved = await res;
@@ -7,12 +13,16 @@ async function json<T>(res: Promise<Response>): Promise<T> {
   return (await resolved.json()) as T;
 }
 
-export function createHttpWorkClient(base = ''): WorkClient {
+export function createHttpWorkClient(options: HttpWorkClientOptions | string = ''): WorkClient {
+  const opts = typeof options === 'string' ? { base: options } : options;
+  const base = opts.base ?? '';
+  const workPath = opts.workPath ?? '/api/work';
+  const artifactsPath = opts.artifactsPath ?? '/api/artifacts';
   return {
-    listWork: () => json<WorkItem[]>(fetch(`${base}/api/work`)),
+    listWork: () => json<WorkItem[]>(fetch(`${base}${workPath}`)),
     addWork: (input) =>
       json<WorkItem>(
-        fetch(`${base}/api/work`, {
+        fetch(`${base}${workPath}`, {
           method: 'POST',
           headers: { 'content-type': 'application/json' },
           body: JSON.stringify(input),
@@ -20,18 +30,18 @@ export function createHttpWorkClient(base = ''): WorkClient {
       ),
     updateWork: (id, patch) =>
       json<WorkItem | null>(
-        fetch(`${base}/api/work/${id}`, {
+        fetch(`${base}${workPath}/${id}`, {
           method: 'PATCH',
           headers: { 'content-type': 'application/json' },
           body: JSON.stringify(patch),
         }),
       ),
     listArtifacts: (workId) =>
-      json<{ id: string }[]>(fetch(workId ? `${base}/api/work/${workId}/artifacts` : `${base}/api/artifacts`)),
-    getArtifact: (id) => json<WorkArtifact | null>(fetch(`${base}/api/artifacts/${id}`)),
+      json<ArtifactSummary[]>(fetch(workId ? `${base}${workPath}/${workId}/artifacts` : `${base}${artifactsPath}`)),
+    getArtifact: (id) => json<WorkArtifact | null>(fetch(`${base}${artifactsPath}/${id}`)),
     answerQuestions: (artifactId, answers) =>
       json<void>(
-        fetch(`${base}/api/artifacts/${artifactId}/answers`, {
+        fetch(`${base}${artifactsPath}/${artifactId}/answers`, {
           method: 'POST',
           headers: { 'content-type': 'application/json' },
           body: JSON.stringify(answers),

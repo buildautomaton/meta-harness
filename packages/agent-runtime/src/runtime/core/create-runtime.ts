@@ -1,30 +1,16 @@
 import { applyPlugins } from './plugin-apply.js';
 import { mergeToolRegistries } from '@runtime/tools/merge-registries.js';
 import type { ToolContext, ToolRegistry, ToolsImplementation } from '@/types/tools/implementation.js';
-import type { SessionBackend, SessionBackendWrap } from '@runtime/session/types.js';
 import { bindHandle } from './bind-handle.js';
 import { buildClientHostHooks } from './build-client-host.js';
 import { createAcpEngine } from '@runtime/acp/engine/create-acp-engine.js';
 import { createNotifierHub } from '@runtime/notify/hub.js';
 import { RUNTIME_VERSION } from './version.js';
 import type { RuntimeHandle, RuntimeOptions } from './runtime-types.js';
-import type { WorkImplementation, WorkBackendWrap } from '@/types/work/implementation.js';
-import { createWorkHttpHandler } from '@plugins/work/http/handler.js';
+import { wrapBackend, wrapWorks } from './wrap-backends.js';
 
 function defaultLog(line: string): void {
   process.stderr.write(`${line}\n`);
-}
-
-function wrapBackend(base: SessionBackend, wraps: SessionBackendWrap[]): SessionBackend {
-  return wraps.reduce((current, wrap) => wrap(current), base);
-}
-
-function wrapWork(
-  base: WorkImplementation | undefined,
-  wraps: WorkBackendWrap[],
-): WorkImplementation | undefined {
-  if (!base) return undefined;
-  return wraps.reduce((current, wrap) => wrap(current), base);
 }
 
 function toolsFrom(impls: ToolsImplementation[], ctx: ToolContext): ToolRegistry {
@@ -49,7 +35,8 @@ export async function createRuntime(options: RuntimeOptions): Promise<RuntimeHan
   if (!slots.backend) throw new Error('createRuntime requires a session plugin');
   if (!slots.transport) throw new Error('createRuntime requires a transport plugin');
   const backend = wrapBackend(slots.backend, slots.backendWraps);
-  const work = wrapWork(slots.work, slots.workWraps);
+  const works = wrapWorks(slots.works, slots.workWraps);
+  const work = slots.workName ? works[slots.workName] : undefined;
   const engine = await createAcpEngine({
     log,
     isShutdownRequested: options.isShutdownRequested,
@@ -78,6 +65,6 @@ export async function createRuntime(options: RuntimeOptions): Promise<RuntimeHan
     tools,
     transportHooks: slots.transportHooks,
     notifier,
-    handleHttp: work ? createWorkHttpHandler(work) : undefined,
+    works,
   });
 }

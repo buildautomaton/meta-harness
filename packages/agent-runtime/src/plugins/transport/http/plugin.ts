@@ -1,10 +1,10 @@
 import type { TransportPlugin, TransportPluginInit } from '@/types/transport/plugin.js';
-import { createMcpTransport } from './transport.js';
+import { createHttpTransport } from './transport.js';
 
-export function mcpTransportPlugin(init: TransportPluginInit = {}): TransportPlugin {
-  const transport = createMcpTransport(init.options ?? {});
+export function httpTransportPlugin(init: TransportPluginInit = {}): TransportPlugin {
+  const transport = createHttpTransport(init.options ?? {});
   return {
-    name: 'transport-mcp',
+    name: 'transport-http',
     kind: 'transport',
     options: { id: init.options?.id ?? transport.id, ...init.options },
     hooks: init.hooks,

@@ -1,12 +1,12 @@
 import { describe, expect, it } from 'vitest';
-import { createMcpTransport } from './transport.js';
+import { createHttpTransport } from './transport.js';
 import { MCP_SERVER_NAME } from './methods.js';
 
-describe('createMcpTransport', () => {
-  it('serves JSON-RPC on localhost HTTP and logs listening', async () => {
+describe('createHttpTransport', () => {
+  it('serves MCP JSON-RPC on localhost HTTP and logs listening', async () => {
     const lines: string[] = [];
     let url = '';
-    const transport = createMcpTransport({
+    const transport = createHttpTransport({
       port: 0,
       path: '/mcp',
       log: (line) => lines.push(line),
@@ -29,16 +29,16 @@ describe('createMcpTransport', () => {
     expect(body.result?.serverInfo?.name).toBe(MCP_SERVER_NAME);
     await transport.stop();
     await started;
-    expect(lines[0]).toBe('[MCP] Starting HTTP JSON-RPC server');
-    expect(lines[1]).toMatch(/^\[MCP] Listening on http:\/\/127\.0\.0\.1:\d+\/mcp \(spawn_minion\)$/);
-    expect(lines).toContain('[MCP] HTTP server closed');
+    expect(lines[0]).toBe('[HTTP] Starting server');
+    expect(lines[1]).toMatch(/^\[HTTP] Listening on http:\/\/127\.0\.0\.1:\d+\/mcp \(spawn_minion\)$/);
+    expect(lines).toContain('[HTTP] Server closed');
   });
 });
 
 async function viWaitFor(check: () => boolean, timeoutMs = 2000): Promise<void> {
   const start = Date.now();
   while (!check()) {
-    if (Date.now() - start > timeoutMs) throw new Error('timed out waiting for MCP listen');
+    if (Date.now() - start > timeoutMs) throw new Error('timed out waiting for HTTP listen');
     await new Promise((r) => setTimeout(r, 10));
   }
 }

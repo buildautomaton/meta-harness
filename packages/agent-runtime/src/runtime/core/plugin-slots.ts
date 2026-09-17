@@ -22,10 +22,12 @@ export type PluginSlots = {
   transportHooks?: TransportHooks;
   toolsHooks?: ToolsHooks;
   work?: WorkBackend;
+  works: Record<string, WorkBackend>;
+  workName?: string;
   workWraps: WorkBackendWrap[];
   workHooks?: WorkHooks;
 };
 
 export function createPluginSlots(): PluginSlots {
-  return { harnesses: [], tools: [], backendWraps: [], workWraps: [] };
+  return { harnesses: [], tools: [], backendWraps: [], workWraps: [], works: {} };
 }

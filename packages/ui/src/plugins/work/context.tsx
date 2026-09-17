@@ -1,30 +1,42 @@
-import { createContext, useContext, useEffect, useState, type ReactNode } from 'react';
-import type { WorkClient, WorkItem } from './types.js';
+import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from 'react';
+import type { WorkArtifact, WorkClient } from './types.js';
 import { createHttpWorkClient } from './http-client.js';
+import { loadArtifacts } from './load-artifacts.js';
 
 type WorkState = {
   client: WorkClient;
-  items: WorkItem[];
-  selectedId: string | null;
-  setSelectedId: (id: string | null) => void;
+  artifacts: WorkArtifact[];
   reload: () => Promise<void>;
 };
 
 const WorkContext = createContext<WorkState | null>(null);
 
 export function WorkProvider({ children, client }: { children: ReactNode; client?: WorkClient }) {
-  const resolved = client ?? createHttpWorkClient();
-  const [items, setItems] = useState<WorkItem[]>([]);
-  const [selectedId, setSelectedId] = useState<string | null>(null);
-  const reload = async () => setItems(await resolved.listWork());
+  const resolved = useMemo(() => client ?? createHttpWorkClient(), [client]);
+  const [artifacts, setArtifacts] = useState<WorkArtifact[]>([]);
+  const reload = async () => setArtifacts(await loadArtifacts(resolved));
   useEffect(() => {
-    void reload().catch(() => setItems([]));
-  }, []);
-  return (
-    <WorkContext.Provider value={{ client: resolved, items, selectedId, setSelectedId, reload }}>
-      {children}
-    </WorkContext.Provider>
-  );
+    let cancelled = false;
+    const load = () =>
+      loadArtifacts(resolved).then(
+        (next) => {
+          if (!cancelled) setArtifacts(next);
+        },
+        () => {
+          if (!cancelled) setArtifacts([]);
+        },
+      );
+    void load();
+    const timer = window.setInterval(() => void load(), 2500);
+    const onFocus = () => void load();
+    window.addEventListener('focus', onFocus);
+    return () => {
+      cancelled = true;
+      window.clearInterval(timer);
+      window.removeEventListener('focus', onFocus);
+    };
+  }, [resolved]);
+  return <WorkContext.Provider value={{ client: resolved, artifacts, reload }}>{children}</WorkContext.Provider>;
 }
 
 export function useWork(): WorkState {

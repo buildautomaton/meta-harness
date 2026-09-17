@@ -17,7 +17,7 @@ See [`packages/agent-runtime/README.md`](packages/agent-runtime/README.md) for t
 ## Project structure
 
 - `packages/agent-runtime`: ACP runtime plus plugins (`src/plugins/`)
-- `packages/local-cli`: thin CLI that registers `coreSet()` (MCP HTTP or remote)
+- `packages/local-cli`: thin CLI that registers `coreSet()` (HTTP, stdio, or remote)
 - `packages/ui`: composable dashboard (plugin core, design system, work surfaces)
 
 ## Getting started

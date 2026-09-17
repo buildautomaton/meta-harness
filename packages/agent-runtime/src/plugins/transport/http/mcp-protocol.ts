@@ -7,39 +7,23 @@ import { jsonRpcError, parseRpcJson, type JsonRpcMessage } from './jsonrpc.js';
 import { readRequestBody } from './http-read-body.js';
 import { handleMcpSseGet } from './sse-get.js';
 import type { McpSseHub } from './sse-hub.js';
-
-export const MCP_CORS = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
-  'Access-Control-Allow-Headers': 'Content-Type, Accept, Mcp-Session-Id, MCP-Protocol-Version',
-};
+import { MCP_CORS } from './cors.js';
+import type { ResolvedHttpEndpoint } from './match-endpoint.js';
 
 export type McpHttpContext = {
   path: string;
+  endpoints?: ResolvedHttpEndpoint[];
   tools: ToolRegistry;
   initialized: { value: boolean };
   log: LogFn;
   sse: McpSseHub;
-  handleHttp?: (req: IncomingMessage, res: ServerResponse) => boolean | Promise<boolean>;
 };
 
-export async function handleMcpHttpRequest(
+export async function handleMcpProtocol(
   req: IncomingMessage,
   res: ServerResponse,
   ctx: McpHttpContext,
 ): Promise<void> {
-  if (req.method === 'OPTIONS') {
-    res.writeHead(204, MCP_CORS);
-    res.end();
-    return;
-  }
-  const pathname = new URL(req.url ?? '/', 'http://127.0.0.1').pathname;
-  if (pathname !== ctx.path) {
-    if (ctx.handleHttp && (await ctx.handleHttp(req, res))) return;
-    res.writeHead(404, MCP_CORS);
-    res.end('Not found');
-    return;
-  }
   if (req.method === 'GET') {
     handleMcpSseGet(req, res, ctx.sse, MCP_CORS);
     return;
@@ -52,11 +36,7 @@ export async function handleMcpHttpRequest(
   await handlePost(req, res, ctx);
 }
 
-async function handlePost(
-  req: IncomingMessage,
-  res: ServerResponse,
-  ctx: McpHttpContext,
-): Promise<void> {
+async function handlePost(req: IncomingMessage, res: ServerResponse, ctx: McpHttpContext): Promise<void> {
   let raw: string;
   try {
     raw = await readRequestBody(req);

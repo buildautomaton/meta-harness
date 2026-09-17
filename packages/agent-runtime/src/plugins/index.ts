@@ -22,14 +22,18 @@ export { createSessionBackend, defaultSessionsDir } from './session/create-backe
 export { transcriptTail } from './session/transcript.js';
 
 // transport
-export { mcpTransportPlugin } from './transport/mcp/plugin.js';
-export { createMcpTransport } from './transport/mcp/transport.js';
+export { httpTransportPlugin } from './transport/http/plugin.js';
+export { createHttpTransport } from './transport/http/transport.js';
 export {
-  MCP_DEFAULT_HOST,
-  MCP_DEFAULT_PORT,
+  HTTP_DEFAULT_HOST,
+  HTTP_DEFAULT_PORT,
+  HTTP_DEFAULT_WORK_ROOT,
   MCP_DEFAULT_PATH,
-  normalizeMcpPath,
-} from './transport/mcp/http-path.js';
+  normalizeHttpPath,
+} from './transport/http/http-path.js';
+export { workHttpEndpoints } from './transport/http/work-endpoints.js';
+export { stdioTransportPlugin } from './transport/stdio/plugin.js';
+export { createStdioTransport } from './transport/stdio/transport.js';
 export { remoteTransportPlugin } from './transport/remote/plugin.js';
 export { createRemoteTransport } from './transport/remote/transport.js';
 export { createHttpRemoteAdapter } from './transport/remote/http-adapter.js';

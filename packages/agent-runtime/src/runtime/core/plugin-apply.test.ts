@@ -4,14 +4,14 @@ import { cursorHarnessPlugin } from '@plugins/harnesses/cursor/plugin.js';
 import { codexHarnessPlugin } from '@plugins/harnesses/codex/plugin.js';
 import { diskSessionPlugin } from '@plugins/session/disk/plugin.js';
 import { streamSessionPlugin } from '@plugins/session/stream/plugin.js';
-import { mcpTransportPlugin } from '@plugins/transport/mcp/plugin.js';
+import { httpTransportPlugin } from '@plugins/transport/http/plugin.js';
 import { minionToolsPlugin } from '@plugins/tools/minion/plugin.js';
 import { mkdtempSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 
 describe('plugin compose', () => {
-  it('registers harnesses, wraps disk with stream, and sets MCP transport', () => {
+  it('registers harnesses, wraps disk with stream, and sets HTTP transport', () => {
     const dir = mkdtempSync(join(tmpdir(), 'harness-plug-'));
     try {
       const slots = applyPlugins(
@@ -19,7 +19,7 @@ describe('plugin compose', () => {
           cursorHarnessPlugin(),
           diskSessionPlugin({ options: { dir } }),
           streamSessionPlugin(),
-          mcpTransportPlugin(),
+          httpTransportPlugin(),
           minionToolsPlugin(),
         ],
         { log: () => {}, cwd: '/tmp' },
@@ -27,7 +27,7 @@ describe('plugin compose', () => {
       expect(slots.harnesses.map((p) => p.type)).toContain('cursor-cli');
       expect(slots.backend?.id).toBe('disk');
       expect(slots.backendWraps).toHaveLength(1);
-      expect(slots.transport?.id).toBe('mcp');
+      expect(slots.transport?.id).toBe('http');
       expect(slots.tools).toHaveLength(1);
     } finally {
       rmSync(dir, { recursive: true, force: true });

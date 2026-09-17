@@ -17,7 +17,10 @@ export function applyWorkPlugin(slots: PluginSlots, plugin: WorkPlugin): void {
   if (plugin.wrapBackend) {
     slots.workWraps.push(plugin.wrapBackend);
   } else if (plugin.implementation) {
-    slots.work = { id: plugin.options?.id ?? 'work', ...plugin.implementation };
+    const backend = { id: plugin.options?.id ?? 'work', ...plugin.implementation };
+    slots.works[plugin.name] = backend;
+    slots.work = backend;
+    slots.workName = plugin.name;
   }
   if (plugin.hooks) {
     slots.workHooks = addHooksOnce(seenFor(slots), slots.workHooks, plugin.hooks, (a, b) =>
