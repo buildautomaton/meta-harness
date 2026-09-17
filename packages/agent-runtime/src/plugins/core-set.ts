@@ -29,6 +29,10 @@ export type CoreSetOptions = {
   /** Register sqlite work plugin + work MCP tools (default true). */
   work?: boolean;
   workFile?: string;
+  /** Work plugin `name` the HTTP transport mounts (default `work-sqlite`). */
+  workPlugin?: string;
+  /** HTTP root for work REST (default `/api` → `/api/work`, `/api/artifacts`). */
+  workRoot?: string;
 };
 
 function defaultLog(line: string): void {

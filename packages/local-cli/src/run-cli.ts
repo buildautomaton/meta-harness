@@ -1,15 +1,15 @@
-import { coreSet, MCP_DEFAULT_HOST, runRuntime, type RuntimeOptions } from '@buildautomaton/agent-runtime';
+import { coreSet, HTTP_DEFAULT_HOST, runRuntime, type RuntimeOptions } from '@buildautomaton/agent-runtime';
 import type { ParsedCli } from './parse-cli.js';
 import { createLog, writeInfo } from './log.js';
 import { CLI_VERSION } from './version.js';
 
 export function formatCliStartup(parsed: ParsedCli): string {
   const remote = parsed.remoteUrl ? ` remoteUrl=${parsed.remoteUrl}` : '';
-  const mcp =
-    parsed.transport === 'mcp'
-      ? ` url=http://${MCP_DEFAULT_HOST}:${parsed.mcpPort}${parsed.mcpPath}`
+  const http =
+    parsed.transport === 'http'
+      ? ` url=http://${HTTP_DEFAULT_HOST}:${parsed.mcpPort}${parsed.mcpPath}`
       : '';
-  return `[CLI] Starting local-cli ${CLI_VERSION} transport=${parsed.transport} cwd=${parsed.cwd} backend=${parsed.backend}${mcp}${remote}`;
+  return `[CLI] Starting local-cli ${CLI_VERSION} transport=${parsed.transport} cwd=${parsed.cwd} backend=${parsed.backend}${http}${remote}`;
 }
 
 export function runtimeOptionsFromCli(parsed: ParsedCli): RuntimeOptions {

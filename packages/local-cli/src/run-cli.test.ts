@@ -9,13 +9,13 @@ describe('formatCliStartup', () => {
       formatCliStartup({
         cwd: '/work',
         backend: 'disk',
-        transport: 'mcp',
+        transport: 'http',
         mcpPort: 3333,
         mcpPath: '/mcp',
         verbose: false,
       }),
     ).toBe(
-      `[CLI] Starting local-cli ${CLI_VERSION} transport=mcp cwd=/work backend=disk url=http://127.0.0.1:3333/mcp`,
+      `[CLI] Starting local-cli ${CLI_VERSION} transport=http cwd=/work backend=disk url=http://127.0.0.1:3333/mcp`,
     );
   });
 

@@ -14,7 +14,7 @@ Host (CLI / Node)
 | You are… | Use |
 | --- | --- |
 | Building a CLI or Node host around local coding agents | This library + `coreSet()` or individual plugins |
-| Shipping the default MCP CLI | [`@buildautomaton/local-cli`](../local-cli) |
+| Shipping the default CLI | [`@buildautomaton/local-cli`](../local-cli) |
 
 The **runtime** owns ACP subprocesses, prompt routing, and plugin interfaces. Hosts stay small: parse argv, pick plugins, call `createRuntime` / `runRuntime`.
 
@@ -55,6 +55,7 @@ flowchart TB
     harness["harness — many"]
     session["session — required"]
     tools["tools — merged"]
+    work["work — named"]
     transport["transport — required"]
   end
   handle["RuntimeHandle<br/>start / stop"]
@@ -62,10 +63,12 @@ flowchart TB
   slots --> harness
   slots --> session
   slots --> tools
+  slots --> work
   slots --> transport
   harness --> handle
   session --> handle
   tools --> handle
+  work --> handle
   transport --> handle
 ```
 
@@ -77,9 +80,9 @@ Host supplies plugins. Kernel fills slots. Handle starts the transport.
 | --- | --- | --- | --- |
 | `harness` | Push onto `harnesses[]`; merge hooks and host methods | many | ACP agent types: detect, install, spawn, prompt |
 | `session` | Set the backend, or push a `wrapBackend` layer | one backend; wraps stack | Create, append, patch, get, list session records |
-| `transport` | Set transport (last plugin wins) | one | `start` / `stop` the host channel; receives the tool registry |
+| `transport` | Set transport (last plugin wins) | one | `start` / `stop`; HTTP mounts other kinds via `endpoints` |
 | `tools` | Push implementation; registries merge | many | `listTools` / `callTool` on the MCP CommandHost |
-| `work` | Set the backend, or push a `wrapBackend` layer | one backend; wraps stack | Work queue, session links, artifacts, review questions |
+| `work` | Register by plugin name; last is default for tools | many | Work queue, session links, artifacts, review questions |
 
 A plugin object is `{ name, kind, options, hooks, implementation, runtime }`. `kind` is `harness | session | transport | tools | work`.
 
@@ -89,7 +92,7 @@ Every factory takes one named-args object `{ options, hooks, implementation, run
 
 | Piece | Meaning |
 | --- | --- |
-| **options** | Config data: harness type and command, session dir, transport id, `remoteUrl` |
+| **options** | Config data: harness type and command, session dir, transport id, `remoteUrl`, HTTP `endpoints` |
 | **hooks** | Host notifications: `onSessionUpdate`, `onStart`, `resolvePermission`, … |
 | **implementation** | How the plugin works: `createClient`, session CRUD, `start`/`stop`, `listTools`/`callTool` |
 | **runtime** | `{ cwd, log }` at construction. `coreSet()` shares one context across the bundle |
@@ -98,7 +101,7 @@ Every factory takes one named-args object `{ options, hooks, implementation, run
 | --- | --- | --- | --- |
 | `harness` | `HarnessOptions` | `HarnessHooks` | `HarnessImplementation` |
 | `session` | `DiskSessionOptions` / `StreamSessionOptions` | `SessionHooks` | `SessionImplementation` |
-| `transport` | `McpTransportOptions` / `RemoteTransportOptions` | `TransportHooks` | `TransportImplementation` / `RemoteTransportImplementation` |
+| `transport` | `HttpTransportOptions` / `StdioTransportOptions` / `RemoteTransportOptions` | `TransportHooks` | `TransportImplementation` / `RemoteTransportImplementation` |
 | `tools` | `ToolsOptions` | `ToolsHooks` | `ToolsImplementation` |
 | `work` | `WorkOptions` | `WorkHooks` | `WorkImplementation` |
 
@@ -107,7 +110,7 @@ import {
   createRuntime,
   cursorHarnessPlugin,
   diskSessionPlugin,
-  mcpTransportPlugin,
+  httpTransportPlugin,
   minionToolsPlugin,
 } from '@buildautomaton/agent-runtime';
 
@@ -117,14 +120,14 @@ const runtime = await createRuntime({
     cursorHarnessPlugin(),
     diskSessionPlugin({ options: { dir: '.harness/sessions' } }),
     minionToolsPlugin(),
-    mcpTransportPlugin(),
+    httpTransportPlugin(),
   ],
 });
 
 await runtime.start();
 ```
 
-`coreSet({ options, hooks, implementation, runtime })` is the CLI bundle: all five harness plugins, disk sessions, minion tools, sqlite work, then MCP — or remote when `transport: "remote"`. `minionTools: false` / `work: false` skip those plugins. If `backend: "stream"`, a stream wrap is stacked on disk so `subscribe()` sits on the file backend. Detect order for built-in harnesses: Cursor, Codex, Kiro, Claude Code, OpenCode.
+`coreSet({ options, hooks, implementation, runtime })` is the CLI bundle: all five harness plugins, disk sessions, minion tools, sqlite work, then HTTP — or stdio / remote when `transport` is set. `minionTools: false` / `work: false` skip those plugins. If `backend: "stream"`, a stream wrap is stacked on disk so `subscribe()` sits on the file backend. Detect order for built-in harnesses: Cursor, Codex, Kiro, Claude Code, OpenCode.
 
 ## ACP engine
 
@@ -157,7 +160,7 @@ flowchart LR
 
 A harness plugin's `createClient` returns a live ACP subprocess. The engine reuses that subprocess when `cwd` and spawn identity still match; otherwise it disconnects and spawns again. Completions are fire-and-forget via `sendResult`; live updates go through `sendSessionUpdate`.
 
-The chain is narrated in `src/runtime/acp/engine/prompt-pipeline.ts` (`handlePrompt` → `runPrompt` → `acquirePromptClient` → `dispatchPrompt`). MCP/remote transport never calls `prompt`; minion tools (or an embedding host) do.
+The chain is narrated in `src/runtime/acp/engine/prompt-pipeline.ts` (`handlePrompt` → `runPrompt` → `acquirePromptClient` → `dispatchPrompt`). HTTP/stdio/remote transport never calls `prompt`; minion tools (or an embedding host) do.
 
 Harnesses live on the engine's registry only. `registerHarness` does not write to a process-wide global.
 
@@ -214,7 +217,7 @@ Prefer `createRuntime` for CLIs. `prompt()` is fire-and-forget; completion arriv
 | `src/runtime/transport/` | Transport runtime helpers |
 | `src/runtime/tools/` | Tools runtime helpers |
 | `src/runtime/notify/` | In-process minion event hub used by tools/transport |
-| `src/plugins/` | `coreSet()` plus one folder per plugin (`harnesses/cursor`, `session/disk`, `tools/minion`, `work/sqlite`, `work-tools`, `transport/mcp`, …) |
+| `src/plugins/` | `coreSet()` plus one folder per plugin (`harnesses/cursor`, `session/disk`, `tools/minion`, `work/sqlite`, `work-tools`, `transport/http`, `transport/stdio`, …) |
 
 `src/types/` is plugin contracts. ACP public types (`AcpEngine`, `AcpClientHandle`, session kinds) live under `src/runtime/acp/` and are re-exported from the package root.
 
@@ -233,7 +236,7 @@ Three folders are named “harness.” “Session” and “transport” each me
 | Host **`sessionId`** | Session-plugin record id |
 | **`acpSessionId`** | ACP protocol session id from the agent |
 | **`AcpClientHandle.sessionId`** | Same as `acpSessionId` (protocol id, not the host record) |
-| **`HostTransport`** | MCP/remote host channel (`start` / `stop`) |
+| **`HostTransport`** | HTTP / stdio / remote host channel (`start` / `stop`) |
 | **`AcpSessionTransport`** | ACP wire: initialize / newSession / prompt |
 
 `plugins/harnesses` = per-agent adapters. `runtime/acp` = engine + wire + clients. `runtime/harnesses` = registry, discovery, install.
@@ -261,12 +264,28 @@ Each agent type is its own plugin. `coreSet()` / `coreHarnessPlugins()` include 
 
 ### Transports
 
-- **`mcpTransportPlugin()`** (`transport-mcp`) — JSON-RPC MCP over localhost HTTP (Streamable HTTP POST + SSE GET). Options: `host`, `port`, `path` (defaults `127.0.0.1:3333/mcp`).
+MCP is a protocol, not a transport. HTTP and stdio carry it for tools.
+
+- **`httpTransportPlugin()`** (`transport-http`) — localhost HTTP. A tools mount serves MCP JSON-RPC (Streamable HTTP POST + SSE GET). A work mount at a root path (default `/api`) creates `/work` and `/artifacts` under that root. Options: `host`, `port`, `path` (default tools path `/mcp`), `endpoints`.
+
+  ```ts
+  httpTransportPlugin({
+    options: {
+      endpoints: [
+        { kind: 'tools', path: '/mcp' },
+        { kind: 'work', path: '/api', plugin: 'work-sqlite' },
+      ],
+    },
+  });
+  ```
+
+  `workHttpEndpoints('work-sqlite')` is `{ kind: 'work', path: '/api', plugin: 'work-sqlite' }`. `coreSet()` wires that to sqlite so the dashboard and MCP tools share one store.
+- **`stdioTransportPlugin()`** (`transport-stdio`) — MCP JSON-RPC over stdin/stdout (Content-Length framing). Tools only; it does not mount work HTTP.
 - **`remoteTransportPlugin({ implementation })`** (`transport-remote`) — register with a control plane. `createHttpRemoteAdapter(url)` POSTs `/register`, polls `/commands`, POSTs `/results`.
 
 ### Tools
 
-Any plugin with `kind: 'tools'` can register MCP tools via `ToolsImplementation` (`listTools` / `callTool`). Optional `instructions()` and `prompts()` supply MCP initialize instructions and `prompts/list` entries. The MCP transport does not contribute that text. Multiple tools plugins merge. **`minionToolsPlugin()`** (`tools-minion`) is one such plugin:
+Any plugin with `kind: 'tools'` can register MCP tools via `ToolsImplementation` (`listTools` / `callTool`). Optional `instructions()` and `prompts()` supply MCP initialize instructions and `prompts/list` entries. Transports do not contribute that text. Multiple tools plugins merge. **`minionToolsPlugin()`** (`tools-minion`) is one such plugin:
 
 `spawn_minion` — `{ harness, prompt, model? }` waits until the minion finishes (streams MCP progress on the same tool call) and returns compacted agent messages. There is no background parameter. For several minions, call `spawn_minion` multiple times in one turn (each call waits on its own). Permission requests arrive as MCP notifications and elicitation while the call is still in flight; the coordinator applies its current permission mode via `resolve_minion_request` (or seeks the user if that mode would) without waiting for other minions.
 
@@ -289,7 +308,7 @@ Override permission handling with `hooks.resolvePermission` when you do not want
 - **`sqliteWorkPlugin()`** (`work-sqlite`) — WASM SQLite store at `<cwd>/.harness/work.sqlite`. Work items link to zero or more sessions. Artifacts are markdown, mermaid HTML, self-contained UI HTML, and structured multiple-choice questions.
 - **`memoryWorkPlugin()`** — same backend in memory (tests, or a stand-in until a cloud `WorkImplementation` is wired).
 
-The MCP HTTP server also serves `/api/work` and `/api/artifacts` for the dashboard.
+The HTTP transport serves `/api/work` and `/api/artifacts` from the `work-sqlite` plugin (same process as MCP tools at `/mcp`). Change the work root with `workRoot` (default `/api`), or pass `endpoints` on `httpTransportPlugin`.
 
 ### Work tools
 
@@ -354,7 +373,7 @@ Internal imports use path aliases instead of long `../` chains: `@/types/…`, `
 
 ## Related packages
 
-- [`@buildautomaton/local-cli`](../local-cli) — MCP/remote CLI that registers `coreSet()`
+- [`@buildautomaton/local-cli`](../local-cli) — HTTP/stdio/remote CLI that registers `coreSet()`
 
 ## License
 

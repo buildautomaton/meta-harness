@@ -1,12 +1,18 @@
 import type { McpToolDefinition } from '@/types/tools/definitions.js';
+import type { TransportEndpoint } from './endpoints.js';
 
-export type TransportKind = 'mcp' | 'remote';
-export type McpTransportOptions = {
+export type TransportKind = 'http' | 'stdio' | 'remote';
+
+export type HttpTransportOptions = {
   id?: string;
   host?: string;
   port?: number;
+  /** Default MCP tools path when `endpoints` has no tools mount. */
   path?: string;
+  endpoints?: TransportEndpoint[];
 };
+
+export type StdioTransportOptions = { id?: string };
 export type RemoteTransportOptions = { id?: string };
 
 export type RemoteCommand = {

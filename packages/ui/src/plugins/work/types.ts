@@ -37,11 +37,20 @@ export type WorkArtifact = {
   createdAt: string;
 };
 
+export type ArtifactSummary = {
+  id: string;
+  workId?: string | null;
+  title?: string;
+  description?: string;
+  createdAt?: string;
+  sessionId?: string | null;
+};
+
 export type WorkClient = {
   listWork(): Promise<WorkItem[]>;
   addWork(input: { title: string; content?: string; held?: boolean }): Promise<WorkItem>;
   updateWork(id: string, patch: { held?: boolean; status?: WorkStatus }): Promise<WorkItem | null>;
-  listArtifacts(workId?: string): Promise<{ id: string }[]>;
+  listArtifacts(workId?: string): Promise<ArtifactSummary[]>;
   getArtifact(id: string): Promise<WorkArtifact | null>;
   answerQuestions(
     artifactId: string,

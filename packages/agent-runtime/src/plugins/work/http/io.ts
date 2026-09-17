@@ -1,5 +1,5 @@
 import type { IncomingMessage, ServerResponse } from 'node:http';
-import { MCP_CORS } from '@plugins/transport/mcp/http-handler.js';
+import { MCP_CORS } from '@plugins/transport/http/cors.js';
 
 export function writeJson(res: ServerResponse, status: number, body: unknown): void {
   if (status === 204) {

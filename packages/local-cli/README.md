@@ -3,7 +3,7 @@
 Thin CLI around `@buildautomaton/agent-runtime`. It only parses flags and registers `coreSet()`. MIT licensed.
 
 ```text
-local-cli  →  coreSet (harnesses + disk + minion tools + sqlite work + MCP or remote)
+local-cli  →  coreSet (harnesses + disk + minion tools + sqlite work + HTTP, stdio, or remote)
               →  createRuntime / runRuntime
 ```
 
@@ -26,7 +26,7 @@ The MCP (or remote) server exposes minion tools (not subagents, to avoid clashin
 
 The initialize **instructions** tell coordinators to use `spawn_minion` instead of Task, never pass `background`, and apply their current permission mode to in-flight minion permission notifications — resolving immediately if that mode would auto-run, or seeking the user if it would ask. Restart the MCP connection after upgrading.
 
-Sessions are stored on disk (`<cwd>/.harness/sessions` by default) via `diskSessionPlugin`. Work is stored in WASM SQLite (`<cwd>/.harness/work.sqlite`). The same HTTP server exposes `/api/work` for the `@buildautomaton/ui` dashboard.
+Sessions are stored on disk (`<cwd>/.harness/sessions` by default) via `diskSessionPlugin`. Work is stored in WASM SQLite (`<cwd>/.harness/work.sqlite`). The HTTP transport mounts that work plugin at `/api` (`/api/work`, `/api/artifacts`) for the `@buildautomaton/ui` dashboard. MCP tools are at `/mcp` on the same server.
 
 ## Install
 
@@ -50,12 +50,15 @@ pnpm --filter @buildautomaton/local-cli build
 node packages/local-cli/dist/cli.js --cwd /path/to/repo
 ```
 
-MCP HTTP on localhost is the default transport (`http://127.0.0.1:3333/mcp`).
+HTTP on localhost is the default transport (`http://127.0.0.1:3333/mcp` for MCP tools).
 
 ```bash
 local-cli --cwd /path/to/repo --port 3333 --mcp-path /mcp
 
-# Remote HTTP registration instead of local MCP
+# MCP over stdio instead of HTTP
+local-cli --transport stdio --cwd /path/to/repo
+
+# Remote HTTP registration
 local-cli --transport remote --remote-url https://control.example
 ```
 
@@ -64,9 +67,9 @@ local-cli --transport remote --remote-url https://control.example
 | `--cwd <path>` | Working directory for spawned minions |
 | `--sessions-dir <path>` | Disk session directory |
 | `--backend disk\|stream` | Disk (default) or in-memory stream wrap |
-| `--transport mcp\|remote` | localhost MCP HTTP (default) or remote adapter |
-| `--port <n>` | MCP HTTP port (default: `3333`) |
-| `--mcp-path <path>` | MCP URL path (default: `/mcp`) |
+| `--transport http\|stdio\|remote` | HTTP (default), MCP stdio, or remote adapter |
+| `--port <n>` | HTTP port (default: `3333`) |
+| `--mcp-path <path>` | MCP tools URL path (default: `/mcp`) |
 | `--remote-url <url>` | Required with `--transport remote` |
 | `--verbose` | Log to stderr |
 
@@ -77,8 +80,9 @@ local-cli --transport remote --remote-url https://control.example
 - `cursorHarnessPlugin` / `codexHarnessPlugin` / `kiroHarnessPlugin` / `claudeCodeHarnessPlugin` / `opencodeHarnessPlugin`
 - `diskSessionPlugin` — `{id}.jsonl` while running; compact to `{id}.json` (metadata + log) and `{id}.md`
 - `minionToolsPlugin` — one tools plugin: `spawn_minion`, `await_minion`, `get_minion_transcript`, `resolve_minion_request`
+- `sqliteWorkPlugin` + `workToolsPlugin` — queue, artifacts, `ask_what_to_work_on` / `tell_what_was_built`
 - `streamSessionPlugin` — when `--backend stream`
-- `mcpTransportPlugin` or `remoteTransportPlugin` (HTTP adapter from `--remote-url`)
+- `httpTransportPlugin` (MCP at `/mcp`, work at `/api`), `stdioTransportPlugin`, or `remoteTransportPlugin`
 
 Add more by calling `createRuntime` from `@buildautomaton/agent-runtime` instead of this binary.
 

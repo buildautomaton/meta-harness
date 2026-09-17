@@ -5,4 +5,5 @@ export type { UiPlugin, UiSurface, UiProviderContribution, UiHooks, SurfaceProps
 export type { UiHost, CreateUiOptions } from './core/create-ui.js';
 export { DashboardShell } from './dashboard/shell.js';
 export { workUiPlugin, createHttpWorkClient } from './plugins/index.js';
+export type { HttpWorkClientOptions, WorkClient, WorkItem, WorkArtifact } from './plugins/index.js';
 export * from './design/index.js';

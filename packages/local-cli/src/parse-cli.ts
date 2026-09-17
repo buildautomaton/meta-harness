@@ -1,7 +1,7 @@
 import {
+  HTTP_DEFAULT_PORT,
   MCP_DEFAULT_PATH,
-  MCP_DEFAULT_PORT,
-  normalizeMcpPath,
+  normalizeHttpPath,
   type SessionBackendKind,
   type TransportKind,
 } from '@buildautomaton/agent-runtime';
@@ -30,36 +30,41 @@ export function parseCli(argv: string[]): ParsedCli {
   }
   const flags = readFlags(args);
   const backend = flags.backend === 'stream' ? 'stream' : 'disk';
-  const transport = flags.transport === 'remote' ? 'remote' : 'mcp';
   return {
     cwd: strFlag(flags.cwd) ?? process.cwd(),
     sessionsDir: strFlag(flags['sessions-dir']),
     backend,
-    transport,
+    transport: parseTransport(flags.transport),
     remoteUrl: strFlag(flags['remote-url']),
     mcpPort: parsePort(flags.port),
-    mcpPath: normalizeMcpPath(strFlag(flags['mcp-path']) ?? MCP_DEFAULT_PATH),
+    mcpPath: normalizeHttpPath(strFlag(flags['mcp-path']) ?? MCP_DEFAULT_PATH),
     verbose: flags.verbose === true,
   };
 }
 
+function parseTransport(value: string | true | undefined): TransportKind {
+  if (value === 'remote') return 'remote';
+  if (value === 'stdio') return 'stdio';
+  return 'http';
+}
+
 function printHelp(): void {
   process.stdout.write(`local-cli ${CLI_VERSION}
-Launch a local MCP HTTP server (spawn_minion waits like Task; await_minion, get_minion_transcript) or register remotely.
+Launch a local HTTP server (MCP tools + work API) or MCP over stdio, or register remotely.
 
   --cwd <path>            Working directory for spawned minions
   --sessions-dir <path>   Disk session directory
   --backend <disk|stream> Session store (default: disk)
-  --transport <mcp|remote>
-  --port <n>              MCP HTTP port (default: ${MCP_DEFAULT_PORT})
-  --mcp-path <path>       MCP URL path (default: ${MCP_DEFAULT_PATH})
+  --transport <http|stdio|remote>
+  --port <n>              HTTP port (default: ${HTTP_DEFAULT_PORT})
+  --mcp-path <path>       MCP tools URL path (default: ${MCP_DEFAULT_PATH})
   --remote-url <url>      Control-plane URL when --transport remote
   --verbose
 `);
 }
 
 function parsePort(value: string | true | undefined): number {
-  if (value === undefined) return MCP_DEFAULT_PORT;
+  if (value === undefined) return HTTP_DEFAULT_PORT;
   const n = typeof value === 'string' ? Number(value) : NaN;
   if (!Number.isInteger(n) || n < 1 || n > 65535) {
     console.error('Invalid --port (expected an integer 1-65535).');

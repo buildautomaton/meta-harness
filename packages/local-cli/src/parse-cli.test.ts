@@ -1,15 +1,15 @@
 import { describe, expect, it } from 'vitest';
 import { parseCli } from './parse-cli.js';
-import { MCP_DEFAULT_PATH, MCP_DEFAULT_PORT } from '@buildautomaton/agent-runtime';
+import { MCP_DEFAULT_PATH, HTTP_DEFAULT_PORT } from '@buildautomaton/agent-runtime';
 
 describe('parseCli', () => {
-  it('defaults to disk MCP HTTP in cwd', () => {
+  it('defaults to disk HTTP in cwd', () => {
     const parsed = parseCli(['node', 'local-cli', '--cwd', '/work']);
     expect(parsed).toMatchObject({
       cwd: '/work',
       backend: 'disk',
-      transport: 'mcp',
-      mcpPort: MCP_DEFAULT_PORT,
+      transport: 'http',
+      mcpPort: HTTP_DEFAULT_PORT,
       mcpPath: MCP_DEFAULT_PATH,
       verbose: false,
     });

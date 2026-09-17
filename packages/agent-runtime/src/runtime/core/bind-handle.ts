@@ -1,9 +1,10 @@
 import type { AcpEngine } from '@runtime/acp/engine/types.js';
-import type { CommandHost, HttpExtraHandler } from '@/types/transport/implementation.js';
+import type { CommandHost } from '@/types/transport/implementation.js';
 import type { HostTransport } from '@runtime/transport/types.js';
 import type { TransportHooks } from '@/types/transport/hooks.js';
 import type { ToolRegistry } from '@/types/tools/implementation.js';
 import type { NotifierHub } from '@/types/notify.js';
+import type { WorkImplementation } from '@/types/work/implementation.js';
 import type { RuntimeHandle } from './runtime-types.js';
 
 export function bindHandle(opts: {
@@ -13,15 +14,15 @@ export function bindHandle(opts: {
   tools: ToolRegistry;
   transportHooks?: TransportHooks;
   notifier?: NotifierHub;
-  handleHttp?: HttpExtraHandler;
+  works?: Record<string, WorkImplementation>;
 }): RuntimeHandle {
-  const { cwd, engine, transport, tools, transportHooks, notifier, handleHttp } = opts;
+  const { cwd, engine, transport, tools, transportHooks, notifier, works } = opts;
   const host: CommandHost = {
     cwd,
     listTools: tools.listTools,
     callTool: tools.callTool,
     notifier,
-    handleHttp,
+    plugins: { work: works ?? {} },
   };
   return {
     cwd,

@@ -1,17 +1,15 @@
 import type { NotifierHub } from '@/types/notify.js';
 import type { ToolRegistry } from '@/types/tools/implementation.js';
+import type { WorkImplementation } from '@/types/work/implementation.js';
 
-import type { IncomingMessage, ServerResponse } from 'node:http';
-
-export type HttpExtraHandler = (
-  req: IncomingMessage,
-  res: ServerResponse,
-) => boolean | Promise<boolean>;
+export type TransportPlugins = {
+  work: Record<string, WorkImplementation>;
+};
 
 export type CommandHost = ToolRegistry & {
   cwd: string;
   notifier?: NotifierHub;
-  handleHttp?: HttpExtraHandler;
+  plugins?: TransportPlugins;
 };
 
 /** Methods a transport plugin may override. */

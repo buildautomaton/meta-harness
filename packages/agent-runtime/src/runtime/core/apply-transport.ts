@@ -15,7 +15,7 @@ function seenFor(slots: PluginSlots): WeakSet<object> {
 
 export function applyTransportPlugin(slots: PluginSlots, plugin: TransportPlugin): void {
   slots.transport = {
-    id: plugin.options.id ?? 'mcp',
+    id: plugin.options.id ?? 'http',
     start: plugin.implementation.start,
     stop: plugin.implementation.stop,
   };

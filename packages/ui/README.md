@@ -6,7 +6,7 @@ Composable dashboard for the local development environment. Same plugin shape as
 Host (Vite app or embedder)
   → createUi({ plugins })
   → applyUiPlugins → UiSlots
-  → Dashboard shell (nav / sidebar / main panels)
+  → Dashboard shell (nav + centered feed)
 ```
 
 ## Plugin kinds
@@ -17,7 +17,7 @@ Host (Vite app or embedder)
 | `surface` | Views contributed to named panels |
 | `theme` | Optional; design tokens live in `src/design/tokens.css` |
 
-The dashboard defines three panels: `nav`, `sidebar`, and `main`. Plugins register generic views into those panels — a sidebar list is the same kind of contribution as a full content area.
+The dashboard shell is a narrow nav plus a centered feed column (`main`). Plugins register views into those panels.
 
 ```ts
 import { createUi, workUiPlugin } from '@buildautomaton/ui';
@@ -25,7 +25,7 @@ import { createUi, workUiPlugin } from '@buildautomaton/ui';
 const { App } = createUi({ plugins: [workUiPlugin()] });
 ```
 
-The work plugin talks to the local-cli HTTP API (`/api/work`, `/api/artifacts`). Swap `createHttpWorkClient` for a cloud client later; the surfaces stay the same.
+The work plugin talks to the local-cli HTTP API (`/api/work`, `/api/artifacts` on the same HTTP server as MCP tools). Completed artifacts show as a Twitter-style feed of cards with HTML thumbnails. Artifacts with no work item still appear (title **Unnamed** if empty). Click a thumbnail to open a full preview.
 
 ## Design system
 
@@ -33,7 +33,7 @@ The work plugin talks to the local-cli HTTP API (`/api/work`, `/api/artifacts`).
 
 ## Develop
 
-Run `local-cli` first (MCP + work API on port 3333), then:
+Run `local-cli` first (HTTP server: MCP tools at `/mcp`, work at `/api` on port 3333), then:
 
 ```bash
 pnpm --filter @buildautomaton/ui dev
