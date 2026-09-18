@@ -53,7 +53,25 @@
   * {
     @apply border-border;
     scrollbar-width: thin;
+    scrollbar-color: transparent transparent;
+  }
+  *:hover {
     scrollbar-color: hsl(var(--muted-foreground) / 0.4) transparent;
+  }
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  ::-webkit-scrollbar-track,
+  ::-webkit-scrollbar-corner {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: transparent;
+    border-radius: 999px;
+  }
+  *:hover::-webkit-scrollbar-thumb {
+    background: hsl(var(--muted-foreground) / 0.4);
   }
   html,
   body,

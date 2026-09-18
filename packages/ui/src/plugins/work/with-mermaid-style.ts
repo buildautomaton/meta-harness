@@ -1,17 +1,20 @@
 import { MERMAID_BOX_CSS } from '../../design/mermaid-box-css.js';
+import { OVERLAY_SCROLLBAR_CSS } from '../../design/overlay-scrollbar-css.js';
 import { mermaidErPaintJs } from './mermaid-er-paint.js';
 import { mermaidPaintJs } from './mermaid-paint.js';
 
+function inject(html: string, attr: string, tag: string, close: '</head>' | '</body>'): string {
+  if (html.includes(attr)) return html;
+  if (html.includes(close)) return html.replace(close, `${tag}${close}`);
+  return close === '</head>' ? `${tag}${html}` : `${html}${tag}`;
+}
+
 export function withMermaidStyle(html: string): string {
-  if (!html.includes('mermaid')) return html;
-  let next = html;
-  if (!next.includes('data-mh-mermaid-style')) {
-    const tag = `<style data-mh-mermaid-style>${MERMAID_BOX_CSS}</style>`;
-    next = next.includes('</head>') ? next.replace('</head>', `${tag}</head>`) : `${tag}${next}`;
-  }
-  if (!next.includes('data-mh-mermaid-paint')) {
-    const tag = `<script data-mh-mermaid-paint>${mermaidPaintJs}${mermaidErPaintJs}</script>`;
-    next = next.includes('</body>') ? next.replace('</body>', `${tag}</body>`) : `${next}${tag}`;
-  }
-  return next;
+  const bar = `<style data-mh-scrollbar>${OVERLAY_SCROLLBAR_CSS}</style>`;
+  let next = inject(html, 'data-mh-scrollbar', bar, '</head>');
+  if (!next.includes('mermaid')) return next;
+  const css = `<style data-mh-mermaid-style>${MERMAID_BOX_CSS}</style>`;
+  const js = `<script data-mh-mermaid-paint>${mermaidPaintJs}${mermaidErPaintJs}</script>`;
+  next = inject(next, 'data-mh-mermaid-style', css, '</head>');
+  return inject(next, 'data-mh-mermaid-paint', js, '</body>');
 }

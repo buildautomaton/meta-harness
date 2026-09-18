@@ -1,3 +1,5 @@
+import { OVERLAY_SCROLLBAR_CSS } from './overlay-scrollbar-css.js';
+
 export const THEME_CSS = `
 :root { color-scheme: dark; --bg:#101218; --panel:#171b24; --line:#2a3140; --text:#e8eaed; --muted:#9aa3b2; --accent:#7eb6ff; }
 * { box-sizing: border-box; }
@@ -20,4 +22,5 @@ th { color: var(--text); font-size: 12px; letter-spacing: .04em; text-transform:
 .changed { color: var(--text); background: #1d2a3a; border-left: 3px solid var(--accent); padding: 12px 14px; border-radius: 8px; }
 .diff .add, .diff .added { color: #8ee09a; }
 .diff .del, .diff .removed { color: #f0a0a0; }
+${OVERLAY_SCROLLBAR_CSS}
 `.trim();

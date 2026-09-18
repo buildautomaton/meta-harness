@@ -1,3 +1,5 @@
+import { MERMAID_ER_CSS } from './mermaid-er-css.js';
+
 export const MERMAID_BOX_CSS = `
 html, body { background: #101218 !important; color: #e8eaed !important; color-scheme: dark; --labelBkg: #171b24; }
 .kicker { color: #7eb6ff !important; }
@@ -77,4 +79,5 @@ g.node text, g.node tspan { fill: #e8eaed !important; }
   background: #171b24 !important;
   background-color: #171b24 !important;
 }
+${MERMAID_ER_CSS}
 `.trim();
