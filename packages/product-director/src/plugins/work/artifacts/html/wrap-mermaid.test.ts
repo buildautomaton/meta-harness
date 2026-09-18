@@ -18,5 +18,9 @@ describe('wrapMermaidPage', () => {
     expect(html).toContain('#101218');
     expect(html).toContain('labelBkg');
     expect(html).toContain('#171b24');
+    expect(html).toContain('::-webkit-scrollbar-thumb');
+    expect(html).toContain('scaleErMarks');
+    expect(html).toContain('_er-');
+    expect(html).toContain('ONLY_ONE');
   });
 });

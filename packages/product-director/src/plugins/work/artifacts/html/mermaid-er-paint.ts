@@ -1,4 +1,7 @@
+import { mermaidErMarksJs } from './mermaid-er-marks.js';
+
 export const mermaidErPaintJs = `(function () {
+  ${mermaidErMarksJs}
   const root = document.getElementById('diagram') || document.querySelector('.mermaid');
   if (!root) return;
   const ns = 'http://www.w3.org/2000/svg';
@@ -38,6 +41,7 @@ export const mermaidErPaintJs = `(function () {
       for (const p of node.querySelectorAll('.row-rect-even path')) p.style.setProperty('fill', '#1c2230', 'important');
       for (const p of node.querySelectorAll('.row-rect-odd path')) p.style.setProperty('fill', '#151922', 'important');
     }
+    scaleErMarks(svg);
   }
   const ready = (document.getElementById('diagram') || document.querySelector('.mermaid') || document).querySelector('svg');
   if (ready) return paint(ready);
