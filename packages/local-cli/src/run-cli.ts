@@ -1,4 +1,5 @@
 import { coreSet, HTTP_DEFAULT_HOST, runRuntime, type RuntimeOptions } from '@buildautomaton/agent-runtime';
+import { directorHttpEndpoints, productDirectorSet } from '@buildautomaton/product-director';
 import type { ParsedCli } from './parse-cli.js';
 import { createLog, writeInfo } from './log.js';
 import { CLI_VERSION } from './version.js';
@@ -14,21 +15,26 @@ export function formatCliStartup(parsed: ParsedCli): string {
 
 export function runtimeOptionsFromCli(parsed: ParsedCli): RuntimeOptions {
   const log = createLog(parsed.verbose);
+  const runtime = { cwd: parsed.cwd, log };
   return {
     cwd: parsed.cwd,
     log,
-    plugins: coreSet({
-      options: {
-        cwd: parsed.cwd,
-        sessionsDir: parsed.sessionsDir,
-        backend: parsed.backend,
-        transport: parsed.transport,
-        remoteUrl: parsed.remoteUrl,
-        mcpPort: parsed.mcpPort,
-        mcpPath: parsed.mcpPath,
-      },
-      runtime: { cwd: parsed.cwd, log },
-    }),
+    plugins: [
+      ...coreSet({
+        options: {
+          cwd: parsed.cwd,
+          sessionsDir: parsed.sessionsDir,
+          backend: parsed.backend,
+          transport: parsed.transport,
+          remoteUrl: parsed.remoteUrl,
+          mcpPort: parsed.mcpPort,
+          mcpPath: parsed.mcpPath,
+          httpEndpoints: directorHttpEndpoints(),
+        },
+        runtime,
+      }),
+      ...productDirectorSet({ runtime }),
+    ],
   };
 }
 

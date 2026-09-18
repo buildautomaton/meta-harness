@@ -8,11 +8,9 @@ import { readRequestBody } from './http-read-body.js';
 import { handleMcpSseGet } from './sse-get.js';
 import type { McpSseHub } from './sse-hub.js';
 import { MCP_CORS } from './cors.js';
-import type { ResolvedHttpEndpoint } from './match-endpoint.js';
 
 export type McpHttpContext = {
   path: string;
-  endpoints?: ResolvedHttpEndpoint[];
   tools: ToolRegistry;
   initialized: { value: boolean };
   log: LogFn;

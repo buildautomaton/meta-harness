@@ -50,7 +50,7 @@ function parseTransport(value: string | true | undefined): TransportKind {
 
 function printHelp(): void {
   process.stdout.write(`local-cli ${CLI_VERSION}
-Launch a local HTTP server (MCP tools + work API) or MCP over stdio, or register remotely.
+Launch a local HTTP server (MCP tools + product director API) or MCP over stdio, or register remotely.
 
   --cwd <path>            Working directory for spawned minions
   --sessions-dir <path>   Disk session directory

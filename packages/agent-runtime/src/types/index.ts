@@ -7,11 +7,17 @@
 export type { LogFn } from './log.js';
 export type {
   PluginKind,
+  KernelPluginKind,
   PluginRuntimeContext,
   PluginInit,
   PluginFactory,
   AgentRuntimePlugin,
 } from './plugin.js';
+export { KERNEL_PLUGIN_KINDS } from './plugin.js';
+export type { StoreKind, TransportCapability, PluginSupport } from './capability.js';
+export * from './file-store/index.js';
+export * from './sql-store/index.js';
+export * from './http/index.js';
 
 export type { HarnessOptions } from './harness/options.js';
 export type { HarnessHooks } from './harness/hooks.js';
@@ -39,7 +45,7 @@ export type {
   SessionBackendWrap,
 } from './session/plugin.js';
 
-export type { TransportImplementation, CommandHost, TransportPlugins } from './transport/implementation.js';
+export type { TransportImplementation, CommandHost } from './transport/implementation.js';
 export type { TransportHooks } from './transport/hooks.js';
 export type { TransportEndpoint } from './transport/endpoints.js';
 export type {
@@ -66,4 +72,3 @@ export type {
   NotifierSink,
 } from './notify.js';
 export type { ToolsPlugin, ToolsPluginFactory, ToolsPluginInit } from './tools/plugin.js';
-export * from './work/index.js';

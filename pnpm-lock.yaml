@@ -45,6 +45,28 @@ importers:
       '@buildautomaton/agent-runtime':
         specifier: workspace:*
         version: link:../agent-runtime
+      '@buildautomaton/product-director':
+        specifier: workspace:*
+        version: link:../product-director
+    devDependencies:
+      '@types/node':
+        specifier: ^22.0.0
+        version: 22.20.1
+      tsup:
+        specifier: ^8.5.1
+        version: 8.5.1(jiti@1.21.7)(postcss@8.5.28)(typescript@5.9.3)
+      typescript:
+        specifier: ^5.9.3
+        version: 5.9.3
+      vitest:
+        specifier: ^2.0.0
+        version: 2.1.9(@types/node@22.20.1)
+
+  packages/product-director:
+    dependencies:
+      '@buildautomaton/agent-runtime':
+        specifier: workspace:*
+        version: link:../agent-runtime
     devDependencies:
       '@types/node':
         specifier: ^22.0.0

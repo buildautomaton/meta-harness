@@ -5,7 +5,6 @@ import type { SessionImplementation } from '@/types/session/implementation.js';
 import type { ToolsHooks } from './hooks.js';
 import type { McpToolCallResult, McpToolDefinition } from './definitions.js';
 import type { ToolsPrompt } from './prompts.js';
-import type { WorkImplementation } from '@/types/work/implementation.js';
 
 export type ToolCallExtras = {
   reportProgress?: (update: { message: string; progress?: number }) => void;
@@ -19,7 +18,7 @@ export type ToolContext = {
   sessionHooks?: SessionHooks;
   toolsHooks?: ToolsHooks;
   notifier?: NotifierHub;
-  work?: WorkImplementation;
+  extras: Record<string, unknown>;
 };
 
 /** How a tools plugin exposes MCP tools. Context is an argument, not a factory. */
@@ -31,9 +30,7 @@ export type ToolsImplementation = {
     ctx: ToolContext,
     extras?: ToolCallExtras,
   ): Promise<McpToolCallResult>;
-  /** MCP initialize instructions. Transport does not supply this text. */
-  instructions?(): string | undefined | Promise<string | undefined>;
-  /** MCP prompts/list + prompts/get. Transport does not supply these. */
+  instructions?(ctx: ToolContext): string | undefined | Promise<string | undefined>;
   prompts?(): ToolsPrompt[] | Promise<ToolsPrompt[]>;
 };
 

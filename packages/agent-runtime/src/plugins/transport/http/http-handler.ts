@@ -1,16 +1,20 @@
 import type { IncomingMessage, ServerResponse } from 'node:http';
+import type { HttpRoute } from '@/types/http/registry.js';
 import { MCP_CORS } from './cors.js';
 import { matchEndpoint } from './match-endpoint.js';
 import { handleMcpProtocol, type McpHttpContext } from './mcp-protocol.js';
-import { dispatchWorkHttp } from '@plugins/work/http/dispatch.js';
 
 export type { McpHttpContext } from './mcp-protocol.js';
 export { MCP_CORS } from './cors.js';
 
+export type HttpDispatchContext = McpHttpContext & {
+  routes?: readonly HttpRoute[];
+};
+
 export async function handleHttpRequest(
   req: IncomingMessage,
   res: ServerResponse,
-  ctx: McpHttpContext,
+  ctx: HttpDispatchContext,
 ): Promise<void> {
   if (req.method === 'OPTIONS') {
     res.writeHead(204, MCP_CORS);
@@ -18,19 +22,13 @@ export async function handleHttpRequest(
     return;
   }
   const pathname = new URL(req.url ?? '/', 'http://127.0.0.1').pathname;
-  const endpoints = ctx.endpoints ?? [{ kind: 'tools' as const, path: ctx.path }];
-  const hit = matchEndpoint(endpoints, pathname);
-  if (!hit) {
-    res.writeHead(404, MCP_CORS);
-    res.end('Not found');
+  const route = matchEndpoint(ctx.routes ?? [], pathname);
+  if (route) {
+    await route.handler(req, res, { pathname, mount: route.path });
     return;
   }
-  if (hit.kind === 'tools') {
+  if (pathname === ctx.path || pathname.startsWith(`${ctx.path}/`)) {
     await handleMcpProtocol(req, res, ctx);
-    return;
-  }
-  if (hit.kind === 'work' && hit.work) {
-    await dispatchWorkHttp(req, res, hit.work, pathname, hit.path, hit.surface);
     return;
   }
   res.writeHead(404, MCP_CORS);

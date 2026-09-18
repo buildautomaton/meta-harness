@@ -12,3 +12,9 @@ export function normalizeHttpPath(path: string): string {
 export function httpListenUrl(host: string, port: number, path: string): string {
   return `http://${host}:${port}${path}`;
 }
+
+export function joinHttpPath(root: string, segment: string): string {
+  const clean = segment.replace(/^\/+/, '').replace(/\/+$/, '');
+  const base = normalizeHttpPath(root);
+  return base === '/' ? `/${clean}` : `${base}/${clean}`;
+}

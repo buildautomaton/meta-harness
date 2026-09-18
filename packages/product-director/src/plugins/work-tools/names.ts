@@ -1,0 +1,3 @@
+export const ASK_PRODUCT_DIRECTOR_WHAT_TO_BUILD_NEXT = 'ask_product_director_what_to_build_next';
+export const TELL_PRODUCT_DIRECTOR_WHAT_WAS_BUILT = 'tell_product_director_what_was_built';
+export const ASK_PRODUCT_DIRECTOR_INTERVIEW_QUESTIONS = 'ask_product_director_interview_questions';

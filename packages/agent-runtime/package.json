@@ -2,7 +2,7 @@
   "name": "@buildautomaton/agent-runtime",
   "version": "0.1.0",
   "license": "MIT",
-  "description": "ACP agent runtime: plugin kernel plus a catalog of harness, session, transport, and tool plugins",
+  "description": "ACP agent runtime: plugin kernel plus a catalog of harness, session, store, transport, and tool plugins",
   "author": "BuildAutomaton",
   "repository": {
     "type": "git",

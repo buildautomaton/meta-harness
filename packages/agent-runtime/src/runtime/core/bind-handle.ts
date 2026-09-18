@@ -4,7 +4,7 @@ import type { HostTransport } from '@runtime/transport/types.js';
 import type { TransportHooks } from '@/types/transport/hooks.js';
 import type { ToolRegistry } from '@/types/tools/implementation.js';
 import type { NotifierHub } from '@/types/notify.js';
-import type { WorkImplementation } from '@/types/work/implementation.js';
+import type { HttpRegistry } from '@/types/http/registry.js';
 import type { RuntimeHandle } from './runtime-types.js';
 
 export function bindHandle(opts: {
@@ -14,16 +14,10 @@ export function bindHandle(opts: {
   tools: ToolRegistry;
   transportHooks?: TransportHooks;
   notifier?: NotifierHub;
-  works?: Record<string, WorkImplementation>;
+  http?: HttpRegistry;
 }): RuntimeHandle {
-  const { cwd, engine, transport, tools, transportHooks, notifier, works } = opts;
-  const host: CommandHost = {
-    cwd,
-    listTools: tools.listTools,
-    callTool: tools.callTool,
-    notifier,
-    plugins: { work: works ?? {} },
-  };
+  const { cwd, engine, transport, tools, transportHooks, notifier, http } = opts;
+  const host: CommandHost = { cwd, listTools: tools.listTools, callTool: tools.callTool, notifier, http };
   return {
     cwd,
     engine,

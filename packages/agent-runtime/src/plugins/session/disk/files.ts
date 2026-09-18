@@ -1,35 +1,32 @@
-import { appendFileSync, existsSync, readFileSync, unlinkSync, writeFileSync } from 'node:fs';
+import type { FileStore } from '@/types/file-store/implementation.js';
 import type { SessionEvent, SessionRecord } from '@/types/session/records.js';
 import { logToEvents } from '@plugins/session/log-to-events.js';
 
-export function readMeta(path: string): SessionRecord | null {
+export function readMeta(store: FileStore, path: string): SessionRecord | null {
   try {
-    return JSON.parse(readFileSync(path, 'utf8')) as SessionRecord;
+    const text = store.read(path);
+    return text ? (JSON.parse(text) as SessionRecord) : null;
   } catch {
     return null;
   }
 }
 
-export function writeJson(path: string, value: unknown): void {
-  writeFileSync(path, `${JSON.stringify(value, null, 2)}\n`);
+export function writeJson(store: FileStore, path: string, value: unknown): void {
+  store.write(path, `${JSON.stringify(value, null, 2)}\n`);
 }
 
-export function writeMarkdown(path: string, text: string): void {
+export function writeMarkdown(store: FileStore, path: string, text: string): void {
   if (!text.trim()) return;
-  writeFileSync(path, text.endsWith('\n') ? text : `${text}\n`);
+  store.write(path, text.endsWith('\n') ? text : `${text}\n`);
 }
 
-export function appendEvent(path: string, event: SessionEvent): void {
-  appendFileSync(path, `${JSON.stringify(event)}\n`);
+export function appendEvent(store: FileStore, path: string, event: SessionEvent): void {
+  store.append(path, `${JSON.stringify(event)}\n`);
 }
 
-export function unlinkIfExists(path: string): void {
-  if (existsSync(path)) unlinkSync(path);
-}
-
-export function sessionEvents(session: SessionRecord, eventsPath: string): SessionEvent[] {
-  if (existsSync(eventsPath)) {
-    return readFileSync(eventsPath, 'utf8')
+export function sessionEvents(store: FileStore, session: SessionRecord, eventsPath: string): SessionEvent[] {
+  if (store.exists(eventsPath)) {
+    return (store.read(eventsPath) ?? '')
       .split('\n')
       .filter(Boolean)
       .map((line) => JSON.parse(line) as SessionEvent);

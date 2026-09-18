@@ -1,13 +1,3 @@
-import type { PluginKind } from '@/types/plugin.js';
-import type { WorkImplementation } from '@/types/work/implementation.js';
-
-export type ResolvedHttpEndpoint = {
-  path: string;
-  kind: PluginKind;
-  surface?: string;
-  work?: WorkImplementation;
-};
-
 export function matchEndpoint<T extends { path: string }>(
   endpoints: readonly T[],
   pathname: string,

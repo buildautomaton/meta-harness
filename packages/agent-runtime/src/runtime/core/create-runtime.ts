@@ -7,7 +7,8 @@ import { createAcpEngine } from '@runtime/acp/engine/create-acp-engine.js';
 import { createNotifierHub } from '@runtime/notify/hub.js';
 import { RUNTIME_VERSION } from './version.js';
 import type { RuntimeHandle, RuntimeOptions } from './runtime-types.js';
-import { wrapBackend, wrapWorks } from './wrap-backends.js';
+import { wrapBackend } from './wrap-backends.js';
+import { contributeHttp } from './contribute-http.js';
 
 function defaultLog(line: string): void {
   process.stderr.write(`${line}\n`);
@@ -18,7 +19,7 @@ function toolsFrom(impls: ToolsImplementation[], ctx: ToolContext): ToolRegistry
     impls.map((impl) => ({
       listTools: () => impl.listTools(ctx),
       callTool: (name, args, extras) => impl.callTool(name, args, ctx, extras),
-      instructions: impl.instructions ? () => impl.instructions!() : undefined,
+      instructions: impl.instructions ? () => impl.instructions!(ctx) : undefined,
       prompts: impl.prompts ? () => impl.prompts!() : undefined,
     })),
   );
@@ -27,7 +28,6 @@ function toolsFrom(impls: ToolsImplementation[], ctx: ToolContext): ToolRegistry
 /**
  * Compose plugins into a `RuntimeHandle`. Requires a session plugin and a
  * transport plugin. Harness plugins register agent types on `handle.engine`.
- * Call `start()` to open the host channel; prompts go through `engine.prompt`.
  */
 export async function createRuntime(options: RuntimeOptions): Promise<RuntimeHandle> {
   const log = options.log ?? defaultLog;
@@ -35,8 +35,7 @@ export async function createRuntime(options: RuntimeOptions): Promise<RuntimeHan
   if (!slots.backend) throw new Error('createRuntime requires a session plugin');
   if (!slots.transport) throw new Error('createRuntime requires a transport plugin');
   const backend = wrapBackend(slots.backend, slots.backendWraps);
-  const works = wrapWorks(slots.works, slots.workWraps);
-  const work = slots.workName ? works[slots.workName] : undefined;
+  contributeHttp(slots, { cwd: options.cwd, log, backend });
   const engine = await createAcpEngine({
     log,
     isShutdownRequested: options.isShutdownRequested,
@@ -56,7 +55,7 @@ export async function createRuntime(options: RuntimeOptions): Promise<RuntimeHan
     sessionHooks: slots.sessionHooks,
     toolsHooks: slots.toolsHooks,
     notifier,
-    work,
+    extras: slots.extras,
   });
   return bindHandle({
     cwd: options.cwd,
@@ -65,6 +64,6 @@ export async function createRuntime(options: RuntimeOptions): Promise<RuntimeHan
     tools,
     transportHooks: slots.transportHooks,
     notifier,
-    works,
+    http: slots.http,
   });
 }
