@@ -1,14 +1,17 @@
-import type { TransportPlugin, TransportPluginInit } from '@/types/transport/plugin.js';
+import type { HttpPlugin, HttpPluginInit } from '@/types/http/plugin.js';
 import { createHttpTransport } from './transport.js';
+import { createHttpRegistry } from './registry.js';
 
-export function httpTransportPlugin(init: TransportPluginInit = {}): TransportPlugin {
-  const transport = createHttpTransport(init.options ?? {});
+export function httpTransportPlugin(init: HttpPluginInit = {}): HttpPlugin {
+  const registry = createHttpRegistry();
+  const transport = createHttpTransport({ ...init.options, registry });
   return {
     name: 'transport-http',
-    kind: 'transport',
+    kind: 'http',
     options: { id: init.options?.id ?? transport.id, ...init.options },
     hooks: init.hooks,
     implementation: { start: transport.start, stop: transport.stop, ...init.implementation },
+    registry,
     runtime: init.runtime,
   };
 }

@@ -6,6 +6,7 @@ import { diskSessionPlugin } from '@plugins/session/disk/plugin.js';
 import { streamSessionPlugin } from '@plugins/session/stream/plugin.js';
 import { httpTransportPlugin } from '@plugins/transport/http/plugin.js';
 import { minionToolsPlugin } from '@plugins/tools/minion/plugin.js';
+import { fileStorePlugin } from '@plugins/stores/file/plugin.js';
 import { mkdtempSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
@@ -16,6 +17,7 @@ describe('plugin compose', () => {
     try {
       const slots = applyPlugins(
         [
+          fileStorePlugin({ options: { root: dir } }),
           cursorHarnessPlugin(),
           diskSessionPlugin({ options: { dir } }),
           streamSessionPlugin(),

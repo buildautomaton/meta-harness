@@ -1,6 +1,21 @@
 import type { LogFn } from './log.js';
+import type { SqlMigration } from './sql-store/migration.js';
+import type { StoreContext, HttpContributeContext } from './http/contribution.js';
+import type { HttpRegistry } from './http/registry.js';
 
-export type PluginKind = 'harness' | 'session' | 'transport' | 'tools' | 'work';
+export type PluginKind = string;
+
+export const KERNEL_PLUGIN_KINDS = [
+  'harness',
+  'session',
+  'transport',
+  'tools',
+  'file-store',
+  'sql-store',
+  'http',
+] as const;
+
+export type KernelPluginKind = (typeof KERNEL_PLUGIN_KINDS)[number];
 
 export type PluginRuntimeContext = {
   cwd: string;
@@ -22,6 +37,9 @@ export type AgentRuntimePlugin = {
   hooks?: object;
   implementation?: object;
   runtime?: PluginRuntimeContext;
+  sqlMigrations?: readonly SqlMigration[];
+  createFromStores?: (stores: StoreContext) => unknown;
+  contributeHttp?: (http: HttpRegistry, ctx: HttpContributeContext) => void;
 };
 
 export type PluginFactory<Options, Hooks, Implementation, Result extends AgentRuntimePlugin = AgentRuntimePlugin> = (

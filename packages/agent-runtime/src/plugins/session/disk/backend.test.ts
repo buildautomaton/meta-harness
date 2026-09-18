@@ -3,6 +3,7 @@ import { existsSync, readFileSync, mkdtempSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { createDiskBackend } from './backend.js';
+import { createNodeFileStore } from '@plugins/stores/file/store.js';
 import { compactSessionLog, markdownFromLog } from '@plugins/session/compact-log.js';
 
 const record = {
@@ -20,7 +21,7 @@ describe('createDiskBackend', () => {
   it('appends jsonl while running, then compacts to md and structured log', async () => {
     const dir = mkdtempSync(join(tmpdir(), 'harness-disk-'));
     try {
-      const store = createDiskBackend(dir);
+      const store = createDiskBackend(dir, createNodeFileStore(dir));
       await store.create(record);
       const events = [
         { ts: 't1', kind: 'update' as const, payload: { sessionUpdate: 'agent_message_chunk', content: { type: 'text', text: 'Hel' } } },

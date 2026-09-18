@@ -1,15 +1,11 @@
 import type { NotifierHub } from '@/types/notify.js';
 import type { ToolRegistry } from '@/types/tools/implementation.js';
-import type { WorkImplementation } from '@/types/work/implementation.js';
-
-export type TransportPlugins = {
-  work: Record<string, WorkImplementation>;
-};
+import type { HttpRegistry } from '@/types/http/registry.js';
 
 export type CommandHost = ToolRegistry & {
   cwd: string;
   notifier?: NotifierHub;
-  plugins?: TransportPlugins;
+  http?: HttpRegistry;
 };
 
 /** Methods a transport plugin may override. */

@@ -8,7 +8,7 @@ function headerValue(value: string | string[] | undefined): string | undefined {
   return value;
 }
 
-export function upgradeWorkWs(req: IncomingMessage, socket: Socket, hub: WorkWsHub, head?: Buffer): void {
+export function upgradeWs(req: IncomingMessage, socket: Socket, hub: WorkWsHub, head?: Buffer): void {
   const key = headerValue(req.headers['sec-websocket-key']);
   const upgrade = headerValue(req.headers.upgrade);
   socket.on('error', () => undefined);
@@ -29,3 +29,5 @@ export function upgradeWorkWs(req: IncomingMessage, socket: Socket, hub: WorkWsH
   if (head?.length) socket.unshift(head);
   hub.add(socket);
 }
+
+export const upgradeWorkWs = upgradeWs;

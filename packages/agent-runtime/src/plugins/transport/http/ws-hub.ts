@@ -2,13 +2,15 @@ import type { Socket } from 'node:net';
 import { encodeCloseFrame, encodePongFrame, encodeTextFrame } from './ws-frame.js';
 import { attachWsReader } from './ws-decode.js';
 
-export type WorkWsHub = {
+export type WsHub = {
   add(socket: Socket): void;
   broadcast(payload: unknown): void;
   close(): void;
 };
 
-export function createWorkWsHub(): WorkWsHub {
+export type WorkWsHub = WsHub;
+
+export function createWsHub(onMessage?: (payload: unknown) => void | Promise<void>): WsHub {
   const sockets = new Set<Socket>();
   return {
     add(socket) {
@@ -19,7 +21,11 @@ export function createWorkWsHub(): WorkWsHub {
           socket.end();
           return;
         }
-        if (opcode === 0x9) socket.write(encodePongFrame(payload));
+        if (opcode === 0x9) {
+          socket.write(encodePongFrame(payload));
+          return;
+        }
+        if (opcode === 0x1 && onMessage) void parseMessage(payload, onMessage);
       });
       socket.on('close', () => sockets.delete(socket));
       socket.on('error', () => sockets.delete(socket));
@@ -43,4 +49,16 @@ export function createWorkWsHub(): WorkWsHub {
       sockets.clear();
     },
   };
+}
+
+export function createWorkWsHub(): WsHub {
+  return createWsHub();
+}
+
+function parseMessage(payload: Buffer, onMessage: (payload: unknown) => void | Promise<void>): void {
+  try {
+    void onMessage(JSON.parse(payload.toString('utf8')));
+  } catch {
+    void onMessage(payload.toString('utf8'));
+  }
 }
