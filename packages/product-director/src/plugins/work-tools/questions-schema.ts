@@ -1,71 +1,36 @@
-const questionItem = {
-  type: 'object',
-  additionalProperties: false,
-  required: ['id', 'prompt', 'context', 'choices'],
-  properties: {
-    id: { type: 'string', description: 'Stable id for this question' },
-    prompt: {
-      type: 'string',
-      description:
-        'Ask about a design decision on this item. Shown to a person under the preview. The HTML does not need to include this questionnaire.',
-    },
-    context: {
-      type: 'string',
-      description:
-        'Starting brief for a follow-up agent. Combined with the chosen answer, they should know how to do the work without the original session. Include what was built, where it lives, and what the answer should change. Do not put this in the prompt shown to the person.',
-    },
-    choices: {
-      type: 'array',
-      minItems: 2,
-      maxItems: 4,
-      description: 'Two to four answers, including keep vs change options when relevant',
-      items: {
-        type: 'object',
-        additionalProperties: false,
-        required: ['id', 'label'],
-        properties: {
-          id: { type: 'string', description: 'Stable id for this choice' },
-          label: { type: 'string', description: 'Choice shown to the reviewer' },
-        },
-      },
-    },
-  },
-};
+import { INTERVIEW_QUESTION_ITEM, REVIEW_QUESTION_ITEM } from './review-question-schema.js';
 
-const questionList = {
+const reviewList = {
   type: 'array',
-  maxItems: 3,
-  items: questionItem,
+  items: REVIEW_QUESTION_ITEM,
   description:
-    'Up to 3 multiple-choice questions the dashboard shows below a preview so a person can answer. Each needs a brief context for a follow-up agent. The HTML and diagrams do not need to include this questionnaire.',
+    'Important decisions only. Aim for about 10 questions across overview, modules, and UI combined. Prefer fewer; do not pad.',
 };
 
 export const QUESTIONS_SCHEMA = {
   type: 'object',
   additionalProperties: false,
   description:
-    'Review questions for a person. The dashboard renders these below the matching preview. The HTML and diagrams do not need to include this questionnaire.',
+    'Review questions after work is complete. Ask only high-quality, important decisions that were made or still need a person to review. Aim for about 10 total, preferring fewer. Shown below the matching preview; HTML and diagrams do not include this questionnaire.',
   properties: {
     overview: {
-      ...questionList,
-      description: 'Up to 3 questions about the overall work. Shown under Overview. The HTML does not need to include them.',
+      ...reviewList,
+      description: 'Important overall decisions. Shown under Overview.',
     },
     modules: {
-      ...questionList,
-      description:
-        'Up to 3 questions about module design. Shown under Overview. The module diagram does not need to include them.',
+      ...reviewList,
+      description: 'Important module-design decisions. Shown under Overview.',
     },
     ui: {
       type: 'array',
-      description:
-        'Questions for each UI screen or component. filename must match a ui.pages entry. Shown below that preview; the HTML does not need to include them.',
+      description: 'Questions for each UI screen or component. filename must match a ui.pages entry.',
       items: {
         type: 'object',
         additionalProperties: false,
         required: ['filename', 'questions'],
         properties: {
           filename: { type: 'string', description: 'Must match a ui.pages filename, e.g. checkout.html' },
-          questions: questionList,
+          questions: reviewList,
         },
       },
     },
@@ -75,7 +40,7 @@ export const QUESTIONS_SCHEMA = {
 export const INTERVIEW_QUESTIONS_SCHEMA = {
   type: 'array',
   maxItems: 4,
-  items: questionItem,
+  items: INTERVIEW_QUESTION_ITEM,
   description:
     '2–4 multiple-choice questions for the draft card, or [] when the interview is done and the work should be queued. Each answer is stored as a decision bullet on the work item.',
 };

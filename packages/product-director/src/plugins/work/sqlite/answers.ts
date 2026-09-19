@@ -3,11 +3,9 @@ import type { AnswerQuestionsResult } from '@/types/work/implementation.js';
 import type { QuestionAnswer } from '@/types/work/questions.js';
 import type { WorkItem } from '@/types/work/records.js';
 import { run } from './sql.js';
-import { titleFromPrompt } from './title-from.js';
-import { upsertQueuedWork } from './upsert-queued.js';
 import { findQuestion, type QuestionRow } from './find-question.js';
-import { sourceKeyFor } from './source-key.js';
 import { clearAnswer } from './clear-answer.js';
+import { applyAnswerQueue } from './enqueue-answer.js';
 
 export function saveAnswers(db: SqlStore, artifactId: string, answers: QuestionAnswer[]): AnswerQuestionsResult {
   const queued: WorkItem[] = [];
@@ -21,7 +19,9 @@ export function saveAnswers(db: SqlStore, artifactId: string, answers: QuestionA
     }
     const row = findQuestion(db, artifactId, answer.subject, answer.questionId) ?? fallbackRow(answer);
     persistAnswer(db, artifactId, answer, row);
-    queued.push(enqueueAnswer(db, artifactId, answer, row));
+    const result = applyAnswerQueue(db, artifactId, answer, row);
+    if (result.queued) queued.push(result.queued);
+    if (result.removed) removed.push(result.removed);
   }
   return { queued, removed };
 }
@@ -39,31 +39,4 @@ function persistAnswer(db: SqlStore, artifactId: string, answer: QuestionAnswer,
      ON CONFLICT(artifact_id, subject, question_id) DO UPDATE SET answer_id = excluded.answer_id`,
     [artifactId, row.subject, answer.questionId, row.prompt, row.context, row.choices, answer.choiceId],
   );
-}
-
-function parseChoices(raw: string): { id: string; label: string }[] {
-  try {
-    const parsed = JSON.parse(raw) as { id: string; label: string }[];
-    return Array.isArray(parsed) ? parsed : [];
-  } catch {
-    return [];
-  }
-}
-
-function enqueueAnswer(
-  db: SqlStore,
-  artifactId: string,
-  answer: QuestionAnswer,
-  row: QuestionRow,
-): WorkItem {
-  const prompt = row.prompt || answer.questionId;
-  const label = parseChoices(row.choices).find((c) => c.id === answer.choiceId)?.label ?? answer.choiceId;
-  return upsertQueuedWork(db, {
-    sourceKey: sourceKeyFor(artifactId, row.subject, answer.questionId),
-    title: titleFromPrompt(prompt),
-    prompt,
-    agentContext: row.context,
-    content: ['## Prompt', prompt, '', '## Answer', label, '', '## Context', row.context].join('\n'),
-    decisions: [label],
-  });
 }

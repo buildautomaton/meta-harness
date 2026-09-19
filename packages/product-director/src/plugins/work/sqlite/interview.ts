@@ -12,7 +12,7 @@ export function replaceWorkQuestions(db: SqlStore, workId: string, questions: De
       db,
       `INSERT INTO work_question (work_id, question_id, prompt, context, choices, answer_id)
        VALUES (?, ?, ?, ?, ?, NULL)`,
-      [workId, q.id, q.prompt, q.context, JSON.stringify(q.choices)],
+      [workId, q.id, q.prompt, q.context ?? '', JSON.stringify(q.choices)],
     );
   }
 }

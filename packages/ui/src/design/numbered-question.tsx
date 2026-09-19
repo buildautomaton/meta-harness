@@ -4,6 +4,7 @@ import { ChoiceList, type ChoiceOption } from './choice-list.js';
 export function NumberedQuestion(props: {
   index: number;
   label?: string;
+  id?: string;
   prompt: string;
   choices: ChoiceOption[];
   selectedId?: string | null;
@@ -12,7 +13,7 @@ export function NumberedQuestion(props: {
   onSelect: (choiceId: string) => void;
 }) {
   return (
-    <NumberedBlock index={props.index} label={props.label}>
+    <NumberedBlock index={props.index} label={props.label} id={props.id}>
       <fieldset className="space-y-2 bg-transparent">
         <legend className="text-sm font-medium leading-snug">{props.prompt}</legend>
         <ChoiceList

@@ -1,5 +1,8 @@
 export type WorkStatus = 'draft' | 'queued' | 'held' | 'in_progress' | 'completed';
 export type WorkPriority = 'high' | 'medium' | 'low';
+export type WorkOrigin =
+  | { kind: 'question'; artifactId: string; subject: string; questionId: string }
+  | { kind: 'draft'; workId: string };
 
 export type WorkItem = {
   id: string;
@@ -11,6 +14,7 @@ export type WorkItem = {
   paused: boolean;
   prompt: string;
   agentContext: string;
+  origin: WorkOrigin;
   decisions: string[];
   questions: DesignQuestion[];
   sessionIds: string[];
@@ -19,7 +23,14 @@ export type WorkItem = {
   completedAt: string | null;
 };
 
-export type DesignChoice = { id: string; label: string };
+export type ChoiceKind = 'status_quo' | 'change';
+export type DesignChoice = {
+  id: string;
+  label: string;
+  kind?: ChoiceKind;
+  prompt?: string;
+  context?: string;
+};
 export type DesignQuestion = {
   id: string;
   prompt: string;

@@ -1,6 +1,6 @@
 import { cn } from './cn.js';
 import { RadioDot } from './status.js';
-import type { ChoiceOption } from './choice-option.js';
+import { choiceHint, type ChoiceOption } from './choice-option.js';
 
 export function ChoiceRow(props: {
   choice: ChoiceOption;
@@ -9,6 +9,7 @@ export function ChoiceRow(props: {
   clearable?: boolean;
   onSelect: (choiceId: string) => void;
 }) {
+  const hint = choiceHint(props.choice);
   return (
     <div className="flex items-start gap-2">
       <button
@@ -26,7 +27,10 @@ export function ChoiceRow(props: {
         )}
       >
         <RadioDot checked={props.checked} />
-        <span className="leading-snug">{props.choice.label}</span>
+        <span className="leading-snug">
+          {props.choice.label}
+          {hint ? <span className="mt-0.5 block text-xs text-muted-foreground">{hint}</span> : null}
+        </span>
       </button>
       {props.checked && props.clearable !== false ? (
         <button

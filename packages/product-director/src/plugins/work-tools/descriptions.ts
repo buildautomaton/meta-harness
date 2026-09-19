@@ -19,4 +19,6 @@ export const TELL_PRODUCT_DIRECTOR_WHAT_WAS_BUILT_DESCRIPTION = [
   'Always pass the sessionId from ask_product_director_what_to_build_next, plus title and description (what changed and why).',
   'Pass every applicable artifact kind from the registered artifact plugins. Omit kinds that do not apply.',
   'At least one artifact kind is required. Artifact param descriptions come from those plugins.',
+  'Review questions: about 10, fewer if you can. Only important decisions that were made or still need review.',
+  'Mark keep-what-was-built answers as status_quo (no changes, no queued work). Only change answers get prompt and context.',
 ].join('\n');

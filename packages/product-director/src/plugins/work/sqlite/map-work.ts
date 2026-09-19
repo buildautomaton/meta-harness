@@ -2,6 +2,7 @@ import type { SqlStore } from '@buildautomaton/agent-runtime';
 import type { WorkItem, WorkPriority, WorkStatus } from '@/types/work/records.js';
 import { all } from './sql.js';
 import { listDecisions, listWorkQuestions } from './decisions.js';
+import { workOriginFor } from './source-key.js';
 
 const STATUSES: WorkStatus[] = ['draft', 'queued', 'held', 'in_progress', 'completed'];
 const PRIOS: WorkPriority[] = ['high', 'medium', 'low'];
@@ -26,6 +27,7 @@ export function mapWorkRow(row: Record<string, unknown>, sessionIds: string[], d
     paused: Number(row.paused ?? 0) === 1,
     prompt: String(row.prompt ?? ''),
     agentContext: String(row.agent_context ?? ''),
+    origin: workOriginFor(String(row.source_key ?? ''), id),
     decisions: listDecisions(db, id),
     questions: listWorkQuestions(db, id),
     sessionIds,

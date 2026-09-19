@@ -1,6 +1,8 @@
 import { NumberedQuestion } from '../../design/numbered-question.js';
 import { flattenQuestions } from './flatten-questions.js';
+import { QuestionSet } from './question-set.js';
 import { useWork } from './context.js';
+import { questionOriginId } from './work-origin.js';
 import type { WorkArtifact } from './types.js';
 
 export function WorkCardQuestions({ artifact }: { artifact: WorkArtifact }) {
@@ -8,10 +10,16 @@ export function WorkCardQuestions({ artifact }: { artifact: WorkArtifact }) {
   const items = flattenQuestions(artifact.questions);
   if (items.length === 0) return null;
   return (
-    <div className="divide-y divide-border/60 border-t border-border/60">
+    <QuestionSet>
       {items.map((item, index) => (
         <NumberedQuestion
           key={item.key}
+          id={questionOriginId({
+            kind: 'question',
+            artifactId: artifact.id,
+            subject: item.subject,
+            questionId: item.question.id,
+          })}
           index={index + 1}
           label={item.subjectLabel}
           prompt={item.question.prompt}
@@ -32,6 +40,6 @@ export function WorkCardQuestions({ artifact }: { artifact: WorkArtifact }) {
           }}
         />
       ))}
-    </div>
+    </QuestionSet>
   );
 }

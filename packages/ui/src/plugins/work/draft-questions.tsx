@@ -1,4 +1,5 @@
 import { NumberedQuestion } from '../../design/numbered-question.js';
+import { QuestionSet } from './question-set.js';
 import { useWork } from './context.js';
 import type { WorkItem } from './types.js';
 
@@ -6,7 +7,7 @@ export function DraftQuestions({ item }: { item: WorkItem }) {
   const { client, reload } = useWork();
   if (item.questions.length === 0) return null;
   return (
-    <div className="divide-y divide-border/60 border-t border-border/60">
+    <QuestionSet>
       {item.questions.map((question, index) => (
         <NumberedQuestion
           key={question.id}
@@ -21,6 +22,6 @@ export function DraftQuestions({ item }: { item: WorkItem }) {
           }}
         />
       ))}
-    </div>
+    </QuestionSet>
   );
 }

@@ -1,4 +1,5 @@
 import type { DesignQuestion } from './questions.js';
+import type { WorkOrigin } from './origin.js';
 
 export const WORK_STATUSES = ['draft', 'queued', 'held', 'in_progress', 'completed'] as const;
 export type WorkStatus = (typeof WORK_STATUSES)[number];
@@ -16,6 +17,7 @@ export type WorkItem = {
   paused: boolean;
   prompt: string;
   agentContext: string;
+  origin: WorkOrigin;
   decisions: string[];
   questions: DesignQuestion[];
   sessionIds: string[];
