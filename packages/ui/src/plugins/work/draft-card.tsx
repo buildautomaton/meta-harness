@@ -1,5 +1,6 @@
 import { fuzzyTime } from './fuzzy-time.js';
 import { DraftQuestions } from './draft-questions.js';
+import { draftOriginId } from './work-origin.js';
 import type { WorkItem } from './types.js';
 
 export function DraftCard({ item }: { item: WorkItem }) {
@@ -7,7 +8,10 @@ export function DraftCard({ item }: { item: WorkItem }) {
   const body = item.content.trim();
   const showBody = Boolean(body) && body !== title;
   return (
-    <article className="bg-background">
+    <article
+      id={draftOriginId(item.id)}
+      className="bg-background scroll-mt-3 transition-colors data-[origin-flash]:bg-muted"
+    >
       <div className="space-y-2 px-4 py-4">
         <p className="text-sm font-semibold leading-snug">{title}</p>
         {showBody ? <p className="whitespace-pre-wrap text-sm leading-relaxed text-muted-foreground">{body}</p> : null}

@@ -1,6 +1,12 @@
+export const CHOICE_KINDS = ['status_quo', 'change'] as const;
+export type ChoiceKind = (typeof CHOICE_KINDS)[number];
+
 export type DesignChoice = {
   id: string;
   label: string;
+  kind?: ChoiceKind;
+  prompt?: string;
+  context?: string;
 };
 
 export type DesignQuestion = {
@@ -31,3 +37,7 @@ export type QuestionAnswer = {
 
 export const OVERVIEW_QUESTIONS_KEY = '__overview__';
 export const MODULES_QUESTIONS_KEY = '__modules__';
+
+export function isStatusQuoChoice(choice: Pick<DesignChoice, 'kind'> | undefined): boolean {
+  return choice?.kind === 'status_quo';
+}

@@ -17,8 +17,14 @@ describe('HTTP answer queues work', () => {
             prompt: 'Keep this layout?',
             context: 'Change checkout.html if they want a different layout.',
             choices: [
-              { id: 'keep', label: 'Keep' },
-              { id: 'change', label: 'Use a two-column layout' },
+              { id: 'keep', label: 'Keep', kind: 'status_quo' },
+              {
+                id: 'change',
+                label: 'Use a two-column layout',
+                kind: 'change',
+                prompt: 'Switch checkout to two columns',
+                context: 'Change checkout.html if they want a different layout.',
+              },
             ],
           },
         ],
@@ -36,12 +42,18 @@ describe('HTTP answer queues work', () => {
       const queued = (await posted.json()) as { queued: { status: string; prompt: string }[] };
       expect(queued.queued).toHaveLength(1);
       expect(queued.queued[0]?.status).toBe('queued');
-      expect(queued.queued[0]?.prompt).toBe('Keep this layout?');
+      expect(queued.queued[0]?.prompt).toBe('Switch checkout to two columns');
       const listed = await fetch(`http://127.0.0.1:${port}/api/work`);
-      const items = (await listed.json()) as { status: string; prompt: string; decisions: string[] }[];
+      const items = (await listed.json()) as {
+        status: string;
+        prompt: string;
+        decisions: string[];
+        origin?: { kind: string; artifactId?: string };
+      }[];
       const found = items.filter((item) => item.status === 'queued');
       expect(found).toHaveLength(1);
       expect(found[0]?.decisions).toEqual(['Use a two-column layout']);
+      expect(found[0]?.origin?.kind).toBe('question');
     } finally {
       sse.close();
       await closeServer(server);

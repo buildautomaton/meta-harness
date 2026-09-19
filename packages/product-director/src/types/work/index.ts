@@ -6,14 +6,16 @@ export type {
   AddWorkInput,
   WorkPatch,
 } from './records.js';
+export type { WorkOrigin, QuestionOrigin, DraftOrigin } from './origin.js';
 export type {
+  ChoiceKind,
   DesignChoice,
   DesignQuestion,
   UiReviewQuestions,
   ReviewQuestions,
   QuestionAnswer,
 } from './questions.js';
-export { OVERVIEW_QUESTIONS_KEY, MODULES_QUESTIONS_KEY } from './questions.js';
+export { CHOICE_KINDS, OVERVIEW_QUESTIONS_KEY, MODULES_QUESTIONS_KEY, isStatusQuoChoice } from './questions.js';
 export type {
   ArtifactKindKey,
   ArtifactFile,

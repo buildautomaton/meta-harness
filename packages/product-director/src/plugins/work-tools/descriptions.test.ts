@@ -18,6 +18,8 @@ describe('tell_product_director_what_was_built copy', () => {
     expect(def.description).toMatch(/own controls/i);
     expect(def.description).toMatch(/highlight/i);
     expect(def.description).toMatch(/assets/i);
+    expect(def.description).toMatch(/about 10/i);
+    expect(def.description).toMatch(/status_quo/i);
     expect(workInstructions(kinds)).toMatch(/design system/i);
     const schema = def.inputSchema as {
       properties: Record<string, { properties?: Record<string, { description?: string }> }>;

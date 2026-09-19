@@ -24,8 +24,14 @@ describe('sqlite work backend', () => {
             prompt: 'Keep this layout?',
             context: 'Checkout lives in ui/checkout.html',
             choices: [
-              { id: 'keep', label: 'Keep' },
-              { id: 'change', label: 'Change' },
+              { id: 'keep', label: 'Keep', kind: 'status_quo' },
+              {
+                id: 'change',
+                label: 'Change',
+                kind: 'change',
+                prompt: 'Use a two-column layout',
+                context: 'Checkout lives in ui/checkout.html',
+              },
             ],
           },
         ],
@@ -33,12 +39,19 @@ describe('sqlite work backend', () => {
     });
     expect(artifact.files.some((f) => f.path === 'ui/checkout.html' && f.content.includes('data:image/png'))).toBe(true);
 
-    const queued = await work.answerQuestions(artifact.id, [
+    const kept = await work.answerQuestions(artifact.id, [
       { subject: '__overview__', questionId: 'q1', choiceId: 'keep' },
     ]);
+    expect(kept.queued).toHaveLength(0);
+
+    const queued = await work.answerQuestions(artifact.id, [
+      { subject: '__overview__', questionId: 'q1', choiceId: 'change' },
+    ]);
     expect(queued.queued[0]?.status).toBe('queued');
-    expect(queued.queued[0]?.prompt).toBe('Keep this layout?');
+    expect(queued.queued[0]?.prompt).toBe('Use a two-column layout');
     expect(queued.queued[0]?.agentContext).toContain('checkout.html');
+    expect(queued.queued[0]?.origin.kind).toBe('question');
+    expect(queued.queued[0]?.origin).toMatchObject({ kind: 'question', questionId: 'q1' });
 
     const again = await work.answerQuestions(artifact.id, [
       { subject: '__overview__', questionId: 'q1', choiceId: 'change' },

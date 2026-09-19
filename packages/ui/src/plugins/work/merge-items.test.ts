@@ -12,6 +12,7 @@ const item = (id: string, status: WorkItem['status']): WorkItem => ({
   paused: false,
   prompt: 'Prompt',
   agentContext: 'Context',
+  origin: { kind: 'question', artifactId: 'art', subject: '__overview__', questionId: 'q1' },
   decisions: ['Change'],
   questions: [],
   sessionIds: [],

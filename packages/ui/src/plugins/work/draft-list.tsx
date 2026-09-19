@@ -2,15 +2,11 @@ import { PenLine } from 'lucide-react';
 import { EmptyState } from '../../design/status.js';
 import { DraftCard } from './draft-card.js';
 import { useWork } from './context.js';
-import type { WorkItem } from './types.js';
-
-function isOpenDraft(item: WorkItem): boolean {
-  return item.status === 'draft';
-}
+import { isDraftColumnItem } from './draft-column-item.js';
 
 export function DraftList() {
   const { items } = useWork();
-  const drafts = items.filter(isOpenDraft);
+  const drafts = items.filter(isDraftColumnItem);
   if (drafts.length === 0) {
     return (
       <EmptyState

@@ -29,7 +29,7 @@ export function insertQuestions(
         `INSERT INTO artifact_question
          (artifact_id, subject, question_id, prompt, context, choices, answer_id)
          VALUES (?, ?, ?, ?, ?, ?, NULL)`,
-        [artifactId, subject, q.id, q.prompt, q.context, JSON.stringify(q.choices)],
+        [artifactId, subject, q.id, q.prompt, q.context ?? '', JSON.stringify(q.choices)],
       );
     }
   }
