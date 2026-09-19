@@ -3,9 +3,9 @@ import {
   createHttpRegistry,
   createMcpSseHub,
   handleHttpRequest,
-} from '@buildautomaton/agent-runtime';
+} from '@buildautomaton/runtime';
 import type { WorkImplementation } from '@/types/work/implementation.js';
-import { contributeWorkHttp } from '../plugins/work/http/contribute.js';
+import { contributeWorkHttp } from '../plugins/runtime/work/http/contribute.js';
 
 export function serveWork(work: WorkImplementation) {
   const registry = createHttpRegistry();

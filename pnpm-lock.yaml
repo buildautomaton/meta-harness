@@ -12,7 +12,66 @@ importers:
         specifier: ^1.12.4
         version: 1.13.4
 
-  packages/agent-runtime:
+  packages/local-cli:
+    dependencies:
+      '@buildautomaton/product-director':
+        specifier: workspace:*
+        version: link:../product-director
+      '@buildautomaton/runtime':
+        specifier: workspace:*
+        version: link:../runtime
+    devDependencies:
+      '@types/node':
+        specifier: ^22.0.0
+        version: 22.20.1
+      tsup:
+        specifier: ^8.5.1
+        version: 8.5.1(jiti@1.21.7)(postcss@8.5.28)(typescript@5.9.3)
+      typescript:
+        specifier: ^5.9.3
+        version: 5.9.3
+      vitest:
+        specifier: ^2.0.0
+        version: 2.1.9(@types/node@22.20.1)
+
+  packages/product-director:
+    dependencies:
+      '@buildautomaton/runtime':
+        specifier: workspace:*
+        version: link:../runtime
+    devDependencies:
+      '@buildautomaton/ui-runtime':
+        specifier: workspace:*
+        version: link:../ui-runtime
+      '@types/node':
+        specifier: ^22.0.0
+        version: 22.20.1
+      '@types/react':
+        specifier: ^19.2.1
+        version: 19.3.0
+      '@types/react-dom':
+        specifier: ^19.2.1
+        version: 19.3.0(@types/react@19.3.0)
+      lucide-react:
+        specifier: ^0.344.0
+        version: 0.344.0(react@19.3.0)
+      react:
+        specifier: ^19.2.1
+        version: 19.3.0
+      react-dom:
+        specifier: ^19.2.1
+        version: 19.3.0(react@19.3.0)
+      tsup:
+        specifier: ^8.5.1
+        version: 8.5.1(jiti@1.21.7)(postcss@8.5.28)(typescript@5.9.3)
+      typescript:
+        specifier: ^5.9.3
+        version: 5.9.3
+      vitest:
+        specifier: ^2.0.0
+        version: 2.1.9(@types/node@22.20.1)
+
+  packages/runtime:
     dependencies:
       '@agentclientprotocol/codex-acp':
         specifier: ^1.1.4
@@ -40,48 +99,50 @@ importers:
         specifier: ^2.0.0
         version: 2.1.9(@types/node@22.20.1)
 
-  packages/local-cli:
+  packages/ui:
     dependencies:
-      '@buildautomaton/agent-runtime':
-        specifier: workspace:*
-        version: link:../agent-runtime
       '@buildautomaton/product-director':
         specifier: workspace:*
         version: link:../product-director
-    devDependencies:
-      '@types/node':
-        specifier: ^22.0.0
-        version: 22.20.1
-      tsup:
-        specifier: ^8.5.1
-        version: 8.5.1(jiti@1.21.7)(postcss@8.5.28)(typescript@5.9.3)
-      typescript:
-        specifier: ^5.9.3
-        version: 5.9.3
-      vitest:
-        specifier: ^2.0.0
-        version: 2.1.9(@types/node@22.20.1)
-
-  packages/product-director:
-    dependencies:
-      '@buildautomaton/agent-runtime':
+      '@buildautomaton/ui-runtime':
         specifier: workspace:*
-        version: link:../agent-runtime
+        version: link:../ui-runtime
+      lucide-react:
+        specifier: ^0.344.0
+        version: 0.344.0(react@19.3.0)
+      react:
+        specifier: ^19.2.1
+        version: 19.3.0
+      react-dom:
+        specifier: ^19.2.1
+        version: 19.3.0(react@19.3.0)
     devDependencies:
-      '@types/node':
-        specifier: ^22.0.0
-        version: 22.20.1
-      tsup:
-        specifier: ^8.5.1
-        version: 8.5.1(jiti@1.21.7)(postcss@8.5.28)(typescript@5.9.3)
+      '@types/react':
+        specifier: ^19.2.1
+        version: 19.3.0
+      '@types/react-dom':
+        specifier: ^19.2.1
+        version: 19.3.0(@types/react@19.3.0)
+      '@vitejs/plugin-react':
+        specifier: ^5.0.0
+        version: 5.2.0(vite@7.3.6(@types/node@22.20.1)(jiti@1.21.7))
+      autoprefixer:
+        specifier: ^10.4.17
+        version: 10.6.1(postcss@8.5.28)
+      postcss:
+        specifier: ^8.4.35
+        version: 8.5.28
+      tailwindcss:
+        specifier: ^3.4.1
+        version: 3.4.19
       typescript:
         specifier: ^5.9.3
         version: 5.9.3
-      vitest:
-        specifier: ^2.0.0
-        version: 2.1.9(@types/node@22.20.1)
+      vite:
+        specifier: ^7.0.0
+        version: 7.3.6(@types/node@22.20.1)(jiti@1.21.7)
 
-  packages/ui:
+  packages/ui-runtime:
     dependencies:
       class-variance-authority:
         specifier: ^0.7.0
@@ -108,24 +169,9 @@ importers:
       '@types/react-dom':
         specifier: ^19.2.1
         version: 19.3.0(@types/react@19.3.0)
-      '@vitejs/plugin-react':
-        specifier: ^5.0.0
-        version: 5.2.0(vite@7.3.6(@types/node@22.20.1)(jiti@1.21.7))
-      autoprefixer:
-        specifier: ^10.4.17
-        version: 10.6.1(postcss@8.5.28)
-      postcss:
-        specifier: ^8.4.35
-        version: 8.5.28
-      tailwindcss:
-        specifier: ^3.4.1
-        version: 3.4.19
       typescript:
         specifier: ^5.9.3
         version: 5.9.3
-      vite:
-        specifier: ^7.0.0
-        version: 7.3.6(@types/node@22.20.1)(jiti@1.21.7)
       vitest:
         specifier: ^2.0.0
         version: 2.1.9(@types/node@22.20.1)

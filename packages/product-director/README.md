@@ -5,10 +5,13 @@ Work queue and review artifacts. Agents **ask what to build next** and **tell wh
 Uses the runtime **sql-store** and **http** plugins only (not file storage). MIT licensed.
 
 ```text
-productDirectorSet()
-  ├── artifact plugins     ui, api, algorithm, dataModel, …
-  ├── work plugin          queue + SQL migrations + /api/work
-  └── director tools       ask / tell / interview
+plugins/
+  runtime/
+    artifact plugins     ui, api, algorithm, dataModel, …
+    work plugin          queue + SQL migrations + /api/work
+    director tools       ask / tell / interview
+  ui/
+    work surfaces        columns dashboard for the queue
 ```
 
 ```mermaid
@@ -27,7 +30,7 @@ flowchart LR
 Register next to `coreSet()`:
 
 ```ts
-import { createRuntime, coreSet } from '@buildautomaton/agent-runtime';
+import { createRuntime, coreSet } from '@buildautomaton/runtime';
 import { productDirectorSet, directorHttpEndpoints } from '@buildautomaton/product-director';
 
 const runtime = { cwd: process.cwd(), log: console.error };
@@ -51,6 +54,17 @@ await createRuntime({
 Tell-tool fields, descriptions, and agent instructions are composed from artifact plugins. Add a plugin, and the tool grows. Remove one, and that kind disappears.
 
 Built-in kinds: **ui**, **api**, **algorithm**, **dataModel**, **moduleStructure**, **backend**, **outline**.
+
+## UI
+
+Dashboard plugins for [`@buildautomaton/ui-runtime`](../ui-runtime). The Vite app is [`@buildautomaton/ui`](../ui).
+
+```ts
+import { createUi } from '@buildautomaton/ui-runtime';
+import { productDirectorUiSet } from '@buildautomaton/product-director/ui';
+
+const { App } = createUi({ plugins: productDirectorUiSet() });
+```
 
 ## HTTP
 

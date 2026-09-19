@@ -8,30 +8,36 @@ MIT licensed. Built on the [Agent Client Protocol](https://agentclientprotocol.c
 
 ```text
 local-cli
-  ├── agent-runtime        kernel, stores, HTTP, harnesses, minion tools
-  ├── product-director     work queue, artifacts, “what to build next”
-  └── ui                   dashboard for that work
+  ├── runtime              kernel, stores, HTTP, harnesses, minion tools
+  └── product-director     runtime plugins (work, artifacts, tools)
+
+ui
+  ├── ui-runtime           kernel, design system, dashboard shells
+  └── product-director     UI plugins (work surfaces)
 ```
 
 | Package | npm |
 | --- | --- |
-| Kernel | [`@buildautomaton/agent-runtime`](https://www.npmjs.com/package/@buildautomaton/agent-runtime) |
+| Kernel | [`@buildautomaton/runtime`](https://www.npmjs.com/package/@buildautomaton/runtime) |
 | Work + artifacts | [`@buildautomaton/product-director`](https://www.npmjs.com/package/@buildautomaton/product-director) |
 | CLI | [`@buildautomaton/local-cli`](https://www.npmjs.com/package/@buildautomaton/local-cli) |
 
 ```mermaid
 flowchart LR
   cli["local-cli"]
-  runtime["agent-runtime"]
+  runtime["runtime"]
   director["product-director"]
   ui["ui"]
+  uiRuntime["ui-runtime"]
   cli --> runtime
   cli --> director
+  ui --> uiRuntime
+  ui --> director
   ui -->|"/api/work"| director
   runtime --- director
 ```
 
-Docs: [runtime](packages/agent-runtime/README.md) · [product director](packages/product-director/README.md) · [CLI](packages/local-cli/README.md) · [UI](packages/ui/README.md)
+Docs: [runtime](packages/runtime/README.md) · [product director](packages/product-director/README.md) · [CLI](packages/local-cli/README.md) · [UI runtime](packages/ui-runtime/README.md) · [UI](packages/ui/README.md)
 
 ## Try it
 
@@ -48,9 +54,10 @@ pnpm test
 ```
 
 ```bash
-pnpm --filter @buildautomaton/agent-runtime test
+pnpm --filter @buildautomaton/runtime test
 pnpm --filter @buildautomaton/product-director test
 pnpm --filter @buildautomaton/local-cli test
+pnpm --filter @buildautomaton/ui-runtime test
 pnpm --filter @buildautomaton/ui dev
 ```
 

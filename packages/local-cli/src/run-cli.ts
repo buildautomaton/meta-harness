@@ -1,4 +1,4 @@
-import { coreSet, HTTP_DEFAULT_HOST, runRuntime, type RuntimeOptions } from '@buildautomaton/agent-runtime';
+import { coreSet, HTTP_DEFAULT_HOST, runRuntime, type RuntimeOptions } from '@buildautomaton/runtime';
 import { directorHttpEndpoints, productDirectorSet } from '@buildautomaton/product-director';
 import type { ParsedCli } from './parse-cli.js';
 import { createLog, writeInfo } from './log.js';

@@ -2,7 +2,7 @@
   "name": "@buildautomaton/local-cli",
   "version": "0.1.0",
   "license": "MIT",
-  "description": "Thin CLI that starts a meta-harness HTTP, stdio, or remote server via agent-runtime and product-director plugins",
+  "description": "Thin CLI that starts a meta-harness HTTP, stdio, or remote server via runtime and product-director plugins",
   "author": "BuildAutomaton",
   "repository": {
     "type": "git",
@@ -36,7 +36,7 @@
     "prepublishOnly": "pnpm run build"
   },
   "dependencies": {
-    "@buildautomaton/agent-runtime": "workspace:*",
+    "@buildautomaton/runtime": "workspace:*",
     "@buildautomaton/product-director": "workspace:*"
   },
   "devDependencies": {

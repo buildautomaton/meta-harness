@@ -1,24 +1,24 @@
 export * from './types/index.js';
 export { productDirectorSet, directorHttpEndpoints } from './director-set.js';
 export type { ProductDirectorOptions } from './director-set.js';
-export { sqliteWorkPlugin, memoryWorkPlugin } from './plugins/work/sqlite/plugin.js';
-export { createSqliteWorkBackend, memorySqlStore } from './plugins/work/sqlite/backend.js';
-export { createWorkHttpHandler } from './plugins/work/http/handler.js';
-export { contributeWorkHttp } from './plugins/work/http/contribute.js';
-export { buildArtifactFiles } from './plugins/work/artifacts/build-files.js';
-export { workToolsPlugin, productDirectorToolsPlugin } from './plugins/work-tools/plugin.js';
-export { WORK_TOOL_DEFINITIONS, workToolDefinitions } from './plugins/work-tools/definitions.js';
+export { sqliteWorkPlugin, memoryWorkPlugin } from './plugins/runtime/work/sqlite/plugin.js';
+export { createSqliteWorkBackend, memorySqlStore } from './plugins/runtime/work/sqlite/backend.js';
+export { createWorkHttpHandler } from './plugins/runtime/work/http/handler.js';
+export { contributeWorkHttp } from './plugins/runtime/work/http/contribute.js';
+export { buildArtifactFiles } from './plugins/runtime/work/artifacts/build-files.js';
+export { workToolsPlugin, productDirectorToolsPlugin } from './plugins/runtime/work-tools/plugin.js';
+export { WORK_TOOL_DEFINITIONS, workToolDefinitions } from './plugins/runtime/work-tools/definitions.js';
 export {
   ASK_PRODUCT_DIRECTOR_WHAT_TO_BUILD_NEXT,
   TELL_PRODUCT_DIRECTOR_WHAT_WAS_BUILT,
   ASK_PRODUCT_DIRECTOR_INTERVIEW_QUESTIONS,
-} from './plugins/work-tools/names.js';
-export { artifactPlugins, builtinArtifactKinds } from './plugins/artifacts/builtins.js';
-export { uiArtifactPlugin } from './plugins/artifacts/ui.js';
-export { apiArtifactPlugin } from './plugins/artifacts/api.js';
-export { algorithmArtifactPlugin } from './plugins/artifacts/algorithm.js';
-export { dataModelArtifactPlugin } from './plugins/artifacts/data-model.js';
-export { moduleStructureArtifactPlugin } from './plugins/artifacts/module-structure.js';
-export { backendArtifactPlugin } from './plugins/artifacts/backend.js';
-export { outlineArtifactPlugin } from './plugins/artifacts/outline.js';
+} from './plugins/runtime/work-tools/names.js';
+export { artifactPlugins, builtinArtifactKinds } from './plugins/runtime/artifacts/builtins.js';
+export { uiArtifactPlugin } from './plugins/runtime/artifacts/ui.js';
+export { apiArtifactPlugin } from './plugins/runtime/artifacts/api.js';
+export { algorithmArtifactPlugin } from './plugins/runtime/artifacts/algorithm.js';
+export { dataModelArtifactPlugin } from './plugins/runtime/artifacts/data-model.js';
+export { moduleStructureArtifactPlugin } from './plugins/runtime/artifacts/module-structure.js';
+export { backendArtifactPlugin } from './plugins/runtime/artifacts/backend.js';
+export { outlineArtifactPlugin } from './plugins/runtime/artifacts/outline.js';
 export { workHttpEndpoints } from './http/work-endpoints.js';

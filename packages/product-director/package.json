@@ -2,7 +2,7 @@
   "name": "@buildautomaton/product-director",
   "version": "0.1.0",
   "license": "MIT",
-  "description": "Product director: work queue, artifact plugins, and tools for telling the director what was built and asking what to build next",
+  "description": "Product director: work queue, artifact plugins, tools, and dashboard UI plugins",
   "author": "BuildAutomaton",
   "repository": {
     "type": "git",
@@ -24,6 +24,7 @@
       "types": "./dist/index.d.ts",
       "default": "./dist/index.js"
     },
+    "./ui": "./src/ui.ts",
     "./package.json": "./package.json"
   },
   "scripts": {
@@ -33,10 +34,28 @@
     "prepublishOnly": "pnpm run build"
   },
   "dependencies": {
-    "@buildautomaton/agent-runtime": "workspace:*"
+    "@buildautomaton/runtime": "workspace:*"
+  },
+  "peerDependencies": {
+    "@buildautomaton/ui-runtime": "workspace:*",
+    "lucide-react": "^0.344.0",
+    "react": "^19.2.1",
+    "react-dom": "^19.2.1"
+  },
+  "peerDependenciesMeta": {
+    "@buildautomaton/ui-runtime": { "optional": true },
+    "lucide-react": { "optional": true },
+    "react": { "optional": true },
+    "react-dom": { "optional": true }
   },
   "devDependencies": {
+    "@buildautomaton/ui-runtime": "workspace:*",
     "@types/node": "^22.0.0",
+    "@types/react": "^19.2.1",
+    "@types/react-dom": "^19.2.1",
+    "lucide-react": "^0.344.0",
+    "react": "^19.2.1",
+    "react-dom": "^19.2.1",
     "tsup": "^8.5.1",
     "typescript": "^5.9.3",
     "vitest": "^2.0.0"

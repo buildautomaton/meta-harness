@@ -1,0 +1,42 @@
+{
+  "name": "@buildautomaton/ui-runtime",
+  "version": "0.1.0",
+  "license": "MIT",
+  "description": "Composable UI runtime: plugin kernel, design system, and dashboard shells",
+  "author": "BuildAutomaton",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/buildautomaton/meta-harness.git",
+    "directory": "packages/ui-runtime"
+  },
+  "homepage": "https://github.com/buildautomaton/meta-harness/tree/main/packages/ui-runtime",
+  "bugs": {
+    "url": "https://github.com/buildautomaton/meta-harness/issues"
+  },
+  "type": "module",
+  "main": "src/index.ts",
+  "exports": {
+    ".": "./src/index.ts",
+    "./design": "./src/design/index.ts",
+    "./plugins": "./src/plugins/index.ts",
+    "./design/tokens.css": "./src/design/tokens.css"
+  },
+  "scripts": {
+    "type-check": "tsc --noEmit",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "class-variance-authority": "^0.7.0",
+    "clsx": "^2.1.0",
+    "lucide-react": "^0.344.0",
+    "react": "^19.2.1",
+    "react-dom": "^19.2.1",
+    "tailwind-merge": "^2.2.1"
+  },
+  "devDependencies": {
+    "@types/react": "^19.2.1",
+    "@types/react-dom": "^19.2.1",
+    "typescript": "^5.9.3",
+    "vitest": "^2.0.0"
+  }
+}

@@ -5,10 +5,10 @@ import {
   httpTransportPlugin,
   fileStorePlugin,
   sqlStorePlugin,
-} from '@buildautomaton/agent-runtime';
-import { memoryWorkPlugin } from './plugins/work/sqlite/plugin.js';
-import { workToolsPlugin } from './plugins/work-tools/plugin.js';
-import { artifactPlugins } from './plugins/artifacts/builtins.js';
+} from '@buildautomaton/runtime';
+import { memoryWorkPlugin } from './plugins/runtime/work/sqlite/plugin.js';
+import { workToolsPlugin } from './plugins/runtime/work-tools/plugin.js';
+import { artifactPlugins } from './plugins/runtime/artifacts/builtins.js';
 import type { WorkImplementation } from './types/work/implementation.js';
 import { mkdtempSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
