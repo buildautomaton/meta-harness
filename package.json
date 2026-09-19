@@ -18,7 +18,7 @@
     "lint": "turbo run lint",
     "test": "turbo run test",
     "type-check": "turbo run type-check",
-    "publish:packages": "pnpm -r publish --filter=@buildautomaton/agent-runtime --filter=@buildautomaton/product-director --filter=@buildautomaton/local-cli --access public"
+    "publish:packages": "pnpm -r publish --filter=@buildautomaton/runtime --filter=@buildautomaton/product-director --filter=@buildautomaton/local-cli --access public"
   },
   "devDependencies": {
     "turbo": "^1.12.4"

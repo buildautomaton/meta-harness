@@ -1,4 +1,4 @@
-import { joinHttpPath } from '@buildautomaton/agent-runtime';
+import { joinHttpPath } from '@buildautomaton/runtime';
 
 export type ExpandedEndpoint = { path: string; plugin?: string; surface?: string };
 

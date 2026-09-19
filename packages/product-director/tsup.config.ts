@@ -13,7 +13,7 @@ export default defineConfig({
   clean: true,
   sourcemap: true,
   dts: true,
-  tsconfig: './tsconfig.json',
+  tsconfig: './tsconfig.build.json',
   esbuildOptions(options) {
     options.alias = {
       '@/types': `${src}/types`,

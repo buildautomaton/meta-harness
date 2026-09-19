@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { parseCli } from './parse-cli.js';
-import { MCP_DEFAULT_PATH, HTTP_DEFAULT_PORT } from '@buildautomaton/agent-runtime';
+import { MCP_DEFAULT_PATH, HTTP_DEFAULT_PORT } from '@buildautomaton/runtime';
 
 describe('parseCli', () => {
   it('defaults to disk HTTP in cwd', () => {

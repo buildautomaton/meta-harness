@@ -4,7 +4,7 @@ Thin CLI. Parses flags, then starts `coreSet()` + `productDirectorSet()`. MIT li
 
 ```text
 local-cli
-  ├── agent-runtime          stores, harnesses, sessions, minions, HTTP
+  ├── runtime          stores, harnesses, sessions, minions, HTTP
   └── product-director       work queue, artifacts, director tools
          ↓
       createRuntime → listen
@@ -60,7 +60,7 @@ Minion tools (from the runtime) plus product-director tools:
 
 Spawn already waits. Don’t poll. Permission prompts arrive on the open tool call.
 
-Need a different mix of plugins? Call `createRuntime` from `@buildautomaton/agent-runtime` instead of this binary.
+Need a different mix of plugins? Call `createRuntime` from `@buildautomaton/runtime` instead of this binary.
 
 ## License
 

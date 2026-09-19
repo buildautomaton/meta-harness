@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { listenLocalhost, closeServer } from '@buildautomaton/agent-runtime';
-import { createSqliteWorkBackend } from '@plugins/work/sqlite/backend.js';
+import { listenLocalhost, closeServer } from '@buildautomaton/runtime';
+import { createSqliteWorkBackend } from '@plugins/runtime/work/sqlite/backend.js';
 import { serveWork } from './serve-work.js';
 
 describe('HTTP clear answer', () => {

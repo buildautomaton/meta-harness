@@ -7,7 +7,7 @@ import type {
   HttpContributeContext,
   HttpRegistry,
   SqlMigration,
-} from '@buildautomaton/agent-runtime';
+} from '@buildautomaton/runtime';
 import type { WorkBackendWrap, WorkImplementation } from './implementation.js';
 import type { WorkHooks } from './hooks.js';
 import type { WorkOptions } from './options.js';

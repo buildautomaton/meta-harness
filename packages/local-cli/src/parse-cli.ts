@@ -4,7 +4,7 @@ import {
   normalizeHttpPath,
   type SessionBackendKind,
   type TransportKind,
-} from '@buildautomaton/agent-runtime';
+} from '@buildautomaton/runtime';
 import { CLI_VERSION } from './version.js';
 
 export type ParsedCli = {
