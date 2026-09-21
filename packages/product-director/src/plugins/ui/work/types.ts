@@ -18,6 +18,7 @@ export type WorkItem = {
   decisions: string[];
   questions: DesignQuestion[];
   sessionIds: string[];
+  project: string;
   createdAt: string;
   updatedAt: string;
   completedAt: string | null;
@@ -51,6 +52,7 @@ export type WorkArtifact = {
   sessionId: string | null;
   files: ArtifactFile[];
   questions: Record<string, DesignQuestion[]>;
+  project?: string;
   createdAt: string;
 };
 
@@ -73,12 +75,15 @@ export type WorkPatch = {
   paused?: boolean;
   status?: WorkStatus;
   queue?: 'top' | 'bottom';
+  unqueue?: boolean;
 };
 
 export type WorkClient = {
   listWork(): Promise<WorkItem[]>;
-  addWork(input: { title: string; content?: string; held?: boolean }): Promise<WorkItem>;
+  addWork(input: { title: string; content?: string; held?: boolean; project?: string }): Promise<WorkItem>;
   updateWork(id: string, patch: WorkPatch): Promise<WorkItem | null>;
+  renameProject(from: string, to: string): Promise<void>;
+  deleteWork(id: string): Promise<void>;
   listArtifacts(workId?: string): Promise<ArtifactSummary[]>;
   getArtifact(id: string): Promise<WorkArtifact | null>;
   answerQuestions(

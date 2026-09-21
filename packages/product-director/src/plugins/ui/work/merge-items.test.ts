@@ -16,6 +16,7 @@ const item = (id: string, status: WorkItem['status']): WorkItem => ({
   decisions: ['Change'],
   questions: [],
   sessionIds: [],
+  project: '',
   createdAt: '',
   updatedAt: '',
   completedAt: null,

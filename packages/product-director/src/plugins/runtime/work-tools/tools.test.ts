@@ -29,11 +29,22 @@ describe('work MCP tools', () => {
         title: 'Done',
         description: 'Built it',
         sessionId,
+        project: 'Harness',
         backend: { description: 'Added a worker' },
       },
       toolCtx,
     );
     expect(told.isError).toBeFalsy();
     expect(told.content[0]!.text).toContain('Recorded "Done"');
+  });
+
+  it('requires project when recording what was built', async () => {
+    const toolCtx = await ctx();
+    const told = await handleTellWhatWasBuilt(
+      { title: 'Done', description: 'Built it', backend: { description: 'Added a worker' } },
+      toolCtx,
+    );
+    expect(told.isError).toBe(true);
+    expect(told.content[0]!.text).toMatch(/project is required/i);
   });
 });

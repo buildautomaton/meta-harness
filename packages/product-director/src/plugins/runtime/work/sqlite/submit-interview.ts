@@ -9,6 +9,8 @@ import { isoNow } from './rank.js';
 import { run } from './sql.js';
 import { bottomRank } from './move-queue.js';
 
+const DROPPED: InterviewRound = { done: true };
+
 export async function submitInterview(
   db: SqlStore,
   hub: WorkHub,
@@ -17,7 +19,7 @@ export async function submitInterview(
   sessionId?: string,
 ): Promise<InterviewRound> {
   const item = getWorkRow(db, workId);
-  if (!item) throw new Error('Work not found');
+  if (!item) return DROPPED;
   if (questions.length > 0 && item.status !== 'draft') {
     throw new Error('Interview questions are only for draft work');
   }
@@ -36,5 +38,7 @@ export async function submitInterview(
   const waiting = hub.waitForAnswers(workId);
   hub.emit('work.changed', workId);
   const answers = await waiting;
-  return { done: false, item: getWorkRow(db, workId)!, answers };
+  const latest = getWorkRow(db, workId);
+  if (!latest) return DROPPED;
+  return { done: false, item: latest, answers };
 }

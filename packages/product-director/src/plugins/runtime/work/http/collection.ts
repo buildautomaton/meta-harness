@@ -22,5 +22,15 @@ export async function handleWorkCollection(
     writeJson(res, 201, await work.addWork(body));
     return;
   }
+  if (method === 'PATCH') {
+    const body = (await readJson(req)) as { from?: string; to?: string };
+    if (typeof body?.from !== 'string' || typeof body?.to !== 'string') {
+      writeJson(res, 400, { error: 'from and to are required' });
+      return;
+    }
+    await work.renameProject(body.from, body.to);
+    writeJson(res, 204, null);
+    return;
+  }
   writeJson(res, 405, { error: 'Method not allowed' });
 }

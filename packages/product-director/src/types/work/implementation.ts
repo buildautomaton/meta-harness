@@ -16,6 +16,8 @@ export type WorkImplementation = {
   getWork(id: string): Promise<WorkItem | null>;
   addWork(input: AddWorkInput): Promise<WorkItem>;
   updateWork(id: string, patch: WorkPatch): Promise<WorkItem | null>;
+  renameProject(from: string, to: string): Promise<void>;
+  deleteWork(id: string): Promise<boolean>;
   pickNextWork(sessionId: string): Promise<WorkItem | null>;
   attachSession(workId: string, sessionId: string): Promise<WorkSessionLink>;
   completeSession(sessionId: string, artifactId: string): Promise<void>;

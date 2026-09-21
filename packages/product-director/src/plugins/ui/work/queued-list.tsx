@@ -3,10 +3,12 @@ import { EmptyState } from '@buildautomaton/ui-runtime';
 import { QueuedCard } from './queued-card.js';
 import { useWork } from './context.js';
 import { isQueuedItem } from './merge-items.js';
+import { sameProject } from './project-name.js';
 
 export function QueuedList() {
-  const { items } = useWork();
-  const queued = items.filter(isQueuedItem);
+  const { items, project } = useWork();
+  const allQueued = items.filter(isQueuedItem);
+  const queued = allQueued.filter((item) => sameProject(item.project, project));
   if (queued.length === 0) {
     return (
       <EmptyState
@@ -17,10 +19,14 @@ export function QueuedList() {
     );
   }
   return (
-    <ul className="w-full divide-y divide-border pb-16">
-      {queued.map((item, index) => (
+    <ul className="w-full divide-y divide-foreground/20 pb-16">
+      {queued.map((item) => (
         <li key={item.id}>
-          <QueuedCard item={item} isFirst={index === 0} isLast={index === queued.length - 1} />
+          <QueuedCard
+            item={item}
+            isFirst={item.id === allQueued[0]?.id}
+            isLast={item.id === allQueued[allQueued.length - 1]?.id}
+          />
         </li>
       ))}
     </ul>

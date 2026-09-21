@@ -32,3 +32,4 @@ export type { WorkEvent, WorkEventType, WorkListener, WorkAssetInput } from './e
 export type { InterviewRound, InterviewAnswer } from './interview.js';
 export type { OutlineViewKind, OutlineViewInput, OutlineArtifactInput } from './outline.js';
 export { OUTLINE_VIEW_KINDS } from './outline.js';
+export { DRAFT_ONLY } from './draft-only.js';

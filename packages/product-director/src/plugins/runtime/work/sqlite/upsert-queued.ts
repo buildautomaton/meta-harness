@@ -16,6 +16,7 @@ export function upsertQueuedWork(
     agentContext: string;
     content: string;
     decisions: string[];
+    project?: string;
   },
 ): WorkItem {
   const existing = findBySource(db, input.sourceKey);
@@ -24,9 +25,9 @@ export function upsertQueuedWork(
   if (current && isPickedUp(current.status)) throw new Error(ANSWER_LOCKED);
   run(
     db,
-    `UPDATE work SET title = ?, content = ?, prompt = ?, agent_context = ?, status = 'queued',
+    `UPDATE work SET title = ?, content = ?, prompt = ?, agent_context = ?, project = ?, status = 'queued',
      updated_at = ? WHERE id = ?`,
-    [input.title, input.content, input.prompt, input.agentContext, isoNow(), existing],
+    [input.title, input.content, input.prompt, input.agentContext, input.project ?? '', isoNow(), existing],
   );
   replaceDecisions(db, existing, input.decisions);
   return getWorkRow(db, existing)!;

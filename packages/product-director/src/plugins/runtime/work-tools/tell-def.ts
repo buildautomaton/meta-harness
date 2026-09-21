@@ -13,6 +13,10 @@ export function tellWhatWasBuiltDefinition(artifacts: ArtifactKind[]): McpToolDe
       type: 'string',
       description: 'Description of the changes: what was built, why, and how it differs from before',
     },
+    project: {
+      type: 'string',
+      description: 'Project this work belongs to. Shown as a tab on the dashboard.',
+    },
     sessionId: {
       type: 'string',
       description: 'Session ID from ask_product_director_what_to_build_next. Always pass it.',
@@ -32,7 +36,7 @@ export function tellWhatWasBuiltDefinition(artifacts: ArtifactKind[]): McpToolDe
     inputSchema: {
       type: 'object',
       additionalProperties: false,
-      required: ['title', 'description'],
+      required: ['title', 'description', 'project'],
       properties,
     },
   };

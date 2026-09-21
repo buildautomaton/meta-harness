@@ -26,10 +26,10 @@ describe('draft interview', () => {
     const round = await pending;
     expect(round.done).toBe(false);
     expect(round.answers?.[0]?.label).toBe('Allow guest');
-    expect(round.item.decisions[0]).toContain('Allow guest');
+    expect(round.item?.decisions[0]).toContain('Allow guest');
 
     const done = await work.submitInterview(draft.id, []);
     expect(done.done).toBe(true);
-    expect(done.item.status).toBe('queued');
+    expect(done.item?.status).toBe('queued');
   });
 });

@@ -9,6 +9,6 @@ export type InterviewAnswer = {
 
 export type InterviewRound = {
   done: boolean;
-  item: WorkItem;
+  item?: WorkItem;
   answers?: InterviewAnswer[];
 };

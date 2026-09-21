@@ -21,6 +21,7 @@ export type WorkItem = {
   decisions: string[];
   questions: DesignQuestion[];
   sessionIds: string[];
+  project: string;
   createdAt: string;
   updatedAt: string;
   completedAt: string | null;
@@ -46,6 +47,7 @@ export type AddWorkInput = {
   agentContext?: string;
   decisions?: string[];
   sourceKey?: string;
+  project?: string;
 };
 
 export type WorkPatch = {
@@ -58,4 +60,5 @@ export type WorkPatch = {
   queue?: 'top' | 'bottom';
   prompt?: string;
   agentContext?: string;
+  unqueue?: boolean;
 };

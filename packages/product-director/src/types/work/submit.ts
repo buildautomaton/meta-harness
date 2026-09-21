@@ -19,6 +19,7 @@ export type ApiRouteInput = {
 export type SubmitWorkInput = {
   title: string;
   description: string;
+  project?: string;
   sessionId?: string;
   turnId?: string;
   ui?: { pages: UiPageInput[] };

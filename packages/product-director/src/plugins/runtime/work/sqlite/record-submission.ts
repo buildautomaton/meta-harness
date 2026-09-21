@@ -23,13 +23,14 @@ export function recordSubmission(db: SqlStore, input: SubmitWorkInput, kinds: Ar
   run(
     db,
     `INSERT INTO artifact
-     (id, work_id, title, description, kinds, session_id, turn_id, stream, created_at)
-     VALUES (?, ?, ?, ?, ?, ?, ?, 'completed', ?)`,
+     (id, work_id, title, description, project, kinds, session_id, turn_id, stream, created_at)
+     VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'completed', ?)`,
     [
       id,
       workId,
       input.title,
       input.description,
+      input.project ?? '',
       JSON.stringify(artifactKindsPresent(input, kinds)),
       input.sessionId ?? null,
       input.turnId ?? null,
@@ -39,6 +40,9 @@ export function recordSubmission(db: SqlStore, input: SubmitWorkInput, kinds: Ar
   insertArtifactFiles(db, id, files);
   insertQuestions(db, id, questionsBySubject(input));
   if (input.sessionId) completeSessionRow(db, input.sessionId, id);
+  if (workId && input.project) {
+    run(db, 'UPDATE work SET project = ? WHERE id = ?', [input.project, workId]);
+  }
   return loadArtifact(db, id)!;
 }
 

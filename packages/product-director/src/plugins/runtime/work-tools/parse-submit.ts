@@ -14,6 +14,8 @@ export function parseSubmitWork(
   const title = str(args.title);
   const description = str(args.description);
   if (!title || !description) return 'title and description are required';
+  const project = str(args.project);
+  if (!project) return 'project is required';
   const extra: Record<string, unknown> = {};
   for (const kind of artifacts) {
     const parsed = kind.parse ? kind.parse(args[kind.key]) : args[kind.key];
@@ -22,6 +24,7 @@ export function parseSubmitWork(
   return {
     title,
     description,
+    project,
     sessionId: str(args.sessionId),
     turnId: str(args.turnId),
     assets: parseAssets(args.assets),

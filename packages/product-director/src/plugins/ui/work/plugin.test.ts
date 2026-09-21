@@ -7,7 +7,7 @@ describe('workUiPlugin', () => {
     const slots = applyUiPlugins([workUiPlugin()]);
     expect(slots.layout).toBe('columns');
     expect(slots.surfaces.map((s) => `${s.panel}:${s.id}`)).toEqual([
-      'nav:work-nav',
+      'header:work-projects',
       'column:work-completed',
       'column:work-draft',
       'column:work-queued',

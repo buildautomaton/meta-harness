@@ -29,6 +29,7 @@ export type WorkArtifact = {
   stream: string;
   files: ArtifactFile[];
   questions: Record<string, DesignQuestion[]>;
+  project: string;
   createdAt: string;
 };
 

@@ -8,6 +8,7 @@ import { type QuestionRow } from './find-question.js';
 import { sourceKeyFor } from './source-key.js';
 import { deleteQueuedBySource } from './delete-queued.js';
 import { choiceForId } from './parse-stored-choices.js';
+import { one } from './sql.js';
 
 export function applyAnswerQueue(
   db: SqlStore,
@@ -41,5 +42,15 @@ function enqueueChange(
     agentContext,
     content: ['## Prompt', prompt, '', '## Answer', label, '', '## Context', agentContext].join('\n'),
     decisions: [label],
+    project: artifactProject(db, artifactId),
   });
+}
+
+function artifactProject(db: SqlStore, artifactId: string): string {
+  try {
+    const row = one(db, 'SELECT project FROM artifact WHERE id = ?', [artifactId]);
+    return row ? String(row.project ?? '') : '';
+  } catch {
+    return '';
+  }
 }

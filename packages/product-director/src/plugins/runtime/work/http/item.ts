@@ -27,8 +27,18 @@ export async function handleWorkItem(
     return;
   }
   if (method === 'PATCH' && !rest) {
-    const item = await work.updateWork(id, (await readJson(req)) as WorkPatch);
-    writeJson(res, item ? 200 : 404, item ?? { error: 'Not found' });
+    const patch = (await readJson(req)) as WorkPatch;
+    const item = await work.updateWork(id, patch);
+    if (item) {
+      writeJson(res, 200, item);
+      return;
+    }
+    writeJson(res, patch.unqueue ? 204 : 404, patch.unqueue ? null : { error: 'Not found' });
+    return;
+  }
+  if (method === 'DELETE' && !rest) {
+    const deleted = await work.deleteWork(id);
+    writeJson(res, deleted ? 204 : 404, deleted ? null : { error: 'Not found' });
     return;
   }
   writeJson(res, 404, { error: 'Not found' });

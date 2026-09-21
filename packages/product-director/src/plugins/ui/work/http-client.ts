@@ -45,6 +45,15 @@ export function createHttpWorkClient(options: HttpWorkClientOptions | string = '
           body: JSON.stringify(patch),
         }),
       ),
+    renameProject: (from, to) =>
+      json<void>(
+        fetch(`${base}${workPath}`, {
+          method: 'PATCH',
+          headers: { 'content-type': 'application/json' },
+          body: JSON.stringify({ from, to }),
+        }),
+      ),
+    deleteWork: (id) => json<void>(fetch(`${base}${workPath}/${id}`, { method: 'DELETE' })),
     listArtifacts: (workId) =>
       json<ArtifactSummary[]>(fetch(workId ? `${base}${workPath}/${workId}/artifacts` : `${base}${artifactsPath}`)),
     getArtifact: (id) => json<WorkArtifact | null>(fetch(`${base}${artifactsPath}/${id}`)),
