@@ -19,8 +19,8 @@ export function insertWork(db: SqlStore, input: AddWorkInput): WorkItem {
     run(
       db,
       `INSERT INTO work
-       (id, title, content, status, priority, queue_rank, paused, prompt, agent_context, source_key, created_at, updated_at)
-       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+       (id, title, content, status, priority, queue_rank, paused, prompt, agent_context, source_key, project, created_at, updated_at)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
       [
         id,
         input.title,
@@ -32,6 +32,7 @@ export function insertWork(db: SqlStore, input: AddWorkInput): WorkItem {
         input.prompt ?? '',
         input.agentContext ?? '',
         input.sourceKey ?? null,
+        input.project ?? '',
         now,
         now,
       ],

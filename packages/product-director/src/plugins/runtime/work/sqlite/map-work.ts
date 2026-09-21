@@ -31,6 +31,7 @@ export function mapWorkRow(row: Record<string, unknown>, sessionIds: string[], d
     decisions: listDecisions(db, id),
     questions: listWorkQuestions(db, id),
     sessionIds,
+    project: String(row.project ?? ''),
     createdAt: String(row.created_at),
     updatedAt: String(row.updated_at),
     completedAt: row.completed_at == null ? null : String(row.completed_at),

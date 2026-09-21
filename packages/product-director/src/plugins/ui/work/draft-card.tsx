@@ -1,4 +1,5 @@
-import { fuzzyTime } from './fuzzy-time.js';
+import { SentTime } from './sent-time.js';
+import { DraftDelete } from './draft-delete.js';
 import { DraftQuestions } from './draft-questions.js';
 import { draftOriginId } from './work-origin.js';
 import type { WorkItem } from './types.js';
@@ -13,7 +14,13 @@ export function DraftCard({ item }: { item: WorkItem }) {
       className="bg-background scroll-mt-3 transition-colors data-[origin-flash]:bg-muted"
     >
       <div className="space-y-2 px-4 py-4">
-        <p className="text-sm font-semibold leading-snug">{title}</p>
+        <div className="flex items-center justify-between gap-3">
+          <div className="flex min-w-0 items-center gap-2">
+            <p className="min-w-0 truncate text-sm font-semibold leading-snug">{title}</p>
+            <SentTime at={item.createdAt} />
+          </div>
+          <DraftDelete id={item.id} />
+        </div>
         {showBody ? <p className="whitespace-pre-wrap text-sm leading-relaxed text-muted-foreground">{body}</p> : null}
         {item.decisions.length > 0 ? (
           <ul className="list-disc space-y-1 pl-5 text-sm leading-relaxed">
@@ -22,7 +29,6 @@ export function DraftCard({ item }: { item: WorkItem }) {
             ))}
           </ul>
         ) : null}
-        <p className="text-xs text-muted-foreground">{fuzzyTime(item.createdAt)}</p>
       </div>
       <DraftQuestions item={item} />
     </article>

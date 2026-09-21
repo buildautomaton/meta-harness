@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { fuzzyTime } from './fuzzy-time.js';
+import { SentTime } from './sent-time.js';
 import { QueuedActions } from './queued-actions.js';
 import { QueuedExpand } from './queued-expand.js';
 import { QueuedLabeled } from './queued-labeled.js';
@@ -26,7 +26,8 @@ export function QueuedCard({
       <div className="flex items-center justify-between gap-3">
         <div className="flex min-w-0 items-center gap-2">
           <QueuedOriginButton item={item} />
-          <p className="text-sm font-semibold leading-snug">{title}</p>
+          <p className="min-w-0 truncate text-sm font-semibold leading-snug">{title}</p>
+          <SentTime at={item.createdAt} paused={item.paused} />
         </div>
         <QueuedActions item={item} isFirst={isFirst} isLast={isLast} />
       </div>
@@ -38,7 +39,6 @@ export function QueuedCard({
         </>
       ) : null}
       {collapsible && details ? <QueuedExpand open={open} onToggle={() => setOpen((v) => !v)} /> : null}
-      <p className="text-xs text-muted-foreground">{item.paused ? 'Paused · ' : ''}{fuzzyTime(item.createdAt)}</p>
     </article>
   );
 }

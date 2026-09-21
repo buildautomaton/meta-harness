@@ -6,6 +6,7 @@ import { handleWorkItem } from './item.js';
 import { handleArtifactRoutes } from './artifact-routes.js';
 import { handleAssetRoutes } from './asset-routes.js';
 import { restAfterPrefix } from './prefix.js';
+import { DRAFT_ONLY } from '@/types/work/draft-only.js';
 
 export async function dispatchWorkHttp(
   req: IncomingMessage,
@@ -46,6 +47,7 @@ export async function dispatchWorkHttp(
     await handleWorkItem(req, res, work, decodeURIComponent(id), tail.join('/') || undefined, method);
   } catch (err) {
     const message = err instanceof Error ? err.message : String(err);
-    writeJson(res, message === 'ANSWER_LOCKED' ? 409 : 500, { error: message });
+    const conflict = message === 'ANSWER_LOCKED' || message === DRAFT_ONLY;
+    writeJson(res, conflict ? 409 : 500, { error: message });
   }
 }

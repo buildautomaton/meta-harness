@@ -52,6 +52,7 @@ function mapSummary(row: Record<string, unknown>): WorkArtifactSummary {
     sessionId: row.session_id == null ? null : String(row.session_id),
     turnId: row.turn_id == null ? null : String(row.turn_id),
     stream: String(row.stream),
+    project: String(row.project ?? ''),
     createdAt: String(row.created_at),
   };
 }

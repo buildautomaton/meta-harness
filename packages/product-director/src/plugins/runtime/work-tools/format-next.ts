@@ -4,9 +4,11 @@ export function formatQueuedWork(sessionId: string, item: WorkItem): string {
   return [
     `Session ID: ${sessionId}`,
     'Pass this sessionId to tell_product_director_what_was_built when the work is done.',
+    'Pass the same project name on that tell call.',
     '',
     'Implement this queued work next:',
     item.title,
+    item.project && `Project: ${item.project}`,
     item.prompt && `Prompt:\n${item.prompt}`,
     item.decisions.length ? `Decisions:\n${item.decisions.map((d) => `- ${d}`).join('\n')}` : '',
     item.agentContext && `Agent context:\n${item.agentContext}`,
@@ -20,6 +22,7 @@ export function formatDrafts(sessionId: string, drafts: WorkItem[]): string {
   if (drafts.length === 0) return '';
   const lines = drafts.flatMap((item) => [
     `- workId ${item.id}: ${item.title}`,
+    item.project && `  Project: ${item.project}`,
     item.content && `  ${item.content.split('\n')[0]}`,
     item.decisions.length ? `  Decisions: ${item.decisions.join('; ')}` : '',
   ]);

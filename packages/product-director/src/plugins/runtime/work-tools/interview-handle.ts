@@ -24,6 +24,7 @@ export async function handleAskInterviewQuestions(
   const sessionId = typeof args.sessionId === 'string' ? args.sessionId : undefined;
   try {
     const round = await work.submitInterview(workId, questions as DesignQuestion[], sessionId);
+    if (!round.item) return text('This draft was deleted. Skip it and continue.');
     if (round.done) return text(`Interview complete. Queued "${round.item.title}" for implementation.`);
     const lines = (round.answers ?? []).map((a) => `- ${a.prompt} → ${a.label}`);
     return text(['Answers recorded as decisions. Keep interviewing, or pass questions: [] to queue.', ...lines].join('\n'));

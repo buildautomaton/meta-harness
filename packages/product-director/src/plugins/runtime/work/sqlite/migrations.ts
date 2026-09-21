@@ -1,6 +1,7 @@
 import type { SqlMigration } from '@buildautomaton/runtime';
 import { WORK_SCHEMA } from './schema.js';
 import { migrateWork } from './migrate.js';
+import { migrateProject, projectColumnsPresent } from './migrate-project.js';
 import { all } from './sql.js';
 
 const WORK_COLUMN_NAMES = ['paused', 'prompt', 'agent_context', 'source_key'];
@@ -22,5 +23,10 @@ export const WORK_MIGRATIONS: SqlMigration[] = [
     name: '002_work_columns',
     migrate: migrateWork,
     alreadyApplied: workColumnsPresent,
+  },
+  {
+    name: '003_project',
+    migrate: migrateProject,
+    alreadyApplied: projectColumnsPresent,
   },
 ];

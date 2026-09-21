@@ -14,6 +14,9 @@ import { isoNow } from './rank.js';
 import { answerDraftQuestions } from './answer-draft.js';
 import { submitInterview } from './submit-interview.js';
 import { saveAssetRow, listAssetRows } from './assets.js';
+import { deleteDraft } from './delete-draft.js';
+import { unqueueWork } from './unqueue-work.js';
+import { renameProject as renameProjectRows } from './rename-project.js';
 
 export function sqliteMethods(
   withDb: <T>(fn: (db: SqlStore) => T | Promise<T>) => Promise<T>,
@@ -32,9 +35,21 @@ export function sqliteMethods(
       }),
     updateWork: (id, patch) =>
       withDb((db) => {
-        const item = patchWork(db, id, patch);
-        if (item) emit('work.changed', id);
+        const item = patch.unqueue ? unqueueWork(db, id) : patchWork(db, id, patch);
+        if (item || patch.unqueue) emit('work.changed', id);
         return item;
+      }),
+    renameProject: (from, to) =>
+      withDb((db) => {
+        renameProjectRows(db, from, to);
+        emit('work.changed');
+        emit('artifact.changed');
+      }),
+    deleteWork: (id) =>
+      withDb((db) => {
+        const deleted = deleteDraft(db, hub, id);
+        if (deleted) emit('work.changed', id);
+        return deleted;
       }),
     pickNextWork: (sessionId) =>
       withDb((db) => {

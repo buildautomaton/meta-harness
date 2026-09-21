@@ -10,6 +10,7 @@ CREATE TABLE IF NOT EXISTS work (
   prompt TEXT NOT NULL DEFAULT '',
   agent_context TEXT NOT NULL DEFAULT '',
   source_key TEXT,
+  project TEXT NOT NULL DEFAULT '',
   created_at TEXT NOT NULL,
   updated_at TEXT NOT NULL,
   completed_at TEXT
@@ -28,6 +29,7 @@ CREATE TABLE IF NOT EXISTS artifact (
   work_id TEXT,
   title TEXT NOT NULL,
   description TEXT NOT NULL,
+  project TEXT NOT NULL DEFAULT '',
   kinds TEXT NOT NULL,
   session_id TEXT,
   turn_id TEXT,

@@ -1,7 +1,9 @@
-import { ArrowDownToLine, ArrowUpToLine, Pause, Play } from 'lucide-react';
+import { ArrowDownToLine, ArrowUpToLine, Pause, Play, X } from 'lucide-react';
 import type { ReactNode } from 'react';
 import { Button, cn } from '@buildautomaton/ui-runtime';
 import { useWork } from './context.js';
+import { resolveWorkOrigin } from './resolve-origin.js';
+import { removeQueued } from './remove-queued.js';
 import type { WorkItem } from './types.js';
 
 export function QueuedActions({
@@ -13,9 +15,17 @@ export function QueuedActions({
   isFirst: boolean;
   isLast: boolean;
 }) {
-  const { client, reload } = useWork();
+  const { client, reload, artifacts, ingestItems, dropItems } = useWork();
   const patch = (body: { queue?: 'top' | 'bottom'; paused?: boolean }) => {
     void client.updateWork(item.id, body).then(reload);
+  };
+  const unqueue = () => {
+    void removeQueued(client, item, resolveWorkOrigin(item, artifacts))
+      .then((result) => {
+        ingestItems(result.queued);
+        dropItems(result.removed);
+      })
+      .finally(() => void reload());
   };
   return (
     <div className="flex shrink-0 items-center justify-end gap-0.5">
@@ -46,6 +56,13 @@ export function QueuedActions({
           <Pause className="h-4 w-4 fill-current" />
         </IconBtn>
       )}
+      <IconBtn
+        label="Remove from queue"
+        className="text-muted-foreground hover:bg-destructive/10 hover:text-destructive"
+        onClick={unqueue}
+      >
+        <X className="h-4 w-4" />
+      </IconBtn>
     </div>
   );
 }
