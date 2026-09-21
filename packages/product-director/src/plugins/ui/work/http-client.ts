@@ -57,6 +57,14 @@ export function createHttpWorkClient(options: HttpWorkClientOptions | string = '
     listArtifacts: (workId) =>
       json<ArtifactSummary[]>(fetch(workId ? `${base}${workPath}/${workId}/artifacts` : `${base}${artifactsPath}`)),
     getArtifact: (id) => json<WorkArtifact | null>(fetch(`${base}${artifactsPath}/${id}`)),
+    updateArtifact: (id, patch) =>
+      json<WorkArtifact | null>(
+        fetch(`${base}${artifactsPath}/${id}`, {
+          method: 'PATCH',
+          headers: { 'content-type': 'application/json' },
+          body: JSON.stringify(patch),
+        }),
+      ),
     answerQuestions: async (artifactId, answers) => {
       const result = await json<AnswerQuestionsResult | WorkItem[] | undefined>(
         fetch(`${base}${artifactsPath}/${artifactId}/answers`, {

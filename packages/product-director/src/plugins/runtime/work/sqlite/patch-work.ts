@@ -16,11 +16,12 @@ export function patchWork(db: SqlStore, id: string, patch: WorkPatch): WorkItem 
   const status = patch.status ?? current.status;
   const prompt = patch.prompt ?? current.prompt;
   const agentContext = patch.agentContext ?? current.agentContext;
+  const project = patch.project !== undefined ? patch.project.trim() : current.project;
   run(
     db,
     `UPDATE work SET title = ?, content = ?, status = ?, priority = ?, paused = ?, prompt = ?,
-     agent_context = ?, updated_at = ? WHERE id = ?`,
-    [title, content, status, priority, paused ? 1 : 0, prompt, agentContext, isoNow(), id],
+     agent_context = ?, project = ?, updated_at = ? WHERE id = ?`,
+    [title, content, status, priority, paused ? 1 : 0, prompt, agentContext, project, isoNow(), id],
   );
   return getWorkRow(db, id);
 }

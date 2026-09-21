@@ -17,6 +17,7 @@ import { saveAssetRow, listAssetRows } from './assets.js';
 import { deleteDraft } from './delete-draft.js';
 import { unqueueWork } from './unqueue-work.js';
 import { renameProject as renameProjectRows } from './rename-project.js';
+import { setArtifactProject } from './set-artifact-project.js';
 
 export function sqliteMethods(
   withDb: <T>(fn: (db: SqlStore) => T | Promise<T>) => Promise<T>,
@@ -74,6 +75,11 @@ export function sqliteMethods(
       }),
     listArtifacts: (workId) => withDb((db) => listArtifactSummaries(db, workId)),
     getArtifact: (id) => withDb((db) => loadArtifact(db, id)),
+    updateArtifact: (id, patch) => withDb((db) => {
+      const artifact = setArtifactProject(db, id, patch.project);
+      if (artifact) emit('artifact.changed', id);
+      return artifact;
+    }),
     answerQuestions: (artifactId, answers) =>
       withDb((db) => {
         const result = saveAnswers(db, artifactId, answers);

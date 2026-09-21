@@ -31,4 +31,12 @@ describe('work project', () => {
     ]);
     expect(queued.queued[0]?.project).toBe('Hiring');
   });
+
+  it('assigns a project onto a draft and an artifact', async () => {
+    const work = createSqliteWorkBackend();
+    const draft = await work.addWork({ title: 'Tiles', content: 'Overlay.' });
+    expect((await work.updateWork(draft.id, { project: 'Studio' }))?.project).toBe('Studio');
+    const artifact = await work.recordSubmission({ title: 'Tiles', description: 'Overlay' });
+    expect((await work.updateArtifact(artifact.id, { project: 'Hiring' }))?.project).toBe('Hiring');
+  });
 });

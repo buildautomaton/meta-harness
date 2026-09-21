@@ -24,6 +24,16 @@ export async function handleArtifactRoutes(
     writeJson(res, artifact ? 200 : 404, artifact ?? { error: 'Not found' });
     return;
   }
+  if (method === 'PATCH' && !action) {
+    const body = (await readJson(req)) as { project?: string };
+    if (typeof body?.project !== 'string') {
+      writeJson(res, 400, { error: 'project is required' });
+      return;
+    }
+    const artifact = await work.updateArtifact(artifactId, { project: body.project });
+    writeJson(res, artifact ? 200 : 404, artifact ?? { error: 'Not found' });
+    return;
+  }
   if (method === 'POST' && action === 'answers') {
     const raw = await readJson(req);
     const queued = await work.answerQuestions(artifactId, coerceAnswers(raw));

@@ -1,7 +1,9 @@
 import type { WorkArtifact, WorkItem } from './types.js';
+import { isDraftColumnItem } from './draft-column-item.js';
+import { isQueuedItem } from './merge-items.js';
 
 export function projectLabel(name: string): string {
-  return name.trim() || 'Inbox';
+  return name.trim() || 'No project';
 }
 
 export function sameProject(value: string | undefined, selected: string): boolean {
@@ -10,16 +12,20 @@ export function sameProject(value: string | undefined, selected: string): boolea
 
 export function normalizeProjectName(value: string): string {
   const trimmed = value.trim();
-  return trimmed.toLowerCase() === 'inbox' ? '' : trimmed;
+  const lower = trimmed.toLowerCase();
+  return lower === 'inbox' || lower === 'no project' ? '' : trimmed;
+}
+
+function boardProject(item: WorkItem): boolean {
+  return isDraftColumnItem(item) || isQueuedItem(item);
 }
 
 export function collectProjects(items: WorkItem[], artifacts: WorkArtifact[]): string[] {
   const names = new Set<string>();
-  for (const item of items) names.add(item.project ?? '');
+  for (const item of items) if (boardProject(item)) names.add(item.project ?? '');
   for (const artifact of artifacts) names.add(artifact.project ?? '');
   const named = [...names].filter((name) => name.trim()).sort((a, b) => a.localeCompare(b));
-  if (names.has('') || named.length === 0) return ['', ...named];
-  return named;
+  return names.has('') ? ['', ...named] : named;
 }
 
 export function mergeProjects(collected: string[], extra: string[]): string[] {

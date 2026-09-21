@@ -1,5 +1,5 @@
 import { cn } from './cn.js';
-import { RadioDot } from './status.js';
+import { Badge, RadioDot } from './status.js';
 import { choiceHint, type ChoiceOption } from './choice-option.js';
 
 export function ChoiceRow(props: {
@@ -27,9 +27,13 @@ export function ChoiceRow(props: {
         )}
       >
         <RadioDot checked={props.checked} />
-        <span className="leading-snug">
+        <span className="inline-flex flex-wrap items-center gap-1.5 leading-snug">
           {props.choice.label}
-          {hint ? <span className="mt-0.5 block text-xs text-muted-foreground">{hint}</span> : null}
+          {hint ? (
+            <Badge className="whitespace-nowrap bg-muted px-1.5 py-0 text-[10px] font-medium leading-4">
+              {hint}
+            </Badge>
+          ) : null}
         </span>
       </button>
       {props.checked && props.clearable !== false ? (
