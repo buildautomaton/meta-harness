@@ -4,6 +4,7 @@ import { QueuedActions } from './queued-actions.js';
 import { QueuedExpand } from './queued-expand.js';
 import { QueuedLabeled } from './queued-labeled.js';
 import { QueuedOriginButton } from './queued-origin-button.js';
+import { AssignProjectButton } from './assign-project-button.js';
 import { isPromptQueued, queuedAnswer } from './queued-prompt.js';
 import type { WorkItem } from './types.js';
 
@@ -29,7 +30,10 @@ export function QueuedCard({
           <p className="min-w-0 truncate text-sm font-semibold leading-snug">{title}</p>
           <SentTime at={item.createdAt} paused={item.paused} />
         </div>
-        <QueuedActions item={item} isFirst={isFirst} isLast={isLast} />
+        <div className="flex shrink-0 items-center">
+          <AssignProjectButton workId={item.id} project={item.project} />
+          <QueuedActions item={item} isFirst={isFirst} isLast={isLast} />
+        </div>
       </div>
       {answer ? <QueuedLabeled text={answer} label="Answer" /> : null}
       {collapsible && open ? (

@@ -11,7 +11,7 @@ export function ProjectTabs() {
     <div className="flex h-12 items-center gap-1 overflow-x-auto">
       {projects.map((name) => (
         <ProjectChip
-          key={name || 'inbox'}
+          key={name || 'no-project'}
           name={name}
           active={name === project}
           onSelect={() => setProject(name)}

@@ -76,6 +76,7 @@ export type WorkPatch = {
   status?: WorkStatus;
   queue?: 'top' | 'bottom';
   unqueue?: boolean;
+  project?: string;
 };
 
 export type WorkClient = {
@@ -86,12 +87,10 @@ export type WorkClient = {
   deleteWork(id: string): Promise<void>;
   listArtifacts(workId?: string): Promise<ArtifactSummary[]>;
   getArtifact(id: string): Promise<WorkArtifact | null>;
+  updateArtifact(id: string, patch: { project: string }): Promise<WorkArtifact | null>;
   answerQuestions(
     artifactId: string,
     answers: { subject: string; questionId: string; choiceId: string }[],
   ): Promise<AnswerQuestionsResult>;
-  answerWorkQuestions(
-    workId: string,
-    answers: { subject: string; questionId: string; choiceId: string }[],
-  ): Promise<WorkItem | null>;
+  answerWorkQuestions(workId: string, answers: { subject: string; questionId: string; choiceId: string }[]): Promise<WorkItem | null>;
 };

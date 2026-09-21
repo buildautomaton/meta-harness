@@ -1,4 +1,4 @@
-import { Pencil } from 'lucide-react';
+import { Folder, Pencil } from 'lucide-react';
 import { useState } from 'react';
 import { cn } from '@buildautomaton/ui-runtime';
 import { projectLabel } from './project-name.js';
@@ -29,11 +29,12 @@ export function ProjectChip(props: {
         type="button"
         onClick={props.onSelect}
         className={cn(
-          'rounded-full py-1 pl-3 text-sm font-medium text-muted-foreground hover:text-foreground',
+          'inline-flex items-center gap-1.5 rounded-full py-1 pl-2.5 text-sm font-medium text-muted-foreground hover:text-foreground',
           props.name ? 'pr-7' : 'pr-3',
           props.active && 'bg-muted text-foreground',
         )}
       >
+        <Folder className="h-3.5 w-3.5" aria-hidden />
         {projectLabel(props.name)}
       </button>
       {props.name ? (

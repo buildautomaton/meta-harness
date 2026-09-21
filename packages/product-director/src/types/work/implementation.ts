@@ -25,6 +25,7 @@ export type WorkImplementation = {
   recordSubmission(input: SubmitWorkInput): Promise<WorkArtifact>;
   listArtifacts(workId?: string): Promise<WorkArtifactSummary[]>;
   getArtifact(id: string): Promise<WorkArtifact | null>;
+  updateArtifact(id: string, patch: { project: string }): Promise<WorkArtifact | null>;
   answerQuestions(artifactId: string, answers: QuestionAnswer[]): Promise<AnswerQuestionsResult>;
   answerWorkQuestions(workId: string, answers: QuestionAnswer[]): Promise<WorkItem | null>;
   submitInterview(workId: string, questions: DesignQuestion[], sessionId?: string): Promise<InterviewRound>;

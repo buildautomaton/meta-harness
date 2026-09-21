@@ -3,6 +3,7 @@ import { EmptyState } from '@buildautomaton/ui-runtime';
 import { WorkCard } from './work-card.js';
 import { useWork } from './context.js';
 import { sameProject } from './project-name.js';
+import { workListClass } from './work-list-class.js';
 
 export function WorkFeedList() {
   const { artifacts, project } = useWork();
@@ -17,7 +18,7 @@ export function WorkFeedList() {
     );
   }
   return (
-    <ul className="w-full divide-y divide-foreground/20 pb-16">
+    <ul className={workListClass}>
       {visible.map((artifact) => (
         <li key={artifact.id}>
           <WorkCard artifact={artifact} />

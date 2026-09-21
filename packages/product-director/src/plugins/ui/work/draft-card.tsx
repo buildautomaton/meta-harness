@@ -1,4 +1,5 @@
 import { SentTime } from './sent-time.js';
+import { AssignProjectButton } from './assign-project-button.js';
 import { DraftDelete } from './draft-delete.js';
 import { DraftQuestions } from './draft-questions.js';
 import { draftOriginId } from './work-origin.js';
@@ -19,7 +20,10 @@ export function DraftCard({ item }: { item: WorkItem }) {
             <p className="min-w-0 truncate text-sm font-semibold leading-snug">{title}</p>
             <SentTime at={item.createdAt} />
           </div>
-          <DraftDelete id={item.id} />
+          <div className="flex shrink-0 items-center">
+            <AssignProjectButton workId={item.id} project={item.project} />
+            <DraftDelete id={item.id} />
+          </div>
         </div>
         {showBody ? <p className="whitespace-pre-wrap text-sm leading-relaxed text-muted-foreground">{body}</p> : null}
         {item.decisions.length > 0 ? (

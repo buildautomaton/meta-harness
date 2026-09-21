@@ -1,4 +1,5 @@
 import { SentTime } from './sent-time.js';
+import { AssignProjectButton } from './assign-project-button.js';
 import type { WorkArtifact } from './types.js';
 
 export function WorkCardHeader({ artifact }: { artifact: WorkArtifact }) {
@@ -9,6 +10,9 @@ export function WorkCardHeader({ artifact }: { artifact: WorkArtifact }) {
           {artifact.title.trim() || 'Unnamed'}
         </h2>
         <SentTime at={artifact.createdAt} />
+        <div className="ml-auto">
+          <AssignProjectButton artifactId={artifact.id} project={artifact.project} />
+        </div>
       </div>
     </header>
   );

@@ -61,4 +61,5 @@ export type WorkPatch = {
   prompt?: string;
   agentContext?: string;
   unqueue?: boolean;
+  project?: string;
 };
