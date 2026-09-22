@@ -19,6 +19,8 @@ describe('tell_product_director_what_was_built copy', () => {
     expect(workInstructions(kinds)).toMatch(/assets/i);
     expect(def.description).toMatch(/about 10/i);
     expect(def.description).toMatch(/status_quo/i);
+    expect(def.description).toMatch(/No changes badge/i);
+    expect(def.description).toMatch(/Be aggressive/i);
     expect(def.description).toMatch(/project/i);
     expect((def.inputSchema as { required: string[] }).required).toContain('project');
     const schema = def.inputSchema as {
@@ -26,7 +28,16 @@ describe('tell_product_director_what_was_built copy', () => {
     };
     expect(schema.properties.dataModel?.properties?.mermaid?.description).toMatch(/real entities/i);
     expect(schema.properties.summary?.properties?.areas?.description).toMatch(/area/i);
+    expect(schema.properties.changesOverview?.properties?.groups?.description).toMatch(/group/i);
     expect(def.description).toMatch(/2–3 plain-language sentences/i);
     expect(def.description).toMatch(/green\/yellow\/red/i);
+    expect(def.description).toMatch(/changesOverview/i);
+    expect(def.description).toMatch(/Reuse that same sessionId/i);
+    expect(def.description).toMatch(/structuredContent\.sessionId/i);
+    expect(workInstructions(kinds)).toMatch(/reuse it on every tell/i);
+    expect(workInstructions(kinds)).toMatch(/structuredContent/i);
+    const sessionId = schema.properties.sessionId as { description?: string } | undefined;
+    expect(sessionId?.description).toMatch(/state handle/i);
+    expect(def.outputSchema).toBeTruthy();
   });
 });

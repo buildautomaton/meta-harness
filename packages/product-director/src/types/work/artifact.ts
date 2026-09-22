@@ -2,6 +2,7 @@ import type { DesignQuestion } from './questions.js';
 
 export const ARTIFACT_KIND_KEYS = [
   'summary',
+  'changesOverview',
   'api',
   'dataModel',
   'ui',

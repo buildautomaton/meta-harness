@@ -54,7 +54,14 @@ describe('buildArtifactFiles', () => {
         },
         summary: {
           areas: [{ area: 'Backend', description: 'Added checkout session create.' }],
-          paths: [{ path: 'src/checkout/', change: 'added' }],
+        },
+        changesOverview: {
+          groups: [
+            {
+              description: 'New checkout session create and supporting folder.',
+              paths: [{ path: 'src/checkout/', change: 'added' }],
+            },
+          ],
         },
       },
       '2026-01-01T00:00:00.000Z',
@@ -62,11 +69,19 @@ describe('buildArtifactFiles', () => {
       builtinArtifactKinds(),
     );
     const summary = files.find((f) => f.path === 'summary.html')?.content ?? '';
+    const overview = files.find((f) => f.path === 'changes-overview.html')?.content ?? '';
     const api = files.find((f) => f.path === 'api.html')?.content ?? '';
-    expect(summary).toContain('change-added');
-    expect(summary).toContain('src/checkout/');
+    expect(summary).toContain('Backend');
+    expect(summary).not.toContain('src/checkout/');
     expect(summary).toContain('class="section"');
     expect(summary).not.toContain('class="panel"');
+    expect(overview).toContain('change-added');
+    expect(overview).toContain('src/checkout/');
+    expect(overview).toContain('changes-overview');
+    expect(overview).toContain('path-scroll');
+    expect(overview).toContain('table-layout: fixed');
+    expect(overview).toContain('flex: 0 0 18px');
+    expect(overview).toContain('max-height: 7.5em');
     expect(api).toContain('change-added');
     expect(api).not.toContain('>added<');
     expect(apiHtml('x', { routes: [{ method: 'DELETE', path: '/x', change: 'removed', description: 'gone' }] })).toContain(

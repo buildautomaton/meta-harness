@@ -9,10 +9,12 @@ describe('previewHtmlFiles', () => {
       { path: 'notes.md' },
       { path: 'data-model.html' },
       { path: 'api.html' },
+      { path: 'changes-overview.html' },
       { path: 'summary.html' },
     ];
     expect(previewHtmlFiles(files).map((f) => f.path)).toEqual([
       'summary.html',
+      'changes-overview.html',
       'api.html',
       'data-model.html',
       'ui/home.html',

@@ -32,6 +32,11 @@ export type { WorkEvent, WorkEventType, WorkListener, WorkAssetInput } from './e
 export type { InterviewRound, InterviewAnswer } from './interview.js';
 export type { ChangeKind } from './change.js';
 export { CHANGE_KINDS } from './change.js';
-export type { SummaryAreaInput, SummaryPathInput, SummaryArtifactInput } from './summary.js';
+export type { SummaryAreaInput, SummaryArtifactInput } from './summary.js';
+export type {
+  ChangesOverviewPathInput,
+  ChangesOverviewGroupInput,
+  ChangesOverviewArtifactInput,
+} from './changes-overview.js';
 export type { DataModelHighlight, DataModelInput } from './data-model.js';
 export { DRAFT_ONLY } from './draft-only.js';

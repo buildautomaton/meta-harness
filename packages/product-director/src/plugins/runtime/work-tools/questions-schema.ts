@@ -11,7 +11,7 @@ export const QUESTIONS_SCHEMA = {
   type: 'object',
   additionalProperties: false,
   description:
-    'Review questions after work is complete. Ask only high-quality, important decisions that were made or still need a person to review. Aim for about 10 total, preferring fewer. Shown below the matching preview; HTML and diagrams do not include this questionnaire.',
+    'Review questions after work is complete. Ask only high-quality, important decisions that were made or still need a person to review. Aim for about 10 total, preferring fewer. Almost every question needs one status_quo answer (No changes badge, no queued work); omit that only when every option truly needs new work. Shown below the matching preview; HTML and diagrams do not include this questionnaire.',
   properties: {
     overview: {
       ...reviewList,

@@ -2,7 +2,7 @@ export const CHOICE_KIND_SCHEMA = {
   type: 'string',
   enum: ['status_quo', 'change'],
   description:
-    'status_quo keeps the decision already built and queues no work (no changes). change needs new agent work; only then include prompt and context.',
+    'status_quo: keep what was built — shows a "No changes" badge and queues no work. change: needs new agent work; only then include prompt and context. Be aggressive: if the answer accepts the built decision, use status_quo.',
 };
 
 export const REVIEW_CHOICE_SCHEMA = {
@@ -14,7 +14,7 @@ export const REVIEW_CHOICE_SCHEMA = {
     label: {
       type: 'string',
       description:
-        'Choice shown to the reviewer. For status_quo, make clear it keeps what was built (no changes).',
+        'Choice shown to the reviewer. For status_quo, say clearly it keeps what was built (that answer gets the No changes badge).',
     },
     kind: CHOICE_KIND_SCHEMA,
     prompt: {

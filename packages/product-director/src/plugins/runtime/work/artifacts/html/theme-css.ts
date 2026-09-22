@@ -1,5 +1,6 @@
 import { OVERLAY_SCROLLBAR_CSS } from './overlay-scrollbar-css.js';
 import { SECTION_CSS } from './section-css.js';
+import { CHANGES_OVERVIEW_CSS } from './changes-overview-css.js';
 
 export const THEME_CSS = `
 :root { color-scheme: dark; --bg:#101218; --panel:#171b24; --line:#2a3140; --text:#e8eaed; --muted:#9aa3b2; --accent:#7eb6ff; }
@@ -19,7 +20,11 @@ table { width: 100%; border-collapse: collapse; }
 th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--line); vertical-align: top; }
 th { color: var(--text); font-size: 12px; letter-spacing: .04em; text-transform: uppercase; }
 .badge { display: inline-block; padding: 2px 8px; border-radius: 999px; border: 1px solid var(--line); font-size: 12px; }
-.change { display: inline-flex; align-items: center; justify-content: center; width: 1.35em; height: 1.35em; border-radius: 999px; font-weight: 700; font-size: 13px; line-height: 1; vertical-align: middle; }
+.change {
+  display: inline-flex; align-items: center; justify-content: center;
+  flex: 0 0 18px; width: 18px; height: 18px; min-width: 18px; min-height: 18px;
+  border-radius: 999px; font-weight: 700; font-size: 13px; line-height: 1; vertical-align: middle;
+}
 .change-icon { display: block; transform: translateY(-0.5px); }
 .change-added { color: #0d2f18; background: #8ee09a; }
 .change-modified { color: #3a2e0a; background: #f0d080; }
@@ -29,6 +34,7 @@ th { color: var(--text); font-size: 12px; letter-spacing: .04em; text-transform:
 .path-list li:last-child { border-bottom: 0; }
 .diff .add, .diff .added { color: #8ee09a; }
 .diff .del, .diff .removed { color: #f0a0a0; }
+${CHANGES_OVERVIEW_CSS}
 ${SECTION_CSS}
 ${OVERLAY_SCROLLBAR_CSS}
 `.trim();
