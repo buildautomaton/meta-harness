@@ -4,17 +4,19 @@ import { mermaidMarkdown } from '@plugins/runtime/work/artifacts/text-pages.js';
 import { wrapMermaidPage } from '@plugins/runtime/work/artifacts/html/wrap-mermaid.js';
 import { DATA_MODEL_ARTIFACT_SCHEMA } from '@plugins/runtime/work-tools/schema/diagrams.js';
 import { parseDiagram } from '@plugins/runtime/work-tools/parse-parts.js';
+import type { DataModelInput } from '@/types/work/data-model.js';
 
 export const dataModelArtifactPlugin = () =>
   artifactPlugin('artifact-data-model', {
     key: 'dataModel',
     description:
-      'dataModel: Mermaid erDiagram or classDiagram of the model after the change, with real entities, fields, and relations.',
-    instructions: 'Data-model diagrams must use this product’s real entity and field names.',
+      'dataModel: Mermaid erDiagram/classDiagram plus highlights so changed entities, properties, and relationships paint green/yellow/red.',
+    instructions:
+      'Data-model diagrams use real entity and field names. Pass highlights for every significant entity, property, or relationship that changed.',
     schema: DATA_MODEL_ARTIFACT_SCHEMA,
     parse: parseDiagram,
     buildFiles: (payload, ctx) => {
-      const model = payload as { mermaid: string; whatChanged: string };
+      const model = payload as DataModelInput;
       return pair(
         'data-model',
         mermaidMarkdown(model.whatChanged, model.mermaid),
@@ -23,6 +25,7 @@ export const dataModelArtifactPlugin = () =>
           kicker: 'Data model',
           whatChanged: model.whatChanged,
           mermaid: model.mermaid,
+          highlights: model.highlights,
         }),
       );
     },

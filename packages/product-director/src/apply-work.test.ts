@@ -33,8 +33,8 @@ describe('work plugin compose', () => {
       const work = slots.extras.work as WorkImplementation & { id?: string };
       expect(work?.id).toBe('memory');
       expect((slots.extras['work-memory'] as { id?: string })?.id).toBe('memory');
-      expect(slots.byKind.get('artifact')).toHaveLength(7);
-      expect(slots.extras.artifacts).toHaveLength(7);
+      expect(slots.byKind.get('artifact')).toHaveLength(5);
+      expect(slots.extras.artifacts).toHaveLength(5);
       expect(slots.tools).toHaveLength(1);
     } finally {
       rmSync(dir, { recursive: true, force: true });

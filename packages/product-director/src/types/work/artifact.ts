@@ -1,13 +1,11 @@
 import type { DesignQuestion } from './questions.js';
 
 export const ARTIFACT_KIND_KEYS = [
-  'ui',
+  'summary',
   'api',
-  'algorithm',
   'dataModel',
-  'moduleStructure',
-  'backend',
-  'outline',
+  'ui',
+  'algorithm',
 ] as const;
 
 export type ArtifactKindKey = string;

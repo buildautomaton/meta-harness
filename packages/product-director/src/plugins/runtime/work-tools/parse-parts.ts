@@ -1,4 +1,7 @@
 import type { SubmitWorkInput } from '@/types/work/submit.js';
+import type { ChangeKind } from '@/types/work/change.js';
+import { CHANGE_KINDS } from '@/types/work/change.js';
+import type { DataModelHighlight, DataModelInput } from '@/types/work/data-model.js';
 import { obj, str } from './parse-value.js';
 
 export { parseQuestions, parseQuestionList } from './parse-questions.js';
@@ -12,15 +15,22 @@ export function parseNamed(value: unknown): SubmitWorkInput['algorithm'] {
   return { name, whatChanged, pseudocode };
 }
 
-export function parseDiagram(value: unknown): SubmitWorkInput['dataModel'] {
+export function parseDiagram(value: unknown): DataModelInput | undefined {
   const row = obj(value);
-  const mermaid = str(row?.mermaid);
-  const whatChanged = str(row?.whatChanged);
+  if (!row) return undefined;
+  const mermaid = str(row.mermaid);
+  const whatChanged = str(row.whatChanged);
   if (!mermaid || !whatChanged) return undefined;
-  return { mermaid, whatChanged };
+  const highlights = Array.isArray(row.highlights)
+    ? row.highlights.map(parseHighlight).filter((h): h is DataModelHighlight => h !== undefined)
+    : undefined;
+  return { mermaid, whatChanged, ...(highlights?.length ? { highlights } : {}) };
 }
 
-export function parseBackend(value: unknown): SubmitWorkInput['backend'] {
-  const description = str(obj(value)?.description);
-  return description ? { description } : undefined;
+function parseHighlight(value: unknown): DataModelHighlight | undefined {
+  const row = obj(value);
+  const ref = str(row?.ref);
+  const change = str(row?.change) as ChangeKind | undefined;
+  if (!ref || !change || !CHANGE_KINDS.includes(change)) return undefined;
+  return { ref, change };
 }

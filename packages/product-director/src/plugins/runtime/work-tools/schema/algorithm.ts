@@ -15,16 +15,3 @@ export const ALGORITHM_ARTIFACT_SCHEMA = {
     },
   },
 };
-
-export const BACKEND_ARTIFACT_SCHEMA = {
-  type: 'object',
-  additionalProperties: false,
-  required: ['description'],
-  properties: {
-    description: {
-      type: 'string',
-      description:
-        'Plain English for other backend work not covered by api, algorithm, dataModel, or moduleStructure. Describe the real services, jobs, or infra that changed in this product.',
-    },
-  },
-};

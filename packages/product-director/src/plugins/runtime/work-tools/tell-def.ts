@@ -11,7 +11,8 @@ export function tellWhatWasBuiltDefinition(artifacts: ArtifactKind[]): McpToolDe
     title: { type: 'string', description: 'Short title of what was built' },
     description: {
       type: 'string',
-      description: 'Description of the changes: what was built, why, and how it differs from before',
+      description:
+        'At most 2–3 plain-language sentences on what was built and why. No jargon dumps or file lists.',
     },
     project: {
       type: 'string',

@@ -15,7 +15,16 @@ describe('sqlite work backend', () => {
       title: 'Checkout',
       description: 'Added checkout page',
       sessionId: 'session-1',
-      ui: { pages: [{ filename: 'checkout.html', title: 'Checkout', html: '<html><img src="logo.png"></html>' }] },
+      ui: {
+        pages: [
+          {
+            filename: 'checkout.html',
+            title: 'Checkout',
+            html: '<html><img src="logo.png"></html>',
+            banner: { change: 'added', text: 'Added checkout page.' },
+          },
+        ],
+      },
       assets: [{ filename: 'logo.png', mimeType: 'image/png', base64: 'aaaa' }],
       questions: {
         overview: [
