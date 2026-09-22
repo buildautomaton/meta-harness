@@ -1,4 +1,11 @@
-export const PREVIEW_ORDER = ['summary', 'api', 'data-model', 'ui', 'algorithm'] as const;
+export const PREVIEW_ORDER = [
+  'summary',
+  'changes-overview',
+  'api',
+  'data-model',
+  'ui',
+  'algorithm',
+] as const;
 
 function previewRank(path: string): number {
   if (path.startsWith('ui/') || path.startsWith('ui\\')) return PREVIEW_ORDER.indexOf('ui');

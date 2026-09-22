@@ -1,9 +1,16 @@
 import type { WorkItem } from '@/types/work/records.js';
 
-export function formatQueuedWork(sessionId: string, item: WorkItem): string {
+export function formatSessionHandle(sessionId: string): string {
   return [
     `Session ID: ${sessionId}`,
-    'Pass this sessionId to tell_product_director_what_was_built when the work is done.',
+    'This sessionId is an MCP state handle in structuredContent. Pass it as sessionId on tell_product_director_what_was_built.',
+    'Reuse this same sessionId on every tell in this agent session. Do not invent a new one or ask again just to get another.',
+  ].join('\n');
+}
+
+export function formatQueuedWork(sessionId: string, item: WorkItem): string {
+  return [
+    formatSessionHandle(sessionId),
     'Pass the same project name on that tell call.',
     '',
     'Implement this queued work next:',
@@ -28,6 +35,7 @@ export function formatDrafts(sessionId: string, drafts: WorkItem[]): string {
   ]);
   return [
     `Interview session ID: ${sessionId}`,
+    'Also returned as interviewSessionId in structuredContent when distinct from sessionId.',
     'Drafts to interview. Run a relentless interview until the plan is sharp.',
     'Call ask_product_director_interview_questions with workId, this sessionId, and 2–4 multiple-choice questions.',
     'Capture each answer as a decision. When you have no more questions, call with questions: [].',

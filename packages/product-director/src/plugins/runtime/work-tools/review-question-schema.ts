@@ -16,7 +16,7 @@ export const REVIEW_QUESTION_ITEM = {
       minItems: 2,
       maxItems: 4,
       description:
-        'Two to four answers. Include status_quo when keeping the built decision is valid (no changes, no queued work). Only change answers get prompt and context.',
+        'Two to four answers. Almost every question must include one status_quo answer (keep what was built: No changes badge, no queued work). Omit status_quo only in rare cases where every option needs new work. Be aggressive about tagging keep/accept answers as status_quo. Only change answers get prompt and context.',
       items: REVIEW_CHOICE_SCHEMA,
     },
   },

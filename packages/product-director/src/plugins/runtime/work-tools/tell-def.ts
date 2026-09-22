@@ -4,6 +4,7 @@ import { TELL_PRODUCT_DIRECTOR_WHAT_WAS_BUILT } from './names.js';
 import { TELL_PRODUCT_DIRECTOR_WHAT_WAS_BUILT_DESCRIPTION } from './descriptions.js';
 import { QUESTIONS_SCHEMA } from './questions-schema.js';
 import { ASSETS_SCHEMA } from './schema/assets.js';
+import { SESSION_ID_PROPERTY, TELL_OUTPUT_SCHEMA } from './session-schemas.js';
 import { builtinArtifactKinds } from '../artifacts/builtins.js';
 
 export function tellWhatWasBuiltDefinition(artifacts: ArtifactKind[]): McpToolDefinition {
@@ -18,10 +19,7 @@ export function tellWhatWasBuiltDefinition(artifacts: ArtifactKind[]): McpToolDe
       type: 'string',
       description: 'Project this work belongs to. Shown as a tab on the dashboard.',
     },
-    sessionId: {
-      type: 'string',
-      description: 'Session ID from ask_product_director_what_to_build_next. Always pass it.',
-    },
+    sessionId: SESSION_ID_PROPERTY,
     turnId: { type: 'string', description: 'Turn this work belongs to, if known' },
     assets: ASSETS_SCHEMA,
     questions: QUESTIONS_SCHEMA,
@@ -40,6 +38,7 @@ export function tellWhatWasBuiltDefinition(artifacts: ArtifactKind[]): McpToolDe
       required: ['title', 'description', 'project'],
       properties,
     },
+    outputSchema: TELL_OUTPUT_SCHEMA,
   };
 }
 

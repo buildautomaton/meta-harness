@@ -8,10 +8,9 @@ import type { SummaryArtifactInput } from '@/types/work/summary.js';
 export const summaryArtifactPlugin = () =>
   artifactPlugin('artifact-summary', {
     key: 'summary',
-    description:
-      'summary: plain-language area blurbs (2–3 sentences each) plus only the significant files or folders that changed.',
+    description: 'summary: plain-language area blurbs (2–3 sentences each) on what changed by surface.',
     instructions:
-      'Include summary for code changes: one short area blurb per touched surface (backend, frontend, modules, …), and only the main paths.',
+      'Include summary for code changes: one short area blurb per touched surface (backend, frontend, modules, …).',
     schema: SUMMARY_ARTIFACT_SCHEMA,
     parse: parseSummary,
     buildFiles: (payload, ctx) => {

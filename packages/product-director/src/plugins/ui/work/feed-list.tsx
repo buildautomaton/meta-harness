@@ -1,13 +1,14 @@
 import { Inbox } from 'lucide-react';
 import { EmptyState } from '@buildautomaton/ui-runtime';
-import { WorkCard } from './work-card.js';
 import { useWork } from './context.js';
+import { FeedThread } from './feed-thread.js';
 import { sameProject } from './project-name.js';
+import { sessionThreads } from './session-threads.js';
 import { workListClass } from './work-list-class.js';
 
 export function WorkFeedList() {
   const { artifacts, project } = useWork();
-  const visible = artifacts.filter((artifact) => sameProject(artifact.project, project));
+  const visible = sessionThreads(artifacts.filter((artifact) => sameProject(artifact.project, project)));
   if (visible.length === 0) {
     return (
       <EmptyState
@@ -19,9 +20,9 @@ export function WorkFeedList() {
   }
   return (
     <ul className={workListClass}>
-      {visible.map((artifact) => (
-        <li key={artifact.id}>
-          <WorkCard artifact={artifact} />
+      {visible.map((thread) => (
+        <li key={thread.key}>
+          <FeedThread artifacts={thread.artifacts} />
         </li>
       ))}
     </ul>

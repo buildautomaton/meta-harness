@@ -9,6 +9,14 @@ describe('buildArtifactFiles order and banners', () => {
         title: 'Cart',
         description: 'Updated cart row.',
         summary: { areas: [{ area: 'Frontend', description: 'Cart row price layout.' }] },
+        changesOverview: {
+          groups: [
+            {
+              description: 'Cart row now shows price beside quantity.',
+              paths: [{ path: 'ui/cart-row.html', change: 'modified' }],
+            },
+          ],
+        },
         api: {
           routes: [{ method: 'GET', path: '/api/cart', change: 'modified', description: 'Returns totals' }],
         },
@@ -39,6 +47,7 @@ describe('buildArtifactFiles order and banners', () => {
     );
     expect(files.filter((f) => f.path.endsWith('.html')).map((f) => f.path)).toEqual([
       'summary.html',
+      'changes-overview.html',
       'api.html',
       'data-model.html',
       'ui/cart-row.html',

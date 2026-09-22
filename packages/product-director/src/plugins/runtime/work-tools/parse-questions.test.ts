@@ -30,6 +30,23 @@ describe('parseQuestions', () => {
     });
   });
 
+  it('infers status_quo when kind is missing and there is no follow-up work', () => {
+    const parsed = parseQuestions({
+      overview: [
+        {
+          id: 'q1',
+          prompt: 'Keep this?',
+          choices: [
+            { id: 'keep', label: 'Keep' },
+            { id: 'change', label: 'Change', prompt: 'Do the change', context: 'Touch files' },
+          ],
+        },
+      ],
+    });
+    expect(parsed?.overview?.[0]?.choices[0]?.kind).toBe('status_quo');
+    expect(parsed?.overview?.[0]?.choices[1]?.kind).toBe('change');
+  });
+
   it('keeps every valid question the agent sent', () => {
     const q = (id: string) => ({ ...change, id });
     const parsed = parseQuestions({

@@ -19,4 +19,5 @@ export { apiArtifactPlugin } from './plugins/runtime/artifacts/api.js';
 export { algorithmArtifactPlugin } from './plugins/runtime/artifacts/algorithm.js';
 export { dataModelArtifactPlugin } from './plugins/runtime/artifacts/data-model.js';
 export { summaryArtifactPlugin } from './plugins/runtime/artifacts/summary.js';
+export { changesOverviewArtifactPlugin } from './plugins/runtime/artifacts/changes-overview.js';
 export { workHttpEndpoints } from './http/work-endpoints.js';
