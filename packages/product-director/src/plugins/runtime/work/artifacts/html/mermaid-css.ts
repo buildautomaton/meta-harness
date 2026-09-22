@@ -4,7 +4,8 @@ export const MERMAID_BOX_CSS = `
 html, body { background: #101218 !important; color: #e8eaed !important; color-scheme: dark; --labelBkg: #171b24; }
 .kicker { color: #7eb6ff !important; }
 h1 { color: #e8eaed !important; }
-.changed { color: #9aa3b2 !important; }
+.section h2 { color: #e8eaed !important; }
+.section p { color: #9aa3b2 !important; }
 .mermaid, .mermaid svg { overflow: visible !important; --labelBkg: #171b24; }
 pre.mermaid { background: transparent !important; border: 0 !important; padding: 8px 0 !important; }
 .node rect, .basic.label-container, .label-container,

@@ -30,7 +30,9 @@ describe('work MCP tools', () => {
         description: 'Built it',
         sessionId,
         project: 'Harness',
-        backend: { description: 'Added a worker' },
+        summary: {
+          areas: [{ area: 'Backend', description: 'Added a worker' }],
+        },
       },
       toolCtx,
     );
@@ -41,7 +43,13 @@ describe('work MCP tools', () => {
   it('requires project when recording what was built', async () => {
     const toolCtx = await ctx();
     const told = await handleTellWhatWasBuilt(
-      { title: 'Done', description: 'Built it', backend: { description: 'Added a worker' } },
+      {
+        title: 'Done',
+        description: 'Built it',
+        summary: {
+          areas: [{ area: 'Backend', description: 'Added a worker' }],
+        },
+      },
       toolCtx,
     );
     expect(told.isError).toBe(true);

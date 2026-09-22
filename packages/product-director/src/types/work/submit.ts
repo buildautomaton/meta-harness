@@ -1,18 +1,25 @@
 import type { ReviewQuestions } from './questions.js';
-import type { OutlineArtifactInput } from './outline.js';
 import type { WorkAssetInput } from './events.js';
+import type { ChangeKind } from './change.js';
+import type { SummaryArtifactInput } from './summary.js';
+import type { DataModelInput } from './data-model.js';
+
+export type UiBannerInput = {
+  change: ChangeKind;
+  text: string;
+};
 
 export type UiPageInput = {
   filename: string;
   title: string;
   html: string;
-  whatChanged?: string;
+  banner: UiBannerInput;
 };
 
 export type ApiRouteInput = {
   method: 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE' | 'OPTIONS' | 'HEAD' | 'WEBSOCKET';
   path: string;
-  change: 'added' | 'modified' | 'removed';
+  change: ChangeKind;
   description: string;
 };
 
@@ -25,10 +32,8 @@ export type SubmitWorkInput = {
   ui?: { pages: UiPageInput[] };
   api?: { routes: ApiRouteInput[] };
   algorithm?: { name: string; whatChanged: string; pseudocode: string };
-  dataModel?: { mermaid: string; whatChanged: string };
-  moduleStructure?: { mermaid: string; whatChanged: string };
-  backend?: { description: string };
-  outline?: OutlineArtifactInput;
+  dataModel?: DataModelInput;
+  summary?: SummaryArtifactInput;
   assets?: WorkAssetInput[];
   questions?: ReviewQuestions;
 };

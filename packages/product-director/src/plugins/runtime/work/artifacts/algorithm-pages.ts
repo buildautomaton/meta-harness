@@ -23,12 +23,14 @@ export function algorithmMarkdown(algorithm: Algorithm): string {
 
 export function algorithmHtml(algorithm: Algorithm): string {
   const body = `
-    <section class="panel">
+    <section class="section">
       <h2>What changed</h2>
       <p>${escapeHtml(algorithm.whatChanged)}</p>
     </section>
-    <h2>Pseudocode</h2>
-    <pre>${escapeHtml(algorithm.pseudocode)}</pre>
+    <section class="section">
+      <h2>Pseudocode</h2>
+      <pre>${escapeHtml(algorithm.pseudocode)}</pre>
+    </section>
   `;
   return wrapDocumentPage({ title: algorithm.name, kicker: 'Algorithm', bodyHtml: body });
 }

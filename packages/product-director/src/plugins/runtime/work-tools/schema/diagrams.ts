@@ -10,24 +10,30 @@ export const DATA_MODEL_ARTIFACT_SCHEMA = {
     },
     whatChanged: {
       type: 'string',
-      description: 'What changed in the data model versus before (entities, fields, relations added, removed, or renamed).',
-    },
-  },
-};
-
-export const MODULE_STRUCTURE_ARTIFACT_SCHEMA = {
-  type: 'object',
-  additionalProperties: false,
-  required: ['mermaid', 'whatChanged'],
-  properties: {
-    mermaid: {
-      type: 'string',
       description:
-        'Mermaid flowchart, graph, or classDiagram of the modules after the change. Use the real module and package names from this codebase. The diagram does not need a review questionnaire; pass module questions in questions.modules.',
+        '2–3 plain-language sentences on what changed in the data model versus before.',
     },
-    whatChanged: {
-      type: 'string',
-      description: 'What changed in the module structure versus before, naming the real modules that moved, split, or were added.',
+    highlights: {
+      type: 'array',
+      description:
+        'Entities, properties, or relationships to color in the diagram. Green=added, yellow=modified, red=removed.',
+      items: {
+        type: 'object',
+        additionalProperties: false,
+        required: ['ref', 'change'],
+        properties: {
+          ref: {
+            type: 'string',
+            description:
+              'Entity name, Entity.field for a property, or Entity--Other for a relationship.',
+          },
+          change: {
+            type: 'string',
+            enum: ['added', 'modified', 'removed'],
+            description: 'added=green, modified=yellow, removed=red',
+          },
+        },
+      },
     },
   },
 };

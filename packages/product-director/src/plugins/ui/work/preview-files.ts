@@ -1,5 +1,16 @@
+export const PREVIEW_ORDER = ['summary', 'api', 'data-model', 'ui', 'algorithm'] as const;
+
+function previewRank(path: string): number {
+  if (path.startsWith('ui/') || path.startsWith('ui\\')) return PREVIEW_ORDER.indexOf('ui');
+  const base = path.replace(/\.(html|md|json)$/i, '').split(/[/\\]/).pop() ?? path;
+  const idx = PREVIEW_ORDER.indexOf(base as (typeof PREVIEW_ORDER)[number]);
+  return idx === -1 ? PREVIEW_ORDER.length + 1 : idx;
+}
+
 export function previewHtmlFiles<T extends { path: string }>(files: T[]): T[] {
-  return files.filter((file) => file.path.endsWith('.html'));
+  return files
+    .filter((file) => file.path.endsWith('.html'))
+    .sort((a, b) => previewRank(a.path) - previewRank(b.path) || a.path.localeCompare(b.path));
 }
 
 export function artifactTabLabel(path: string): string {

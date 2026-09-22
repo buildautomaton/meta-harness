@@ -23,13 +23,15 @@ export type {
   WorkArtifactSummary,
 } from './artifact.js';
 export { ARTIFACT_KIND_KEYS } from './artifact.js';
-export type { UiPageInput, ApiRouteInput, SubmitWorkInput } from './submit.js';
+export type { UiPageInput, UiBannerInput, ApiRouteInput, SubmitWorkInput } from './submit.js';
 export type { WorkImplementation, WorkBackend, WorkBackendWrap, AnswerQuestionsResult } from './implementation.js';
 export type { WorkHooks } from './hooks.js';
 export type { WorkOptions, WorkBackendKind } from './options.js';
 export type { WorkPlugin, WorkPluginFactory, WorkPluginInit } from './plugin.js';
 export type { WorkEvent, WorkEventType, WorkListener, WorkAssetInput } from './events.js';
 export type { InterviewRound, InterviewAnswer } from './interview.js';
-export type { OutlineViewKind, OutlineViewInput, OutlineArtifactInput } from './outline.js';
-export { OUTLINE_VIEW_KINDS } from './outline.js';
+export type { ChangeKind } from './change.js';
+export { CHANGE_KINDS } from './change.js';
+export type { SummaryAreaInput, SummaryPathInput, SummaryArtifactInput } from './summary.js';
+export type { DataModelHighlight, DataModelInput } from './data-model.js';
 export { DRAFT_ONLY } from './draft-only.js';

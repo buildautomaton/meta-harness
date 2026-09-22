@@ -9,7 +9,16 @@ describe('HTTP answer queues work', () => {
     const artifact = await work.recordSubmission({
       title: 'Checkout',
       description: 'Added checkout',
-      ui: { pages: [{ filename: 'checkout.html', title: 'Checkout', html: '<html></html>' }] },
+      ui: {
+        pages: [
+          {
+            filename: 'checkout.html',
+            title: 'Checkout',
+            html: '<html></html>',
+            banner: { change: 'added', text: 'New checkout screen.' },
+          },
+        ],
+      },
       questions: {
         overview: [
           {

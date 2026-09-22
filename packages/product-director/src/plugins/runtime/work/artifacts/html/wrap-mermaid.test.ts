@@ -22,5 +22,21 @@ describe('wrapMermaidPage', () => {
     expect(html).toContain('scaleErMarks');
     expect(html).toContain('_er-');
     expect(html).toContain('ONLY_ONE');
+    expect(html).toContain('diagram-highlights');
+    expect(html).toContain('class="section"');
+    expect(html).toContain('What changed');
+    expect(html).not.toContain('class="changed"');
+  });
+
+  it('embeds highlight refs for paint', () => {
+    const html = wrapMermaidPage({
+      title: 'Model',
+      kicker: 'Data model',
+      whatChanged: 'Added status',
+      mermaid: 'erDiagram\n  ORDER {\n    string status\n  }',
+      highlights: [{ ref: 'ORDER.status', change: 'added' }],
+    });
+    expect(html).toContain('ORDER.status');
+    expect(html).toContain('"change":"added"');
   });
 });

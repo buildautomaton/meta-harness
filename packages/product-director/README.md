@@ -53,7 +53,7 @@ await createRuntime({
 
 Tell-tool fields, descriptions, and agent instructions are composed from artifact plugins. Add a plugin, and the tool grows. Remove one, and that kind disappears.
 
-Built-in kinds: **ui**, **api**, **algorithm**, **dataModel**, **moduleStructure**, **backend**, **outline**.
+Built-in kinds: **summary**, **api**, **dataModel**, **ui**, **algorithm**.
 
 ## UI
 

@@ -18,7 +18,5 @@ export { uiArtifactPlugin } from './plugins/runtime/artifacts/ui.js';
 export { apiArtifactPlugin } from './plugins/runtime/artifacts/api.js';
 export { algorithmArtifactPlugin } from './plugins/runtime/artifacts/algorithm.js';
 export { dataModelArtifactPlugin } from './plugins/runtime/artifacts/data-model.js';
-export { moduleStructureArtifactPlugin } from './plugins/runtime/artifacts/module-structure.js';
-export { backendArtifactPlugin } from './plugins/runtime/artifacts/backend.js';
-export { outlineArtifactPlugin } from './plugins/runtime/artifacts/outline.js';
+export { summaryArtifactPlugin } from './plugins/runtime/artifacts/summary.js';
 export { workHttpEndpoints } from './http/work-endpoints.js';

@@ -16,7 +16,8 @@ export const ASK_PRODUCT_DIRECTOR_INTERVIEW_DESCRIPTION = [
 
 export const TELL_PRODUCT_DIRECTOR_WHAT_WAS_BUILT_DESCRIPTION = [
   'Tell the product director what you just built. Call this after the work is done, at the end of the session.',
-  'Always pass the sessionId from ask_product_director_what_to_build_next, plus title, description (what changed and why), and project.',
+  'Always pass the sessionId from ask_product_director_what_to_build_next, plus title, description, and project.',
+  'description: at most 2–3 plain-language sentences on what was built. No long changelogs.',
   'Pass every applicable artifact kind from the registered artifact plugins. Omit kinds that do not apply.',
   'At least one artifact kind is required. Artifact param descriptions come from those plugins.',
   'Review questions: about 10, fewer if you can. Only important decisions that were made or still need review.',
