@@ -24,6 +24,7 @@ export const UI_BANNER_TEXT_DESCRIPTION =
 export const UI_BANNER_CHANGE_DESCRIPTION =
   'added (green), modified (yellow), or removed (red). Controls banner color only.';
 export const UI_INSTRUCTIONS = [
+  'Include ui whenever any user-facing screen or component changed — summary/changesOverview are not a substitute for the HTML mockup.',
   'UI previews are self-contained HTML in the same style and design system as the app being built.',
   'Preview a changed screen, or a changed component when the scope was smaller.',
   'Pass banner: { change, text } as JSON next to html — never draw New badges or banners inside the mockup.',

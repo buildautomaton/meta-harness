@@ -6,8 +6,7 @@ import { getWorkRow } from './read-work.js';
 import { replaceWorkQuestions } from './interview.js';
 import { insertSession } from './sessions.js';
 import { isoNow } from './rank.js';
-import { run } from './sql.js';
-import { bottomRank } from './move-queue.js';
+import { promoteToQueue } from './queue-draft.js';
 
 const DROPPED: InterviewRound = { done: true };
 
@@ -25,13 +24,9 @@ export async function submitInterview(
   }
   if (sessionId) insertSession(db, { sessionId, workId, status: 'picked_up', createdAt: isoNow() });
   if (questions.length === 0) {
-    run(db, "UPDATE work SET status = 'queued', queue_rank = ?, updated_at = ? WHERE id = ?", [
-      bottomRank(db),
-      isoNow(),
-      workId,
-    ]);
+    const queued = promoteToQueue(db, workId)!;
     hub.emit('work.changed', workId);
-    return { done: true, item: getWorkRow(db, workId)! };
+    return { done: true, item: queued };
   }
   if (hub.interviewing.has(workId)) throw new Error('Interview already in progress for this draft');
   replaceWorkQuestions(db, workId, questions);
@@ -40,5 +35,6 @@ export async function submitInterview(
   const answers = await waiting;
   const latest = getWorkRow(db, workId);
   if (!latest) return DROPPED;
+  if (latest.status === 'queued') return { done: true, item: latest };
   return { done: false, item: latest, answers };
 }

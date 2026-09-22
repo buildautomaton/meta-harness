@@ -14,7 +14,7 @@ export const changesOverviewArtifactPlugin = () =>
     description:
       'changesOverview: summary table of significant files/folders, grouped by related change sets (added/modified/removed).',
     instructions:
-      'Include changesOverview for code changes: group related paths, mark each added/modified/removed, and give each group a 1–2 line significance blurb.',
+      'Include changesOverview for every code change: group related paths, mark each added/modified/removed, and give each group a 1–2 line significance blurb. Still pass ui/api/dataModel/algorithm when those surfaces changed.',
     schema: CHANGES_OVERVIEW_ARTIFACT_SCHEMA,
     parse: parseChangesOverview,
     buildFiles: (payload, ctx) => {

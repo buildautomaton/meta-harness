@@ -9,10 +9,12 @@ export function parseChoice(value: unknown): DesignChoice | undefined {
   const prompt = str(choice?.prompt);
   const context = str(choice?.context);
   const kind = parseKind(choice?.kind) ?? inferKind(prompt, context);
+  const recommended = choice?.recommended === true;
   return {
     id,
     label,
     ...(kind ? { kind } : {}),
+    ...(recommended ? { recommended: true } : {}),
     ...(prompt ? { prompt } : {}),
     ...(context ? { context } : {}),
   };

@@ -18,5 +18,5 @@ export function parseQuestion(value: unknown): DesignQuestion | undefined {
     ? row.choices.map(parseChoice).filter((c): c is NonNullable<typeof c> => c !== undefined)
     : [];
   if (!id || !prompt || choices.length < 2) return undefined;
-  return { id, prompt, context, choices: choices.slice(0, 4) };
+  return { id, prompt, context, choices: choices.slice(0, 6) };
 }

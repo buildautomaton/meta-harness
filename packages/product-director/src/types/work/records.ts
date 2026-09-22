@@ -60,6 +60,7 @@ export type WorkPatch = {
   queue?: 'top' | 'bottom';
   prompt?: string;
   agentContext?: string;
+  queued?: boolean;
   unqueue?: boolean;
   project?: string;
 };

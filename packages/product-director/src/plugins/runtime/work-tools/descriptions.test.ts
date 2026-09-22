@@ -17,8 +17,9 @@ describe('tell_product_director_what_was_built copy', () => {
     expect(workInstructions(kinds)).toMatch(/design system/i);
     expect(workInstructions(kinds)).toMatch(/own controls/i);
     expect(workInstructions(kinds)).toMatch(/assets/i);
-    expect(def.description).toMatch(/about 10/i);
+    expect(def.description).toMatch(/at most 3/i);
     expect(def.description).toMatch(/status_quo/i);
+    expect(def.description).toMatch(/recommended/i);
     expect(def.description).toMatch(/No changes badge/i);
     expect(def.description).toMatch(/Be aggressive/i);
     expect(def.description).toMatch(/project/i);
@@ -32,10 +33,15 @@ describe('tell_product_director_what_was_built copy', () => {
     expect(def.description).toMatch(/2–3 plain-language sentences/i);
     expect(def.description).toMatch(/green\/yellow\/red/i);
     expect(def.description).toMatch(/changesOverview/i);
+    expect(def.description).toMatch(/do not stop after summary/i);
     expect(def.description).toMatch(/Reuse that same sessionId/i);
     expect(def.description).toMatch(/structuredContent\.sessionId/i);
     expect(workInstructions(kinds)).toMatch(/reuse it on every tell/i);
     expect(workInstructions(kinds)).toMatch(/structuredContent/i);
+    expect(workInstructions(kinds)).toMatch(/do not stop after summary/i);
+    const props = Object.keys(schema.properties);
+    expect(props.indexOf('ui')).toBeLessThan(props.indexOf('questions'));
+    expect(props.indexOf('summary')).toBeLessThan(props.indexOf('questions'));
     const sessionId = schema.properties.sessionId as { description?: string } | undefined;
     expect(sessionId?.description).toMatch(/state handle/i);
     expect(def.outputSchema).toBeTruthy();

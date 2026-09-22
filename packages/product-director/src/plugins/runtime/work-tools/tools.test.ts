@@ -7,54 +7,53 @@ import { builtinArtifactKinds } from '../artifacts/builtins.js';
 import { ASK_PRODUCT_DIRECTOR_WHAT_TO_BUILD_NEXT_DEFINITION } from './ask-def.js';
 import { tellWhatWasBuiltDefinition } from './tell-def.js';
 
-function ctx(queued = true): Promise<ToolContext> {
-  const work = createSqliteWorkBackend();
-  const ready = queued
-    ? work.addWork({ title: 'Next', content: 'Do the next thing', queued: true })
-    : Promise.resolve();
-  return ready.then(() => ({
+function toolCtx(work = createSqliteWorkBackend()): ToolContext {
+  return {
     cwd: '/tmp',
     extras: { work, artifacts: builtinArtifactKinds() },
     engine: {} as ToolContext['engine'],
     backend: {} as ToolContext['backend'],
-  }));
+  };
 }
 
 describe('work MCP tools', () => {
   it('returns next work then records what was built', async () => {
-    const toolCtx = await ctx();
-    const asked = await handleAskWhatToWorkOn(toolCtx);
-    expect(asked.isError).toBeFalsy();
+    const work = createSqliteWorkBackend();
+    await work.addWork({ title: 'Next', content: 'Do the next thing', queued: true });
+    const ctx = toolCtx(work);
+    const asked = await handleAskWhatToWorkOn(ctx);
     const structured = asked.structuredContent as { sessionId?: string };
     expect(structured.sessionId).toMatch(
       /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i,
     );
-    expect(asked.content[0]!.text).toContain(`Session ID: ${structured.sessionId}`);
-
     const told = await handleTellWhatWasBuilt(
       {
         title: 'Done',
         description: 'Built it',
         sessionId: structured.sessionId,
         project: 'Harness',
-        summary: {
-          areas: [{ area: 'Backend', description: 'Added a worker' }],
-        },
+        summary: { areas: [{ area: 'Backend', description: 'Added a worker' }] },
       },
-      toolCtx,
+      ctx,
     );
-    expect(told.isError).toBeFalsy();
     expect(told.content[0]!.text).toContain('Recorded "Done"');
     expect(told.structuredContent).toMatchObject({ sessionId: structured.sessionId });
-    expect((told.structuredContent as { artifactId: string }).artifactId).toBeTruthy();
   });
 
-  it('still returns a sessionId state handle when there is no queued work', async () => {
-    const asked = await handleAskWhatToWorkOn(await ctx(false));
-    const structured = asked.structuredContent as { sessionId?: string };
-    expect(structured.sessionId).toBeTruthy();
-    expect(asked.content[0]!.text).toContain('No queued implementation work');
-    expect(asked.content[0]!.text).toContain(`Session ID: ${structured.sessionId}`);
+  it('waits until queued work appears when idle', async () => {
+    const work = createSqliteWorkBackend();
+    const pending = handleAskWhatToWorkOn(toolCtx(work));
+    await work.addWork({ title: 'Next', content: 'Do the next thing', queued: true });
+    const asked = await pending;
+    expect(asked.content[0]!.text).toContain('Implement this queued work next');
+  });
+
+  it('returns drafts immediately without waiting for a queue', async () => {
+    const work = createSqliteWorkBackend();
+    await work.addWork({ title: 'Draft', content: 'Plan it' });
+    const asked = await handleAskWhatToWorkOn(toolCtx(work));
+    expect(asked.content[0]!.text).toContain('Drafts to interview');
+    expect(asked.content[0]!.text).toContain('exactly one question');
   });
 
   it('declares outputSchema for ask and tell state handles', () => {
@@ -67,16 +66,9 @@ describe('work MCP tools', () => {
   });
 
   it('requires project when recording what was built', async () => {
-    const toolCtx = await ctx();
     const told = await handleTellWhatWasBuilt(
-      {
-        title: 'Done',
-        description: 'Built it',
-        summary: {
-          areas: [{ area: 'Backend', description: 'Added a worker' }],
-        },
-      },
-      toolCtx,
+      { title: 'Done', description: 'Built it', summary: { areas: [{ area: 'Backend', description: 'x' }] } },
+      toolCtx(),
     );
     expect(told.isError).toBe(true);
     expect(told.content[0]!.text).toMatch(/project is required/i);

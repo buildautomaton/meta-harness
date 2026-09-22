@@ -29,6 +29,7 @@ export type DesignChoice = {
   id: string;
   label: string;
   kind?: ChoiceKind;
+  recommended?: boolean;
   prompt?: string;
   context?: string;
 };
@@ -75,6 +76,7 @@ export type WorkPatch = {
   paused?: boolean;
   status?: WorkStatus;
   queue?: 'top' | 'bottom';
+  queued?: boolean;
   unqueue?: boolean;
   project?: string;
 };
