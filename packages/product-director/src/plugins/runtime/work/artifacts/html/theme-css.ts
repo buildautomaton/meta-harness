@@ -34,6 +34,10 @@ th { color: var(--text); font-size: 12px; letter-spacing: .04em; text-transform:
 .path-list li:last-child { border-bottom: 0; }
 .diff .add, .diff .added { color: #8ee09a; }
 .diff .del, .diff .removed { color: #f0a0a0; }
+.mh-change-banner { margin: 0 0 16px; padding: 12px 14px; border-left: 4px solid; white-space: pre-wrap; }
+.mh-change-banner-added { color: #d9f5df; background: #163222; border-color: #8ee09a; }
+.mh-change-banner-modified { color: #f7ecd0; background: #3a3010; border-color: #f0d080; }
+.mh-change-banner-removed { color: #f7d5d5; background: #3a1515; border-color: #f0a0a0; }
 ${CHANGES_OVERVIEW_CSS}
 ${SECTION_CSS}
 ${OVERLAY_SCROLLBAR_CSS}

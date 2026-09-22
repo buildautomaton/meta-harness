@@ -5,7 +5,7 @@ import { mermaidErPaintJs } from './mermaid-er-paint.js';
 import { mermaidPaintJs } from './mermaid-paint.js';
 import { mermaidHighlightPaintJs } from './mermaid-highlight-paint.js';
 import { THEME_CSS } from './theme-css.js';
-import type { DataModelHighlight } from '@/types/work/data-model.js';
+import type { DataModelHighlight } from '../../../../../types/work/data-model.js';
 
 const PAGE_CSS = `
 ${THEME_CSS}

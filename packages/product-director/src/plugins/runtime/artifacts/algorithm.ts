@@ -1,6 +1,6 @@
 import { artifactPlugin } from './define.js';
-import { pair } from './pair.js';
-import { algorithmHtml, algorithmMarkdown } from '@plugins/runtime/work/artifacts/algorithm-pages.js';
+import { mdFile } from './md-file.js';
+import { algorithmMarkdown } from '@plugins/runtime/work/artifacts/algorithm-pages.js';
 import { ALGORITHM_ARTIFACT_SCHEMA } from '@plugins/runtime/work-tools/schema/algorithm.js';
 import { parseNamed } from '@plugins/runtime/work-tools/parse-parts.js';
 
@@ -15,6 +15,6 @@ export const algorithmArtifactPlugin = () =>
     parse: parseNamed,
     buildFiles: (payload) => {
       const algorithm = payload as Parameters<typeof algorithmMarkdown>[0];
-      return pair('algorithm', algorithmMarkdown(algorithm), algorithmHtml(algorithm));
+      return mdFile('algorithm', algorithmMarkdown(algorithm));
     },
   });

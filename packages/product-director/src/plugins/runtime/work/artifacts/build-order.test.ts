@@ -1,9 +1,10 @@
 import { describe, expect, it } from 'vitest';
 import { builtinArtifactKinds } from '../../artifacts/builtins.js';
 import { buildArtifactFiles } from './build-files.js';
+import { previewSrcDoc } from './render/preview-src.js';
 
 describe('buildArtifactFiles order and banners', () => {
-  it('orders html previews and wraps ui with a change banner', () => {
+  it('stores non-ui as markdown, ui as html with change banner', () => {
     const files = buildArtifactFiles(
       {
         title: 'Cart',
@@ -45,22 +46,28 @@ describe('buildArtifactFiles order and banners', () => {
       [],
       builtinArtifactKinds(),
     );
-    expect(files.filter((f) => f.path.endsWith('.html')).map((f) => f.path)).toEqual([
-      'summary.html',
-      'changes-overview.html',
-      'api.html',
-      'data-model.html',
-      'ui/cart-row.html',
-      'algorithm.html',
+    expect(files.filter((f) => f.path.endsWith('.html')).map((f) => f.path)).toEqual(['ui/cart-row.html']);
+    expect(files.filter((f) => f.path.endsWith('.md')).map((f) => f.path).sort()).toEqual([
+      'algorithm.md',
+      'api.md',
+      'changes-overview.md',
+      'data-model.md',
+      'description.md',
+      'summary.md',
     ]);
     const ui = files.find((f) => f.path === 'ui/cart-row.html')?.content ?? '';
     expect(ui).toContain('mh-change-banner-modified');
     expect(ui).toContain('Price sits beside quantity now.');
-    const algo = files.find((f) => f.path === 'algorithm.html')?.content ?? '';
-    expect(algo).toContain('class="section"');
+    const algo = previewSrcDoc(
+      'algorithm.md',
+      files.find((f) => f.path === 'algorithm.md')?.content ?? '',
+    );
+    expect(algo).toContain('What changed');
     expect(algo).not.toContain('class="panel"');
-    expect(algo).not.toContain('class="changed"');
-    const model = files.find((f) => f.path === 'data-model.html')?.content ?? '';
+    const modelMd = files.find((f) => f.path === 'data-model.md')?.content ?? '';
+    expect(modelMd).toContain('CART.total');
+    expect(modelMd).toContain('```json highlights');
+    const model = previewSrcDoc('data-model.md', modelMd);
     expect(model).toContain('CART.total');
     expect(model).toContain('class="section"');
     expect(model).toContain('What changed');

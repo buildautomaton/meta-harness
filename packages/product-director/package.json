@@ -34,7 +34,8 @@
     "prepublishOnly": "pnpm run build"
   },
   "dependencies": {
-    "@buildautomaton/runtime": "workspace:*"
+    "@buildautomaton/runtime": "workspace:*",
+    "marked": "^18.0.14"
   },
   "peerDependencies": {
     "@buildautomaton/ui-runtime": "workspace:*",
@@ -43,10 +44,18 @@
     "react-dom": "^19.2.1"
   },
   "peerDependenciesMeta": {
-    "@buildautomaton/ui-runtime": { "optional": true },
-    "lucide-react": { "optional": true },
-    "react": { "optional": true },
-    "react-dom": { "optional": true }
+    "@buildautomaton/ui-runtime": {
+      "optional": true
+    },
+    "lucide-react": {
+      "optional": true
+    },
+    "react": {
+      "optional": true
+    },
+    "react-dom": {
+      "optional": true
+    }
   },
   "devDependencies": {
     "@buildautomaton/ui-runtime": "workspace:*",

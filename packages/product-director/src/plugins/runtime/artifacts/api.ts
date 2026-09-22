@@ -1,7 +1,7 @@
 import type { ApiRouteInput } from '@/types/work/submit.js';
 import { artifactPlugin } from './define.js';
-import { pair } from './pair.js';
-import { apiHtml, apiMarkdown } from '@plugins/runtime/work/artifacts/text-pages.js';
+import { mdFile } from './md-file.js';
+import { apiMarkdown } from '@plugins/runtime/work/artifacts/text-pages.js';
 import { API_ARTIFACT_SCHEMA } from '@plugins/runtime/work-tools/schema/api.js';
 
 const METHODS = ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS', 'HEAD', 'WEBSOCKET'] as const;
@@ -25,9 +25,9 @@ export const apiArtifactPlugin = () =>
       'Include api whenever any HTTP route was added, modified, or removed. Use this product’s real routes and methods — summary alone is not enough.',
     schema: API_ARTIFACT_SCHEMA,
     parse: parseApi,
-    buildFiles: (payload, ctx) => {
+    buildFiles: (payload) => {
       const api = payload as { routes: ApiRouteInput[] };
-      return pair('api', apiMarkdown(api), apiHtml(String(ctx.title), api));
+      return mdFile('api', apiMarkdown(api));
     },
   });
 
