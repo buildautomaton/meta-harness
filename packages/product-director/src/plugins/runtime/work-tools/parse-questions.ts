@@ -8,8 +8,8 @@ export function parseQuestions(value: unknown): ReviewQuestions | undefined {
   const row = obj(value);
   if (!row) return undefined;
   return {
-    overview: parseQuestionList(row.overview),
-    modules: parseQuestionList(row.modules),
+    overview: parseQuestionList(row.overview, 3),
+    modules: parseQuestionList(row.modules, 3),
     ui: parseUiQuestions(row.ui),
   };
 }
@@ -20,7 +20,7 @@ function parseUiQuestions(value: unknown): ReviewQuestions['ui'] {
     .map((item) => {
       const row = obj(item);
       const filename = str(row?.filename);
-      const questions = parseQuestionList(row?.questions);
+      const questions = parseQuestionList(row?.questions, 3);
       return filename && questions ? { filename, questions } : undefined;
     })
     .filter((item): item is NonNullable<typeof item> => item !== undefined);

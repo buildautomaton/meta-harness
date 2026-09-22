@@ -21,10 +21,11 @@ export function tellWhatWasBuiltDefinition(artifacts: ArtifactKind[]): McpToolDe
     },
     sessionId: SESSION_ID_PROPERTY,
     turnId: { type: 'string', description: 'Turn this work belongs to, if known' },
-    assets: ASSETS_SCHEMA,
-    questions: QUESTIONS_SCHEMA,
   };
+  // Artifact kinds before questions so agents see ui/api/dataModel/algorithm ahead of the large questionnaire.
   for (const kind of artifacts) properties[kind.key] = kind.schema;
+  properties.assets = ASSETS_SCHEMA;
+  properties.questions = QUESTIONS_SCHEMA;
   const extra = artifacts.map((kind) => kind.description).filter(Boolean).join('\n');
   return {
     name: TELL_PRODUCT_DIRECTOR_WHAT_WAS_BUILT,

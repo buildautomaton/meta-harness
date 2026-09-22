@@ -1,5 +1,6 @@
 import { SentTime } from './sent-time.js';
 import { AssignProjectButton } from './assign-project-button.js';
+import { DraftAccept } from './draft-accept.js';
 import { DraftDelete } from './draft-delete.js';
 import { DraftQuestions } from './draft-questions.js';
 import { draftOriginId } from './work-origin.js';
@@ -9,6 +10,7 @@ export function DraftCard({ item }: { item: WorkItem }) {
   const title = item.title.trim() || 'Draft';
   const body = item.content.trim();
   const showBody = Boolean(body) && body !== title;
+  const isDraft = item.status === 'draft';
   return (
     <article
       id={draftOriginId(item.id)}
@@ -22,7 +24,8 @@ export function DraftCard({ item }: { item: WorkItem }) {
           </div>
           <div className="flex shrink-0 items-center">
             <AssignProjectButton workId={item.id} project={item.project} />
-            <DraftDelete id={item.id} />
+            {isDraft ? <DraftAccept id={item.id} /> : null}
+            {isDraft ? <DraftDelete id={item.id} /> : null}
           </div>
         </div>
         {showBody ? <p className="whitespace-pre-wrap text-sm leading-relaxed text-muted-foreground">{body}</p> : null}

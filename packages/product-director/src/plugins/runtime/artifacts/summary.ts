@@ -10,7 +10,7 @@ export const summaryArtifactPlugin = () =>
     key: 'summary',
     description: 'summary: plain-language area blurbs (2–3 sentences each) on what changed by surface.',
     instructions:
-      'Include summary for code changes: one short area blurb per touched surface (backend, frontend, modules, …).',
+      'Include summary for every code change: one short area blurb per touched surface (backend, frontend, modules, …). Still pass ui/api/dataModel/algorithm when those surfaces changed.',
     schema: SUMMARY_ARTIFACT_SCHEMA,
     parse: parseSummary,
     buildFiles: (payload, ctx) => {

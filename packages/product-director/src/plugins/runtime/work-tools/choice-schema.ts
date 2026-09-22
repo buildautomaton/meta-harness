@@ -5,6 +5,12 @@ export const CHOICE_KIND_SCHEMA = {
     'status_quo: keep what was built — shows a "No changes" badge and queues no work. change: needs new agent work; only then include prompt and context. Be aggressive: if the answer accepts the built decision, use status_quo.',
 };
 
+export const RECOMMENDED_SCHEMA = {
+  type: 'boolean',
+  description:
+    'True for the suggested choice (UI shows Recommended). Mark exactly one choice per question. May be the status_quo or a change.',
+};
+
 export const REVIEW_CHOICE_SCHEMA = {
   type: 'object',
   additionalProperties: false,
@@ -17,6 +23,7 @@ export const REVIEW_CHOICE_SCHEMA = {
         'Choice shown to the reviewer. For status_quo, say clearly it keeps what was built (that answer gets the No changes badge).',
     },
     kind: CHOICE_KIND_SCHEMA,
+    recommended: RECOMMENDED_SCHEMA,
     prompt: {
       type: 'string',
       description:
@@ -37,5 +44,6 @@ export const INTERVIEW_CHOICE_SCHEMA = {
   properties: {
     id: { type: 'string', description: 'Stable id for this choice' },
     label: { type: 'string', description: 'Choice shown on the draft card' },
+    recommended: RECOMMENDED_SCHEMA,
   },
 };

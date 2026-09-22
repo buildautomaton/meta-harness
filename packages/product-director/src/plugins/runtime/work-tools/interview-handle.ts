@@ -17,7 +17,7 @@ export async function handleAskInterviewQuestions(
   if (!Array.isArray(args.questions)) {
     return toolText('questions is required (pass [] when the interview is done)', { isError: true });
   }
-  const questions = parseQuestionList(args.questions, 4) ?? [];
+  const questions = parseQuestionList(args.questions, 1) ?? [];
   if (args.questions.length > 0 && questions.length === 0) {
     return toolText('Each question needs id, prompt, context, and at least two choices', { isError: true });
   }
@@ -32,7 +32,10 @@ export async function handleAskInterviewQuestions(
     }
     const lines = (round.answers ?? []).map((a) => `- ${a.prompt} → ${a.label}`);
     return toolText(
-      ['Answers recorded as decisions. Keep interviewing, or pass questions: [] to queue.', ...lines].join('\n'),
+      [
+        'Answer recorded as a decision. Ask the next single question, or pass questions: [] to queue.',
+        ...lines,
+      ].join('\n'),
       { structuredContent: { done: false, ...(sessionId ? { sessionId } : {}) } },
     );
   } catch (err) {

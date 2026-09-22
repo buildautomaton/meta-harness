@@ -3,7 +3,6 @@ import type { WorkImplementation } from '@/types/work/implementation.js';
 import type { WorkHub } from './hub.js';
 import { listWorkRows, getWorkRow } from './read-work.js';
 import { insertWork } from './insert-work.js';
-import { patchWork } from './patch-work.js';
 import { pickNext } from './pick-next.js';
 import { insertSession, completeSessionRow, listSessionRows } from './sessions.js';
 import type { ArtifactKind } from '@/types/artifact/kind.js';
@@ -15,7 +14,7 @@ import { answerDraftQuestions } from './answer-draft.js';
 import { submitInterview } from './submit-interview.js';
 import { saveAssetRow, listAssetRows } from './assets.js';
 import { deleteDraft } from './delete-draft.js';
-import { unqueueWork } from './unqueue-work.js';
+import { updateWorkRow } from './update-work.js';
 import { renameProject as renameProjectRows } from './rename-project.js';
 import { setArtifactProject } from './set-artifact-project.js';
 
@@ -36,7 +35,7 @@ export function sqliteMethods(
       }),
     updateWork: (id, patch) =>
       withDb((db) => {
-        const item = patch.unqueue ? unqueueWork(db, id) : patchWork(db, id, patch);
+        const item = updateWorkRow(db, hub, id, patch);
         if (item || patch.unqueue) emit('work.changed', id);
         return item;
       }),
@@ -75,11 +74,12 @@ export function sqliteMethods(
       }),
     listArtifacts: (workId) => withDb((db) => listArtifactSummaries(db, workId)),
     getArtifact: (id) => withDb((db) => loadArtifact(db, id)),
-    updateArtifact: (id, patch) => withDb((db) => {
-      const artifact = setArtifactProject(db, id, patch.project);
-      if (artifact) emit('artifact.changed', id);
-      return artifact;
-    }),
+    updateArtifact: (id, patch) =>
+      withDb((db) => {
+        const artifact = setArtifactProject(db, id, patch.project);
+        if (artifact) emit('artifact.changed', id);
+        return artifact;
+      }),
     answerQuestions: (artifactId, answers) =>
       withDb((db) => {
         const result = saveAnswers(db, artifactId, answers);

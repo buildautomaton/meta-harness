@@ -18,8 +18,12 @@ export function parseSubmitWork(
   if (!project) return 'project is required';
   const extra: Record<string, unknown> = {};
   for (const kind of artifacts) {
+    if (args[kind.key] == null) continue;
     const parsed = kind.parse ? kind.parse(args[kind.key]) : args[kind.key];
-    if (parsed != null) extra[kind.key] = parsed;
+    if (parsed == null) {
+      return `${kind.key} was provided but could not be parsed — fix the shape or omit ${kind.key}`;
+    }
+    extra[kind.key] = parsed;
   }
   return {
     title,

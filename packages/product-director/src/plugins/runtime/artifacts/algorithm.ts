@@ -9,7 +9,8 @@ export const algorithmArtifactPlugin = () =>
     key: 'algorithm',
     description:
       'algorithm: name, what changed vs before, and post-change pseudocode using this product’s real steps and domain terms.',
-    instructions: 'Algorithms must use this product’s real names, not generic examples.',
+    instructions:
+      'Include algorithm whenever behavior or logic steps changed. Use this product’s real names — summary alone is not enough.',
     schema: ALGORITHM_ARTIFACT_SCHEMA,
     parse: parseNamed,
     buildFiles: (payload) => {

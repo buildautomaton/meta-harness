@@ -21,7 +21,8 @@ export const apiArtifactPlugin = () =>
     key: 'api',
     description:
       'api: every HTTP route added, modified, or removed — real paths from this app, with method, path, and what changed.',
-    instructions: 'API artifacts must use this product’s real routes and methods, not sample /api/example paths.',
+    instructions:
+      'Include api whenever any HTTP route was added, modified, or removed. Use this product’s real routes and methods — summary alone is not enough.',
     schema: API_ARTIFACT_SCHEMA,
     parse: parseApi,
     buildFiles: (payload, ctx) => {

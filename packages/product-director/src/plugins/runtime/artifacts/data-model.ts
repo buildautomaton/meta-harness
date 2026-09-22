@@ -12,7 +12,7 @@ export const dataModelArtifactPlugin = () =>
     description:
       'dataModel: Mermaid erDiagram/classDiagram plus highlights so changed entities, properties, and relationships paint green/yellow/red.',
     instructions:
-      'Data-model diagrams use real entity and field names. Pass highlights for every significant entity, property, or relationship that changed.',
+      'Include dataModel whenever entities, fields, or relationships changed. Use real names and pass highlights for significant changes — summary alone is not enough.',
     schema: DATA_MODEL_ARTIFACT_SCHEMA,
     parse: parseDiagram,
     buildFiles: (payload, ctx) => {

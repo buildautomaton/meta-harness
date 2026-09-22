@@ -5,6 +5,7 @@ export type DesignChoice = {
   id: string;
   label: string;
   kind?: ChoiceKind;
+  recommended?: boolean;
   prompt?: string;
   context?: string;
 };

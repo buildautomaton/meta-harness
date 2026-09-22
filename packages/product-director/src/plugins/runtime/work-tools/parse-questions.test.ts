@@ -47,14 +47,14 @@ describe('parseQuestions', () => {
     expect(parsed?.overview?.[0]?.choices[1]?.kind).toBe('change');
   });
 
-  it('keeps every valid question the agent sent', () => {
+  it('caps review questions at three per section', () => {
     const q = (id: string) => ({ ...change, id });
     const parsed = parseQuestions({
       overview: Array.from({ length: 8 }, (_, i) => q(`o${i}`)),
       modules: Array.from({ length: 4 }, (_, i) => q(`m${i}`)),
     });
-    expect(parsed?.overview).toHaveLength(8);
-    expect(parsed?.modules).toHaveLength(4);
+    expect(parsed?.overview).toHaveLength(3);
+    expect(parsed?.modules).toHaveLength(3);
   });
 });
 
@@ -62,7 +62,7 @@ describe('parseQuestionList', () => {
   it('accepts interview questions that still send context', () => {
     const list = parseQuestionList(
       [{ ...change, context: 'Decide layout', choices: [{ id: 'a', label: 'A' }, { id: 'b', label: 'B' }] }],
-      4,
+      1,
     );
     expect(list?.[0]?.context).toBe('Decide layout');
   });
