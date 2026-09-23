@@ -23,7 +23,8 @@ export function WorkCardPreviewStrip(props: {
             className={cn('flex w-28 shrink-0 flex-col gap-1.5 text-left', active && 'opacity-100')}
           >
             <WorkCardThumbPreview
-              html={file.content}
+              path={file.path}
+              content={file.content}
               label={label}
               className={cn('h-16 rounded-xl', active && 'ring-2 ring-foreground/50')}
             />

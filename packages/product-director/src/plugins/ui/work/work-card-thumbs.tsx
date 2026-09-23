@@ -1,4 +1,4 @@
-import { previewHtmlFiles, visibleThumbs } from './preview-files.js';
+import { previewArtifactFiles, visibleThumbs } from './preview-files.js';
 import { WorkCardThumb } from './work-card-thumb.js';
 import type { ArtifactFile } from './types.js';
 
@@ -9,9 +9,9 @@ export function WorkCardThumbs({
   files: ArtifactFile[];
   onOpen: (path: string) => void;
 }) {
-  const html = previewHtmlFiles(files);
-  if (html.length === 0) return null;
-  const { shown, more } = visibleThumbs(html);
+  const previews = previewArtifactFiles(files);
+  if (previews.length === 0) return null;
+  const { shown, more } = visibleThumbs(previews);
   return (
     <div className="grid grid-cols-2 gap-3 px-4 pb-4 sm:grid-cols-3">
       {shown.map((file) => (
@@ -20,7 +20,7 @@ export function WorkCardThumbs({
       {more > 0 ? (
         <button
           type="button"
-          onClick={() => onOpen(html[shown.length]!.path)}
+          onClick={() => onOpen(previews[shown.length]!.path)}
           className="flex h-44 w-full flex-col items-center justify-center gap-1 rounded-2xl bg-muted/60 ring-1 ring-border/60"
         >
           <span className="text-2xl font-semibold tabular-nums">{more}+</span>

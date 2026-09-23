@@ -7,6 +7,8 @@ export const PREVIEW_ORDER = [
   'algorithm',
 ] as const;
 
+const SKIP_MD = new Set(['description.md']);
+
 function previewRank(path: string): number {
   if (path.startsWith('ui/') || path.startsWith('ui\\')) return PREVIEW_ORDER.indexOf('ui');
   const base = path.replace(/\.(html|md|json)$/i, '').split(/[/\\]/).pop() ?? path;
@@ -14,10 +16,17 @@ function previewRank(path: string): number {
   return idx === -1 ? PREVIEW_ORDER.length + 1 : idx;
 }
 
-export function previewHtmlFiles<T extends { path: string }>(files: T[]): T[] {
+/** UI stays HTML; other artifacts preview from markdown. */
+export function previewArtifactFiles<T extends { path: string }>(files: T[]): T[] {
   return files
-    .filter((file) => file.path.endsWith('.html'))
+    .filter((file) => isPreviewPath(file.path))
     .sort((a, b) => previewRank(a.path) - previewRank(b.path) || a.path.localeCompare(b.path));
+}
+
+export function isPreviewPath(path: string): boolean {
+  if (path.startsWith('ui/') || path.startsWith('ui\\')) return path.endsWith('.html');
+  if (path.endsWith('.md')) return !SKIP_MD.has(path.split(/[/\\]/).pop() ?? path);
+  return false;
 }
 
 export function artifactTabLabel(path: string): string {

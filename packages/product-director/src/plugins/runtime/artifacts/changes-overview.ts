@@ -1,9 +1,6 @@
 import { artifactPlugin } from './define.js';
-import { pair } from './pair.js';
-import {
-  changesOverviewHtml,
-  changesOverviewMarkdown,
-} from '@plugins/runtime/work/artifacts/changes-overview-pages.js';
+import { mdFile } from './md-file.js';
+import { changesOverviewMarkdown } from '@plugins/runtime/work/artifacts/changes-overview-pages.js';
 import { CHANGES_OVERVIEW_ARTIFACT_SCHEMA } from '@plugins/runtime/work-tools/schema/changes-overview.js';
 import { parseChangesOverview } from '@plugins/runtime/work-tools/parse-changes-overview.js';
 import type { ChangesOverviewArtifactInput } from '@/types/work/changes-overview.js';
@@ -17,12 +14,6 @@ export const changesOverviewArtifactPlugin = () =>
       'Include changesOverview for every code change: group related paths, mark each added/modified/removed, and give each group a 1–2 line significance blurb. Still pass ui/api/dataModel/algorithm when those surfaces changed.',
     schema: CHANGES_OVERVIEW_ARTIFACT_SCHEMA,
     parse: parseChangesOverview,
-    buildFiles: (payload, ctx) => {
-      const overview = payload as ChangesOverviewArtifactInput;
-      return pair(
-        'changes-overview',
-        changesOverviewMarkdown(overview),
-        changesOverviewHtml(String(ctx.title), overview),
-      );
-    },
+    buildFiles: (payload) =>
+      mdFile('changes-overview', changesOverviewMarkdown(payload as ChangesOverviewArtifactInput)),
   });

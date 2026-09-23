@@ -1,7 +1,8 @@
 import { X } from 'lucide-react';
-import { previewHtmlFiles } from './preview-files.js';
+import { previewArtifactFiles } from './preview-files.js';
 import { WorkCardPreviewStrip } from './work-card-preview-strip.js';
 import { withMermaidStyle } from './with-mermaid-style.js';
+import { previewSrcDoc } from '../../runtime/work/artifacts/render/preview-src.js';
 import type { ArtifactFile } from './types.js';
 
 export function WorkCardPreview(props: {
@@ -10,9 +11,10 @@ export function WorkCardPreview(props: {
   onOpen: (path: string) => void;
   onClose: () => void;
 }) {
-  const html = previewHtmlFiles(props.files);
-  const file = html.find((row) => row.path === props.path);
+  const previews = previewArtifactFiles(props.files);
+  const file = previews.find((row) => row.path === props.path);
   if (!props.path || !file) return null;
+  const srcDoc = withMermaidStyle(previewSrcDoc(file.path, file.content));
   return (
     <div
       className="fixed inset-0 z-50 flex items-center justify-center bg-background/80 p-4"
@@ -23,7 +25,7 @@ export function WorkCardPreview(props: {
         onClick={(event) => event.stopPropagation()}
       >
         <div className="flex items-start border-b border-border">
-          <WorkCardPreviewStrip files={html} path={props.path} onOpen={props.onOpen} />
+          <WorkCardPreviewStrip files={previews} path={props.path} onOpen={props.onOpen} />
           <button
             type="button"
             aria-label="Close"
@@ -33,7 +35,7 @@ export function WorkCardPreview(props: {
             <X className="h-4 w-4" aria-hidden />
           </button>
         </div>
-        <iframe title={file.path} srcDoc={withMermaidStyle(file.content)} className="min-h-0 flex-1 bg-[#101218]" />
+        <iframe title={file.path} srcDoc={srcDoc} className="min-h-0 flex-1 bg-[#101218]" />
       </div>
     </div>
   );

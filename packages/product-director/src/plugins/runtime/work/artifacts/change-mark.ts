@@ -16,7 +16,3 @@ export function changeMark(change: ChangeKind): string {
   const label = LABEL[change];
   return `<span class="change change-${change}" title="${label}" aria-label="${label}"><span class="change-icon" aria-hidden="true">${SYMBOL[change]}</span></span>`;
 }
-
-export function changeSymbol(change: ChangeKind): string {
-  return SYMBOL[change];
-}

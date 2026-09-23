@@ -1,11 +1,10 @@
 import { describe, expect, it } from 'vitest';
 import { builtinArtifactKinds } from '../../artifacts/builtins.js';
 import { buildArtifactFiles } from './build-files.js';
-import { apiHtml } from './text-pages.js';
-import { summaryHtml } from './summary-pages.js';
+import { previewSrcDoc } from './render/preview-src.js';
 
 describe('buildArtifactFiles', () => {
-  it('writes markdown, mermaid html, and questions', () => {
+  it('writes markdown and questions without non-ui html', () => {
     const files = buildArtifactFiles(
       {
         title: 'Model',
@@ -32,12 +31,14 @@ describe('buildArtifactFiles', () => {
     const paths = files.map((f) => f.path);
     expect(paths).toContain('description.md');
     expect(paths).toContain('data-model.md');
-    expect(paths).toContain('data-model.html');
+    expect(paths).not.toContain('data-model.html');
     expect(paths).toContain('questions.json');
-    expect(files.find((f) => f.path === 'data-model.html')?.content).toContain('mermaid');
+    const md = files.find((f) => f.path === 'data-model.md')?.content ?? '';
+    expect(md).toContain('```mermaid');
+    expect(previewSrcDoc('data-model.md', md)).toContain('mermaid');
   });
 
-  it('renders summary and api change marks', () => {
+  it('renders summary and api change marks at preview time', () => {
     const files = buildArtifactFiles(
       {
         title: 'Routes',
@@ -68,13 +69,16 @@ describe('buildArtifactFiles', () => {
       [],
       builtinArtifactKinds(),
     );
-    const summary = files.find((f) => f.path === 'summary.html')?.content ?? '';
-    const overview = files.find((f) => f.path === 'changes-overview.html')?.content ?? '';
-    const api = files.find((f) => f.path === 'api.html')?.content ?? '';
+    const summaryMd = files.find((f) => f.path === 'summary.md')?.content ?? '';
+    const overviewMd = files.find((f) => f.path === 'changes-overview.md')?.content ?? '';
+    const apiMd = files.find((f) => f.path === 'api.md')?.content ?? '';
+    expect(summaryMd).toContain('Backend');
+    expect(summaryMd).not.toContain('src/checkout/');
+    const summary = previewSrcDoc('summary.md', summaryMd);
+    const overview = previewSrcDoc('changes-overview.md', overviewMd);
+    const api = previewSrcDoc('api.md', apiMd);
     expect(summary).toContain('Backend');
-    expect(summary).not.toContain('src/checkout/');
-    expect(summary).toContain('class="section"');
-    expect(summary).not.toContain('class="panel"');
+    expect(summary).toContain('<h2');
     expect(overview).toContain('change-added');
     expect(overview).toContain('src/checkout/');
     expect(overview).toContain('changes-overview');
@@ -84,9 +88,5 @@ describe('buildArtifactFiles', () => {
     expect(overview).toContain('max-height: 7.5em');
     expect(api).toContain('change-added');
     expect(api).not.toContain('>added<');
-    expect(apiHtml('x', { routes: [{ method: 'DELETE', path: '/x', change: 'removed', description: 'gone' }] })).toContain(
-      'change-removed',
-    );
-    expect(summaryHtml('x', { areas: [{ area: 'Frontend', description: 'Tweaked cart.' }] })).toContain('Frontend');
   });
 });
