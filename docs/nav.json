@@ -1,0 +1,31 @@
+{
+  "title": "meta-harness",
+  "items": [
+    { "slug": "", "title": "Overview" },
+    { "slug": "local-cli", "title": "Local CLI" },
+    { "slug": "ui", "title": "UI" },
+    {
+      "slug": "runtime",
+      "title": "Runtime",
+      "children": [
+        { "slug": "runtime/stores", "title": "Stores" },
+        { "slug": "runtime/sessions", "title": "Sessions" },
+        { "slug": "runtime/harnesses", "title": "Harnesses" },
+        { "slug": "runtime/tools", "title": "Tools" },
+        { "slug": "runtime/http", "title": "HTTP" },
+        { "slug": "runtime/transports", "title": "Transports" },
+        { "slug": "runtime/custom", "title": "Custom plugins" }
+      ]
+    },
+    {
+      "slug": "product-director",
+      "title": "Product director",
+      "children": [
+        { "slug": "product-director/runtime", "title": "Runtime plugins" },
+        { "slug": "product-director/ui", "title": "UI plugins" }
+      ]
+    },
+    { "slug": "ui-runtime", "title": "UI runtime" },
+    { "slug": "license", "title": "License" }
+  ]
+}
